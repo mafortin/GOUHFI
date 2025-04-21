@@ -1,6 +1,6 @@
 # GOUHFI: novel contrast- and resolution-agnostic segmentation tool for Ultra-High Field MRI
 
-**GOUHFI** is a deep learning-based fully automatic brain segmentation tool optimized for ultra-high field MRI (i.e., ≥ 7T MRI). Using the domain randomization approach proposed in [SynthSeg](https://github.com/BBillot/SynthSeg), GOUHFI is able to segment images of any contrast, resolution and field strength, making it broadly applicable across scanners, imaging protocols and centers. 
+The Generalized and Optimized segmentation tool for Ultra-High Field Images (GOUHFI) is a deep learning-based fully automatic brain segmentation tool optimized for ultra-high field MRI (i.e., ≥ 7T MRI). Using the domain randomization approach proposed in [SynthSeg](https://github.com/BBillot/SynthSeg), GOUHFI is able to segment images of any contrast, resolution and field strength, making it broadly applicable across scanners, imaging protocols and centers. 
 
 ![GOUHFI](figs/fig-readme.png)
 
@@ -22,13 +22,12 @@
 
 ### Step 0: Create a Python virtual environment
 
-- As any Python project, we highly recommend you to install GOUHFI inside a virtual environment. Whether you use pip, anaconda or miniconda is up to you. 
-- A considerable amount of documentation is available online on how to proceed if needed.
+- As for any Python project, we highly recommend you to install GOUHFI inside a virtual environment. Whether you use pip, anaconda or miniconda is up to you. 
 
 ### Step 1: Install PyTorch 
 
 - Follow the instructions on the [PyTorch website](https://pytorch.org/get-started/locally/).
-- This step **has** to be done **before** step 2 below as recommended by the nnUNet team [step #1 here](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/installation_instructions.md#installation-instructions).
+- This step **has to be done before** step 2 below as recommended by the nnUNet team. See step #1 [here](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/installation_instructions.md#installation-instructions).
 
 ### Step 2: Install the repository locally
 
@@ -50,18 +49,29 @@ pip install -e .
 
 ### Step 3: Download the trained model weights
 
-- A Zenodo link to the trained model weights is included in the repository under `trained_model/` subdirectory or simply with this [link](https://zenodo.org/records/15255556). This might require to have a Zenodo account (free).
-- Move this `GOUHFI.zip` in the `trained-model` folder.
+1) A Zenodo link to the trained model weights is included in the repository under `trained_model/` subdirectory or simply with this [link](https://zenodo.org/records/15255556). This might require to have a Zenodo account (free).
+2) Move this `GOUHFI.zip` in the `trained-model` folder.
 
 ### Step 4: Unzip the `GOUHFI.zip`
 
 - To unzip `GOUHFI.zip`, use the following command:
 ```bash
-cd PATH/TO/GOUHFI.zip
+cd /path/to/GOUHFI.zip
 unzip GOUHFI.zip
 ```
 
-- Once unzipped, you should have a folder called `Dataset014_gouhfi` in the `trained_model` folder.
+- Once unzipped, you should have a folder called `Dataset014_gouhfi` with all trained folds and related files in the `trained_model` folder.
+
+
+### Step 5: Test the installation
+
+- In your terminal, type:
+
+```bash
+run_goufhi --help
+```
+
+- If you see the help function for `run_gouhfi`, you have installed the repository properly. Congrats and happy segmenting!
 
 ---
 
@@ -79,7 +89,8 @@ run_goufhi --input /path/to/input/folder/ --output path/to/output/folder/
 | `--input`  | Path to the directory containing the input image(s) to be segmented. |
 | `--output` | Folder where the segmentations will be saved. |
 
-This command runs the model on your input image and saves the output segmentation mask to the specified folder.
+- This command runs the model on your input image(s) and saves the corresponding output segmentations/label maps to the specified folder.
+- Moreover, this command **needs** to be performed inside your newly created virtual python environment (see step 0 from [go to instllation](#installation)).
 
 ---
 
@@ -88,7 +99,7 @@ This command runs the model on your input image and saves the output segmentatio
 - File:
     - Format: NIfTI (`.nii or .nii.gz`)
     - Naming convention: The nnUNet naming convention (i.e., `{CASE_IDENTIFIER}_0000.nii.gz`). More details [here](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/dataset_format_inference.md).
-    - If you want to segment >1 image/subject, all images should be inside the input directory defined by `--input` under distinctive filenames. The output segmentations will follow the same naming convetion as the input filenames minus the `_0000` string.  
+    - If you want to segment >1 image/subject, all images should be inside the input directory defined by `--input` under distinctive filenames. The output segmentations will follow the same naming convention as the input filenames minus the `_0000` string.  
 
 - Image:
     - Contrast: Any
