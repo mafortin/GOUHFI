@@ -2,6 +2,8 @@
 
 **GOUHFI** is a deep learning-based fully automatic brain segmentation tool optimized for ultra-high field MRI (i.e., ≥ 7T MRI). Using the domain randomization approach proposed in [SynthSeg](https://github.com/BBillot/SynthSeg), GOUHFI is able to segment images of any contrast, resolution and field strength, making it broadly applicable across scanners, imaging protocols and centers. 
 
+![GOUHFI](figs/fig-readme.png)
+
 ---
 
 ## How was GOUHFI developed?
@@ -18,6 +20,10 @@
 
 ## Installation
 
+### Step 0: Create a Python virtual environment
+
+- As any Python project, we highly recommend you to install GOUHFI inside a virtual environment. Whether you use pip, anaconda or miniconda is up to you. 
+- A considerable amount of documentation is available online on how to proceed if needed.
 
 ### Step 1: Install PyTorch 
 
@@ -32,8 +38,6 @@
 pip install git+https://github.com/mafortin/GOUHFI.git
 ```
 
-This installs the `run_goufhi` command line tool.
-
 ---
 
 #### Option 2: Clone and Install Locally
@@ -44,20 +48,30 @@ cd GOUHFI
 pip install -e .
 ```
 
-### Step 3: Download the trained model weights from Zenodo
+### Step 3: Download the trained model weights
 
-A Zenodo link to the trained model weights is included in the repository under `trained_model/` subdirectory or simply with this [link](https://zenodo.org/records/15255556).
+- A Zenodo link to the trained model weights is included in the repository under `trained_model/` subdirectory or simply with this [link](https://zenodo.org/records/15255556). This might require to have a Zenodo account (free).
+- Move this `GOUHFI.zip` in the `trained-model` folder.
 
-### Step 4: 
+### Step 4: Unzip the `GOUHFI.zip`
+
+- To unzip `GOUHFI.zip`, use the following command:
+```bash
+cd PATH/TO/GOUHFI.zip
+unzip GOUHFI.zip
+```
+
+- Once unzipped, you should have a folder called `Dataset014_gouhfi` in the `trained_model` folder.
 
 ---
+
 
 ## Usage
 
 ### Run Inference
 
 ```bash
-run_goufhi --input /path/to/image.nii.gz --output /output/folder/ [--conform]
+run_goufhi --input /path/to/input/folder/ --output path/to/output/folder/
 ```
 
 | Argument  | Description                        |
@@ -85,7 +99,11 @@ This command runs the model on your input image and saves the output segmentatio
 
 ## Output
 
-- `{CASE_IDENTIFIER}.nii.gz` — Segmentation results for the `{CASE_IDENTIFIER}` subject (i.e., subcortical segmentation of the brain into 35 labels).
+- File:
+- `{CASE_IDENTIFIER}.nii.gz` —> Segmentation result/Label map for the `{CASE_IDENTIFIER}` subject.
+
+- Label map:
+    - The labels are linearly ordered from 0 (background) to 35. The complete list of labels is shown in file `gouhfi-labels`
 
 ---
 
