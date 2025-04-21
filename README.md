@@ -110,11 +110,12 @@ run_goufhi --input /path/to/input/folder/ --output path/to/output/folder/
 
 ## Output
 
-- File:
+File:
 - `{CASE_IDENTIFIER}.nii.gz` —> Segmentation result/Label map for the `{CASE_IDENTIFIER}` subject.
 
-- Label map:
-    - The labels are linearly ordered from 0 (background) to 35. The complete list of labels is shown in file `gouhfi-labels`
+Segmentation/Label map:
+    - The labels are linearly ordered from 0 (background) to 35. The complete list of labels is shown in file `misc/label-list-lut.txt`.
+    - **Tip**: If you have a version of [*FreeSurfer*](https://surfer.nmr.mgh.harvard.edu/fswiki) installed with *Freeview*, you can easily visualize the segmentation outputs overlaid on your input images. In order to visualize the segmentations wih the same color scheme/lookuptable as used by the *FreeSurfer/FastSurfer* team, simply copy the `label-list-lut.txt` inside your `$FREESURFER_HOME/luts/` folder (label values are not the same, but the colors will be). Then, this new lookuptable should be available in your Colormap/Lookuptable dropdown menu.
 
 ---
 
