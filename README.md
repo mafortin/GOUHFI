@@ -97,7 +97,7 @@ run_goufhi --input /path/to/input/folder/ --output path/to/output/folder/
 ## Input Requirements
 
 - File:
-    - Format: NIfTI (`.nii or .nii.gz`)
+    - Format: compressed NIfTI (`.nii.gz`)
     - Naming convention: The nnUNet naming convention (i.e., `{CASE_IDENTIFIER}_0000.nii.gz`). More details [here](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/dataset_format_inference.md).
     - If you want to segment >1 image/subject, all images should be inside the input directory defined by `--input` under distinctive filenames. The output segmentations will follow the same naming convention as the input filenames minus the `_0000` string.  
 
