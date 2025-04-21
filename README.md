@@ -114,23 +114,8 @@ File:
 - `{CASE_IDENTIFIER}.nii.gz` —> Segmentation result/Label map for the `{CASE_IDENTIFIER}` subject.
 
 Segmentation/Label map:
-    - The labels are linearly ordered from 0 (background) to 35. The complete list of labels is shown in file `misc/label-list-lut.txt`.
+- The labels are linearly ordered from 0 (background) to 35. The complete list of labels is shown in file `misc/label-list-lut.txt`.
     - **Tip**: If you have a version of [*FreeSurfer*](https://surfer.nmr.mgh.harvard.edu/fswiki) installed with *Freeview*, you can easily visualize the segmentation outputs overlaid on your input images. In order to visualize the segmentations wih the same color scheme/lookuptable as used by the *FreeSurfer/FastSurfer* team, simply copy the `label-list-lut.txt` inside your `$FREESURFER_HOME/luts/` folder (label values are not the same, but the colors will be). Then, this new lookuptable should be available in your Colormap/Lookuptable dropdown menu.
-
----
-
-## Dependencies
-
-The following dependencies are installed automatically when using pip:
-
-- `torch` (PyTorch)
-- `nibabel`
-- `scipy`
-- `nnunetv2`
-- `antspynet`
-
-
-
 
 ---
 
@@ -138,12 +123,25 @@ The following dependencies are installed automatically when using pip:
 
 If you use **GOUHFI** in your research, please cite the following:
 
+For the paper:
 ```
 @article{fortin2025gouhfi,
   title={GOUHFI: a novel contrast- and resolution-agnostic segmentation tool for Ultra-High Field MRI},
   author={Fortin, Marc-Antoine et al.},
   journal={Imaging Neuroscience},
   year={2025}
+}
+```
+
+For the trained model:
+```
+@misc{fortin2025gouhfi,
+  author       = {Fortin, M.-A. and Larsen, M. and Kristoffersen, A. L. and Goa, P. E.},
+  title        = {GOUHFI: Generalized and Optimized segmentation tool for Ultra-High Field Images},
+  year         = {2025},
+  publisher    = {Zenodo},
+  doi          = {10.5281/zenodo.15255556},
+  url          = {https://doi.org/10.5281/zenodo.15255556}
 }
 ```
 
@@ -166,11 +164,11 @@ This project is licensed under the Apache 2.0 License. See the `LICENSE` file fo
 - [nnU-Net v2](https://github.com/MIC-DKFZ/nnUNet)
     - For the training, inference, post-processing and evaluation of the 3D U-Net.
 - [SynthSeg](https://github.com/BBillot/SynthSeg)
-    - For the generative model to create synthetic images for training.
+    - Used to generate the synthetic images for the training dataset, **not** required if you just want to do inference.
 - [FastSurfer](https://github.com/Deep-MI/FastSurfer)
-    - For the conforming step of images to be segmented.
+    - For the conforming step of images to be segmented, **not** required if your images are already LIA oriented.
 - [ANTsPyNet](https://github.com/ANTsX/ANTsPyNet)
-    - For brain extraction.
+    - For brain extraction only, **not** required for segmentation.
 
 ---
 
