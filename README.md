@@ -4,7 +4,7 @@
 
 ---
 
-## Features
+## How was GOUHFI developed?
 
 - ***MAF: More detailed explanation of what we did? [long abstract style]***
 - This repository is based on the nnUNet v2 framework and uses the same naming convention and requirements for running inference and postprocessing.
@@ -45,6 +45,8 @@ pip install -e .
 ```
 
 ### Step 3: Download the trained model weights from Zenodo
+
+A Zenodo link to the trained model weights is included in the repository under `trained_model/` subdirectory or simply with this [link](https://zenodo.org/records/15255556).
 
 ### Step 4: 
 
@@ -98,11 +100,7 @@ The following dependencies are installed automatically when using pip:
 - `antspynet`
 
 
----
 
-## Model Weights
-
-A link to the trained model weights is included in the repository under `trained_models/`.
 
 ---
 
