@@ -1,0 +1,42 @@
+[project]
+name = "gouhfi"
+
+version = "1.0.0"
+readme = "README.md"
+requires-python = ">=3.10"
+
+description = """GOUHFI is a novel Deep Learning-based brain segmentation tool optimized for Ultra-High Field MRI (i.e., >3T) where the domain randomization approach was used, making it contrast- and resolution-agnostic."""
+
+
+authors = [
+    { name="Marc-Antoine Fortin", email="marc.a.fortin@ntnu.no" }
+]
+
+license = { file = "LICENSE" }
+
+keywords = [
+    "brain segmentation",
+    "ultra-high field MRI", 
+    "deep learning",
+    "medical image segmentation",
+    "semantic segmentation",
+    "domain randomization", 
+    "contrast-agnostic",
+    "resolution-agnostic",
+]
+
+dependencies = [
+    "nnunetv2",
+    "antspynet"
+]
+
+[project.urls]
+homepage = "https://github.com/mafortin/GOUHFI"
+repository = "https://github.com/mafortin/GOUHFI"
+
+[project.scripts]
+run_goufhi = "run-inference.inf-postpro-eval-nnunet:main"
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
