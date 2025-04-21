@@ -1,12 +1,13 @@
-# GOUHFI: Generalizable Ultra-High Field Image Segmentation
+# GOUHFI: novel contrast- and resolution-agnostic segmentation tool for Ultra-High Field MRI
 
-**GOUHFI** is a deep learning-based fully automatic brain segmentation tool optimized for ultra-high field MRI (i.e., ≥ 7T MRI). Using the domain randomization approach proposed in [SynthSeg](https://github.com/BBillot/SynthSeg), GOUHFI is able to segment images of any contrast, resolution and field strength, making it broadly applicable across scanners and protocols. 
+**GOUHFI** is a deep learning-based fully automatic brain segmentation tool optimized for ultra-high field MRI (i.e., ≥ 7T MRI). Using the domain randomization approach proposed in [SynthSeg](https://github.com/BBillot/SynthSeg), GOUHFI is able to segment images of any contrast, resolution and field strength, making it broadly applicable across scanners, imaging protocols and centers. 
 
 ---
 
 ## Features
 
 - ***MAF: More detailed explanation of what we did? [long abstract style]***
+- This repository is based on the nnUNet v2 framework and uses the same naming convention and requirements for running inference and postprocessing.
 - Robust 3D U-Net model trained using [nnU-Net v2](https://github.com/MIC-DKFZ/nnUNet)
 - Domain randomization for contrast and resolution generalization
 - Validated on both UHF (7T) and standard 3T MRI
@@ -17,7 +18,15 @@
 
 ## Installation
 
-### Option 1: Install Directly from GitHub (Recommended)
+
+### Step 1: Install PyTorch 
+
+- Follow the instructions on the [PyTorch website](https://pytorch.org/get-started/locally/).
+- This step **has** to be done **before** step 2 below as recommended by the nnUNet team [step #1 here](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/installation_instructions.md#installation-instructions).
+
+### Step 2: Install the repository locally
+
+#### Option 1: Install Directly from GitHub (Recommended)
 
 ```bash
 pip install git+https://github.com/mafortin/GOUHFI.git
@@ -27,13 +36,17 @@ This installs the `run_goufhi` command line tool.
 
 ---
 
-### Option 2: Clone and Install Locally
+#### Option 2: Clone and Install Locally
 
 ```bash
 git clone https://github.com/mafortin/GOUHFI.git
 cd GOUHFI
 pip install -e .
 ```
+
+### Step 3: Download the trained model weights from Zenodo
+
+### Step 4: 
 
 ---
 
@@ -47,7 +60,7 @@ run_goufhi --input /path/to/image.nii.gz --output /output/folder/ [--conform]
 
 | Argument  | Description                        |
 |-----------|------------------------------------|
-| `--input`  | Path to the directory containing the input images to be segmented. |
+| `--input`  | Path to the directory containing the input image(s) to be segmented. |
 | `--output` | Folder where the segmentations will be saved. |
 
 This command runs the model on your input image and saves the output segmentation mask to the specified folder.
@@ -56,11 +69,15 @@ This command runs the model on your input image and saves the output segmentatio
 
 ## Input Requirements
 
-- Format: NIfTI (`.nii or .nii.gz`)
-- Naming convention: The nnUNet naming convention (i.e., `{CASE_IDENTIFIER}_0000.nii.gz`). More details [here](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/dataset_format_inference.md).
-- Contrast: Any
-- Resolution: Any (resampling to isotropic resolution is processed internally. Might not be optimal for highly anisotropic images, but worth a try.)
-- Orientation: LIA (like FastSurfer [see the `conform_images` command])
+- File:
+    - Format: NIfTI (`.nii or .nii.gz`)
+    - Naming convention: The nnUNet naming convention (i.e., `{CASE_IDENTIFIER}_0000.nii.gz`). More details [here](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/dataset_format_inference.md).
+    - If you want to segment >1 image/subject, all images should be inside the input directory defined by `--input` under distinctive filenames. The output segmentations will follow the same naming convetion as the input filenames minus the `_0000` string.  
+
+- Image:
+    - Contrast: Any
+    - Resolution: Any (resampling to isotropic resolution is processed internally. Not tested for highly anisotropic images, but always worth a try.)
+    - Orientation: LIA (like FastSurfer [see the `conform_images` command])
 
 ---
 
