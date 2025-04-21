@@ -8,7 +8,7 @@ The Generalized and Optimized segmentation tool for Ultra-High Field Images (GOU
 
 ## How was GOUHFI developed?
 
-- ***MAF: More detailed explanation of what we did? [long abstract style]***
+- ***MAF: TO BE DONE More detailed explanation of what we did? [long abstract style]***
 - This repository is based on the nnUNet v2 framework and uses the same naming convention and requirements for running inference and postprocessing.
 - Robust 3D U-Net model trained using [nnU-Net v2](https://github.com/MIC-DKFZ/nnUNet)
 - Domain randomization for contrast and resolution generalization
