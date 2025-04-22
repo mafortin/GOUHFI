@@ -164,11 +164,11 @@ This project is licensed under the Apache 2.0 License. See the `LICENSE` file fo
 - [nnU-Net v2](https://github.com/MIC-DKFZ/nnUNet)
     - For the training, inference, post-processing and evaluation of the 3D U-Net.
 - [SynthSeg](https://github.com/BBillot/SynthSeg)
-    - Used to generate the synthetic images for the training dataset, **not** required if you just want to do inference.
+    - Used to generate the synthetic images for the training dataset.
 - [FastSurfer](https://github.com/Deep-MI/FastSurfer)
-    - For the conforming step of images to be segmented, **not** required if your images are already LIA oriented.
+    - For the conforming step of images to be segmented. I have put a copy of the conforming script here for simplification/making the repository more compact, but no modifcation from their script has been made.
 - [ANTsPyNet](https://github.com/ANTsX/ANTsPyNet)
-    - For brain extraction only, **not** required for segmentation.
+    - For brain extraction only, **not** required for segmentation. Quick and efficient brain extraction tool if you need to do this to your data. Again, included for simplicity for the users.
 
 ---
 
