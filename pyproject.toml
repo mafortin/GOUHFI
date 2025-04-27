@@ -27,7 +27,7 @@ dependencies = [
     "nnunetv2",
     "ants",
     "antspynet",
-    "skimage"
+    "scikit-image"
 ]
 
 [project.urls]
