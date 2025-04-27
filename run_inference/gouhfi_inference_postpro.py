@@ -71,7 +71,7 @@ def apply_post_processing(input_dir, output_dir, pp_pkl_file, np, plans_json):
     return duration
 
 
-def run_inference_postproc(dataset_id, input_dir, config="3d_fullres", trainer="nnUNetTrainer_NoDA_500epochs_AdamW", plan="nnUNetResEncL", np=8, folds="0 1 2 3 4"):
+def run_inference_postproc(dataset_id='014', input_dir=os.getcwd(), config="3d_fullres", trainer="nnUNetTrainer_NoDA_500epochs_AdamW", plan="nnUNetResEncL", np=8, folds="0 1 2 3 4"):
     
     # Convert folds argument to a list of strings
     folds_list = folds.split()
@@ -103,23 +103,19 @@ def run_inference_postproc(dataset_id, input_dir, config="3d_fullres", trainer="
 def main():
 
     parser = argparse.ArgumentParser(description="Run nnUNet_v2 inference and post-processing.")
-    parser.add_argument("--dataset_id", required=True, help="Dataset ID in the format DatasetXXX_YYYY.")
     parser.add_argument("-i", "--input_dir", required=True, help="Directory containing input data.")
-    parser.add_argument("--config", default="3d_fullres", help="Configuration to use for inference.")
-    parser.add_argument("--trainer", default="nnUNetTrainer_NoDA_500epochs_AdamW", help="Trainer to use for inference.")
-    parser.add_argument("--plan", default="nnUNetResEncL", help="Plan to use for inference.")
     parser.add_argument("--np", type=int, default=8, help="Number of processes for post-processing. Depends on your CPU.")
     parser.add_argument("--folds", default="0 1 2 3 4", help="Folds to use for inference. By default all folds are used and combined together.")
+    #parser.add_argument("--config", default="3d_fullres", help="Configuration to use for inference.")
+    #parser.add_argument("--trainer", default="nnUNetTrainer_NoDA_500epochs_AdamW", help="Trainer to use for inference.")
+    #parser.add_argument("--plan", default="nnUNetResEncL", help="Plan to use for inference.")
+    #parser.add_argument("--dataset_id", required=True, help="Dataset ID in the format DatasetXXX_YYYY.")
 
     # Parse arguments
     args = parser.parse_args()
 
     run_inference_postproc(
-        dataset_id=args.dataset_id,
         input_dir=args.input_dir,
-        config=args.config,
-        trainer=args.trainer,
-        plan=args.plan,
         np=args.np,
         folds=args.folds
     )
