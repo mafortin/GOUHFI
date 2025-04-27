@@ -163,15 +163,19 @@ This project is licensed under the Apache 2.0 License. See the `LICENSE` file fo
 
 This project incorporates code from the following projects, used under the Apache License 2.0:
 
+Image preparation/preprocessing:
 - [FastSurfer/FastSurferVINN](https://github.com/Deep-MI/FastSurfer)
-    - In this project, the script `conform.py` from FastSurfer/FastSurferVINN was used for 'conforming' the images to be segmented by GOUHFI (i.e., reorienting to LIA, resampling to isotropic resolution and normalizing signal values between 0 and 255). The script has been used as is, without modification, and is shared as part of the GOUHFI repository to make the repository more self-contained.
-- [SynthSeg](https://github.com/BBillot/SynthSeg)
-    - Used to generate the synthetic images for the training dataset.
-- [nnU-Net v2](https://github.com/MIC-DKFZ/nnUNet)
-    - For the training, inference, post-processing and evaluation of the 3D U-Net.
-
+    - In this project, the script `conform.py` from FastSurfer/FastSurferVINN was used for 'conforming' the images to be segmented by GOUHFI (i.e., reorienting to LIA, resampling to isotropic resolution and normalizing signal values between 0 and 255). The script has been used as is, without modification, and is shared as part of the GOUHFI repository to make the repository more self-contained. If you have an already up and running FastSurfer installation, you can use it directly from there. In this repository, the function `run_conforming` will execute this script.
 - [ANTsPyNet](https://github.com/ANTsX/ANTsPyNet)
-    - For brain extraction only, **not** required for segmentation. Quick and efficient brain extraction tool if you need to do this to your data. Again, included for simplicity for the users.
+    - For brain extraction. Quick and efficient brain extraction tool (`antspynet.brain_extraction`) if you need to do this to your images. We provide a script called `brain_extraction_antspynet.py` where we wrapped an unmodified implementation of `antspynet.brain_extraction` to make the repository more self-contained. If you have an already up and running ANTsPyNet installation, you can use it directly from there.
+
+Retraining:
+- [nnU-Net v2](https://github.com/MIC-DKFZ/nnUNet)
+    - The nnUNet v2 framework was used for training, inference, post-processing and evaluation of GOUHFI. When you are installing GOUHFI as explained above in this README file, you should have all the required nnUNet functions to run inference, post-processing and evaluation as done by the nnUNet. However, if you would like to reproduce the full training as explained in the related paper, you would need a full local installation of the nnUNet, which is not provided by this repository. See the [nnUNet installation dcumentation](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/installation_instructions.md) for more information on how to proceed.
+
+Generating synthetic images for training:
+- [SynthSeg](https://github.com/BBillot/SynthSeg)
+    - 
 
 ---
 
