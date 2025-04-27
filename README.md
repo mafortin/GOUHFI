@@ -23,6 +23,8 @@ The Generalized and Optimized segmentation tool for Ultra-High Field Images (GOU
 ### Step 0: Create a Python virtual environment
 
 - As for any Python project, we highly recommend you to install GOUHFI inside a virtual environment. Whether you use pip, anaconda or miniconda is up to you. 
+- Once your (empty) virtual environment is created, execute the following steps inside this virtual environment.
+- Relevant links related to [conda](https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/20/conda/) in general or [its installation](https://docs.conda.io/projects/conda/en/stable/user-guide/install/linux.html) for Ubuntu distributions.
 
 ### Step 1: Install PyTorch 
 
