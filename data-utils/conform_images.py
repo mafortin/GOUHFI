@@ -55,7 +55,7 @@ def conform_images(input_dir, output_dir, order, rename, dtype, seg_input):
         rename_df.to_csv(os.path.join(output_dir, 'rename_mapping.csv'), index=False)
         print(f"Rename mapping saved to {os.path.join(output_dir, 'rename_mapping.csv')}")
 
-if __name__ == "__main__":
+def main():
 
     parser = argparse.ArgumentParser(description="Conform NIfTI images in a directory.")
     parser.add_argument("-i", "--input_dir", required=True, help="Path to the input directory containing NIfTI images.")
@@ -65,10 +65,13 @@ if __name__ == "__main__":
     parser.add_argument("--rename", action='store_true',
                         help="Rename conformed images in a chronological order and save the mapping to a CSV file.")
     parser.add_argument("--dtype", type=str, default="float32",
-                        help="Data type to use for the conformed images (default: float32. Other options: uin8, int16, int32).")
+                        help="Data type to use for the conformed images (default: float32. Other options: uint8, int16, int32).")
     parser.add_argument("--seg_input", action='store_true',
                         help="Indicate that the image to be conformed is a label map and nearest neighbor interpolation will be used instead of linear interpolation or spline.")
 
     args = parser.parse_args()
 
     conform_images(args.input_dir, args.output_dir, args.order, args.rename, args.dtype, args.seg_input)
+
+if __name__ == "__main__":
+    main()
