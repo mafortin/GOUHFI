@@ -100,16 +100,16 @@ run_goufhi --help
 ### Run Inference
 
 ```bash
-run_goufhi --input /path/to/input/folder/ --output path/to/output/folder/
+run_goufhi -i /path/to/input/folder/ -o path/to/output/folder/
 ```
 
 | Argument  | Description                        |
 |-----------|------------------------------------|
-| `--input`  | Path to the directory containing the input image(s) to be segmented. |
-| `--output` | Folder where the segmentations will be saved. |
+| `-i`/`--input_dir`  | Path to the directory containing the input image(s) to be segmented. |
+| `-o`/`--output_dir` | Folder where the segmentations will be saved. |
 
 - This command runs the model on your input image(s) and saves the corresponding output segmentations/label maps to the specified folder.
-- Moreover, this command **needs** to be performed inside your newly created virtual python environment (see step 0 from [go to instllation](#installation)).
+- Moreover, this command **needs** to be performed inside your newly created virtual python environment (see step 0 from [go to installation](#installation)).
 
 ---
 
