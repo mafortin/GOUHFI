@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 #----------------------------------------------------------------------------------# 
 # Copyright 2025 [Marc-Antoine Fortin, MR Physics, NTNU]
 #
@@ -13,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# This file is adapted from FastSurfer (https://github.com/Deep-MI/FastSurfer)
+# This file is based from FastSurfer (https://github.com/Deep-MI/FastSurfer)
 # under the terms of the Apache License, Version 2.0.
 #---------------------------------------------------------------------------------#
 
@@ -21,6 +22,8 @@ import os
 import argparse
 import subprocess
 import pandas as pd
+from conform import conform_images
+
 
 
 def conform_images(input_dir, output_dir, order, rename, dtype, seg_input):
@@ -47,7 +50,7 @@ def conform_images(input_dir, output_dir, order, rename, dtype, seg_input):
 
             # Construct the command
             command = [
-                "python", "./FastSurferCNN/data_loader/conform.py",
+                "python", "./conform.py",
                 "-i", input_path,
                 "-o", output_path,
                 "--conform_min",

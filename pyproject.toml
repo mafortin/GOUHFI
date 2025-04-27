@@ -36,6 +36,7 @@ repository = "https://github.com/mafortin/GOUHFI"
 
 [project.scripts]
 run_goufhi = "run-inference.inf-postpro-eval-nnunet:main"
+run_conforming = "data-utils.conform_images:main"
 
 [build-system]
 requires = ["setuptools", "wheel"]
