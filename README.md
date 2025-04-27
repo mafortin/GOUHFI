@@ -71,10 +71,14 @@ Add the following line to your `.bashrc` or `.zshrc` file (depending which shell
 ```bash
 export GOUHFI_HOME=/full/path/to/GOUHFI
 ```
-- You can double-check if this step worked properly by typing in your terminal:
+- where `/full/path/to/GOUHFI` is the full path to your GOUHFI installation directory. 
+
+You can double-check if this step worked properly by typing in your terminal:
 ```bash
-echo ${GOUHFI_HOME}
+source ~/.bashrc
+echo $GOUHFI_HOME
 ```
+- where `~/.bashrc` can be `~/.zshrc`.
 
 - For more information, the [nnUNet documentation](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/set_environment_variables.md) on how to do this is quite helpful.
 
