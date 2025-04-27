@@ -10,7 +10,7 @@ authors = [
     { name = "Marc-Antoine Fortin", email = "marc.a.fortin@ntnu.no" }
 ]
 
-license = { file = "LICENSE" }
+license = "Apache-2.0"
 
 keywords = [
     "brain segmentation",
@@ -44,4 +44,9 @@ run_labels_reordering = "data_utils.reorder_labels_freesurfer_lut:main"
 [build-system]
 requires = ["setuptools>=42"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["data_utils*", "run_inference*"]
+exclude = ["misc*", "figs*", "test_data*", "trained_model*"]
 
