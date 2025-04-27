@@ -159,14 +159,17 @@ This project is licensed under the Apache 2.0 License. See the `LICENSE` file fo
 
 ---
 
-## Related Projects
+## Third-Party softwares/librairies related to GOUHFI
 
-- [nnU-Net v2](https://github.com/MIC-DKFZ/nnUNet)
-    - For the training, inference, post-processing and evaluation of the 3D U-Net.
+This project incorporates code from the following projects, used under the Apache License 2.0:
+
+- [FastSurfer/FastSurferVINN](https://github.com/Deep-MI/FastSurfer)
+    - In this project, the script `conform.py` from FastSurfer/FastSurferVINN was used for 'conforming' the images to be segmented by GOUHFI (i.e., reorienting to LIA, resampling to isotropic resolution and normalizing signal values between 0 and 255). The script has been used as is, without modification, and is shared as part of the GOUHFI repository to make the repository more self-contained.
 - [SynthSeg](https://github.com/BBillot/SynthSeg)
     - Used to generate the synthetic images for the training dataset.
-- [FastSurfer](https://github.com/Deep-MI/FastSurfer)
-    - For the conforming step of images to be segmented. I have put a copy of the conforming script here for simplification/making the repository more compact, but no modifcation from their script has been made.
+- [nnU-Net v2](https://github.com/MIC-DKFZ/nnUNet)
+    - For the training, inference, post-processing and evaluation of the 3D U-Net.
+
 - [ANTsPyNet](https://github.com/ANTsX/ANTsPyNet)
     - For brain extraction only, **not** required for segmentation. Quick and efficient brain extraction tool if you need to do this to your data. Again, included for simplicity for the users.
 
