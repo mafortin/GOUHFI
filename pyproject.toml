@@ -1,15 +1,13 @@
 [project]
 name = "gouhfi"
-
 version = "1.0.0"
 readme = "README.md"
 requires-python = ">=3.10"
 
 description = """GOUHFI is a novel Deep Learning-based brain segmentation tool optimized for Ultra-High Field MRI (i.e., >3T) where the domain randomization approach was used, making it contrast- and resolution-agnostic."""
 
-
 authors = [
-    { name="Marc-Antoine Fortin", email="marc.a.fortin@ntnu.no" }
+    { name = "Marc-Antoine Fortin", email = "marc.a.fortin@ntnu.no" }
 ]
 
 license = { file = "LICENSE" }
@@ -36,10 +34,12 @@ dependencies = [
 homepage = "https://github.com/mafortin/GOUHFI"
 repository = "https://github.com/mafortin/GOUHFI"
 
+# Scripts section for executable entry points
 [project.scripts]
 run_goufhi = "run-inference.gouhfi_inference_postpro:main"
 run_conforming = "data-utils.conform_images:main"
 run_brain_extraction = "data-utils.brain_extraction_antspynet:main"
+run_labels_reordering = "data-utils.reorder_labels_freesurfer_lut:main"
 
 [build-system]
 requires = ["setuptools>=42"]
