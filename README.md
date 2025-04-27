@@ -22,14 +22,23 @@ The Generalized and Optimized segmentation tool for Ultra-High Field Images (GOU
 
 ### Step 1: Create a Python virtual environment
 
-- As for any Python project, we highly recommend you to install GOUHFI inside a virtual environment. Whether you use pip, anaconda or miniconda is up to you. 
-- Once your (empty) virtual environment is created, execute the following steps inside this virtual environment.
-- Relevant links related to [conda](https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/20/conda/) in general or [its installation](https://docs.conda.io/projects/conda/en/stable/user-guide/install/linux.html) for Ubuntu distributions (OS dependent).
+- As for any Python project, we highly recommend you to install GOUHFI inside a virtual environment. Whether you use pip, anaconda or miniconda is up to you, but the steps below use conda. Relevant links related to [conda](https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/20/conda/) in general or [its installation](https://docs.conda.io/projects/conda/en/stable/user-guide/install/linux.html) for Ubuntu distributions (OS dependent).
+
+- If you are using conda, you can use the following command: 
+```bash
+conda create --name gouhfi python=3.10 
+```
+- `gouhfi` in the above command line is the name of the virtual environment and can be replaced by anything else if preferred.
+- Once your (empty) virtual environment is created, execute the following steps inside this virtual environment by typing:
+```bash
+conda activate gouhfi
+```
 
 ### Step 2: Install PyTorch 
 
 - Follow the instructions on the [PyTorch website](https://pytorch.org/get-started/locally/) to install the stable PyTorch version based on your OS, package manager, language (Python here) and compute platform (usually the latest CUDA is recommended).
 - This step **has to be done before** step 2 below as recommended by the nnUNet team. See step #1 [here](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/installation_instructions.md#installation-instructions).
+
 
 ### Step 3: Clone & install the repository locally
 
@@ -39,8 +48,6 @@ git clone https://github.com/mafortin/GOUHFI.git
 cd GOUHFI
 pip install -e .
 ```
-
----
 
 ### Step 4: Download the trained model weights
 
