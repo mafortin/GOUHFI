@@ -1,3 +1,24 @@
+#----------------------------------------------------------------------------------# 
+# Copyright 2025 [Marc-Antoine Fortin, MR Physics, NTNU]
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# This file is reproduced from FastSurfer (https://github.com/Deep-MI/FastSurfer)
+# under the terms of the Apache License, Version 2.0.
+
+#---------------------------------------------------------------------------------#
+
+
 # Copyright 2019
 # AI in Medical Imaging, German Center for Neurodegenerative Diseases (DZNE), Bonn
 #
@@ -13,6 +34,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#---------------------------------------------------------------------------------#
+
 
 # IMPORTS
 import argparse
@@ -25,11 +48,12 @@ import nibabel as nib
 import numpy as np
 import numpy.typing as npt
 
-from FastSurferCNN.utils import logging
-from FastSurferCNN.utils.arg_types import VoxSizeOption
-from FastSurferCNN.utils.arg_types import float_gt_zero_and_le_one as __conform_to_one_mm
-from FastSurferCNN.utils.arg_types import target_dtype as __target_dtype
-from FastSurferCNN.utils.arg_types import vox_size as __vox_size
+from fastsurfer import logging
+from fastsurfer.arg_types import VoxSizeOption
+from fastsurfer.arg_types import float_gt_zero_and_le_one as __conform_to_one_mm
+from fastsurfer.arg_types import target_dtype as __target_dtype
+from fastsurfer.arg_types import vox_size as __vox_size
+
 
 HELPTEXT = """
 Script to conform an MRI brain image to UCHAR, RAS orientation, 
