@@ -71,17 +71,23 @@ def apply_post_processing(input_dir, output_dir, pp_pkl_file, np, plans_json):
     return duration
 
 
-def main(dataset_id, input_dir, config="3d_fullres", trainer="nnUNetTrainer_NoDA_500epochs_AdamW", plan="nnUNetResEncL", np=8, folds="0 1 2 3 4"):
+def run_inference_postproc(dataset_id, input_dir, config="3d_fullres", trainer="nnUNetTrainer_NoDA_500epochs_AdamW", plan="nnUNetResEncL", np=8, folds="0 1 2 3 4"):
     
     # Convert folds argument to a list of strings
     folds_list = folds.split()
+
+    # Fetch the GOUHFI_HOME environment variable
+    gouhfi_home = os.getenv('GOUHFI_HOME')
+    if gouhfi_home is None:
+        print("Error: GOUHFI_HOME is not set. Please set the GOUHFI_HOME environment variable as explained in the installation steps.")
+        exit(1)
 
     # Construct paths
     input_dir = input_dir.rstrip('/')
     base_dir = os.path.dirname(input_dir)
     output_dir = os.path.join(base_dir, "outputs")
     output_pp_dir = os.path.join(base_dir, "outputs_postprocessed")
-    results_dir = f"/home/marcantf/Data/nnunet/results/{dataset_id}/{trainer}__{plan}__{config}/crossval_results_folds_0_1_2_3_4/"
+    results_dir = os.path.join(gouhfi_home, "trained_model/Dataset014_gouhfi/nnUNetTrainer_NoDA_500epochs_AdamW__nnUNetResEncL__3d_fullres/crossval_results_folds_0_1_2_3_4")
     pp_pkl_file = os.path.join(results_dir, "postprocessing.pkl")
     plans_json = os.path.join(results_dir, "plans.json")
 
@@ -94,7 +100,7 @@ def main(dataset_id, input_dir, config="3d_fullres", trainer="nnUNetTrainer_NoDA
     print(f"Total duration for inference and post-processing: {inference_duration + post_processing_duration:.2f} seconds.")
 
 
-if __name__ == "__main__":
+def main():
 
     parser = argparse.ArgumentParser(description="Run nnUNet_v2 inference and post-processing.")
     parser.add_argument("--dataset_id", required=True, help="Dataset ID in the format DatasetXXX_YYYY.")
@@ -108,7 +114,7 @@ if __name__ == "__main__":
     # Parse arguments
     args = parser.parse_args()
 
-    main(
+    run_inference_postproc(
         dataset_id=args.dataset_id,
         input_dir=args.input_dir,
         config=args.config,
@@ -118,3 +124,6 @@ if __name__ == "__main__":
         folds=args.folds
     )
 
+
+if __name__ == "__main__":
+    main()
