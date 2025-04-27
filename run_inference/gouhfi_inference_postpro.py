@@ -17,14 +17,17 @@
 # This file is based from the nnUNet v2 framework (https://github.com/MIC-DKFZ/nnUNet)
 # under the terms of the Apache License, Version 2.0.
 #---------------------------------------------------------------------------------#
-
-
-
 import argparse
 import subprocess
 import os
 import glob
 import time
+import sys
+
+# Add the 'trainer' directory to the Python path so that the trainer can be found
+sys.path.append(os.path.join(os.path.dirname(__file__), 'trainer'))
+# Import your custom trainer
+from trainer.nnUNetTrainer_NoDA_500epochs_AdamW import nnUNetTrainer_NoDA_500epochs_AdamW
 
 
 def run_inference(dataset_id, input_dir, output_dir, config, trainer, plan, folds, num_pr):
@@ -71,7 +74,7 @@ def apply_post_processing(input_dir, output_dir, pp_pkl_file, np, plans_json):
     return duration
 
 
-def run_inference_postproc(dataset_id='014', input_dir=os.getcwd(), config="3d_fullres", trainer="nnUNetTrainer_NoDA_500epochs_AdamW", plan="nnUNetResEncL", np=8, folds="0 1 2 3 4"):
+def run_inference_postproc(dataset_id='014', input_dir=os.getcwd(), output_dir=os.getcwd(), config="3d_fullres", trainer="nnUNetTrainer_NoDA_500epochs_AdamW", plan="nnUNetResEncL", np=8, folds="0 1 2 3 4"):
     
     # Convert folds argument to a list of strings
     folds_list = folds.split()
@@ -89,7 +92,7 @@ def run_inference_postproc(dataset_id='014', input_dir=os.getcwd(), config="3d_f
     output_pp_dir = os.path.join(base_dir, "outputs_postprocessed")
     results_dir = os.path.join(gouhfi_home, "trained_model/Dataset014_gouhfi/nnUNetTrainer_NoDA_500epochs_AdamW__nnUNetResEncL__3d_fullres/crossval_results_folds_0_1_2_3_4")
     pp_pkl_file = os.path.join(results_dir, "postprocessing.pkl")
-    plans_json = os.path.join(results_dir, "plans.json")
+    plans_json = os.path.join(gouhfi_home, "trained_model/Dataset014_gouhfi/nnUNetTrainer_NoDA_500epochs_AdamW__nnUNetResEncL__3d_fullres")
 
     # Run inference
     inference_duration = run_inference(dataset_id, input_dir, output_dir, config, trainer, plan, folds_list, np)
@@ -104,6 +107,7 @@ def main():
 
     parser = argparse.ArgumentParser(description="Run nnUNet_v2 inference and post-processing.")
     parser.add_argument("-i", "--input_dir", required=True, help="Directory containing input data.")
+    parser.add_argument("-o", "--output_dir", help="Directory to save output data.")
     parser.add_argument("--np", type=int, default=8, help="Number of processes for post-processing. Depends on your CPU.")
     parser.add_argument("--folds", default="0 1 2 3 4", help="Folds to use for inference. By default all folds are used and combined together.")
     #parser.add_argument("--config", default="3d_fullres", help="Configuration to use for inference.")
@@ -116,6 +120,7 @@ def main():
 
     run_inference_postproc(
         input_dir=args.input_dir,
+        output_dir=args.output_dir,
         np=args.np,
         folds=args.folds
     )
