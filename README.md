@@ -8,7 +8,7 @@ The Generalized and Optimized segmentation tool for Ultra-High Field Images (GOU
 
 ## How was GOUHFI developed?
 
-- ***MAF: More detailed explanation of what we did? [long abstract style]***
+- ***MAF: TO BE DONE More detailed explanation of what we did? [long abstract style]***
 - This repository is based on the nnUNet v2 framework and uses the same naming convention and requirements for running inference and postprocessing.
 - Robust 3D U-Net model trained using [nnU-Net v2](https://github.com/MIC-DKFZ/nnUNet)
 - Domain randomization for contrast and resolution generalization
@@ -23,6 +23,8 @@ The Generalized and Optimized segmentation tool for Ultra-High Field Images (GOU
 ### Step 0: Create a Python virtual environment
 
 - As for any Python project, we highly recommend you to install GOUHFI inside a virtual environment. Whether you use pip, anaconda or miniconda is up to you. 
+- Once your (empty) virtual environment is created, execute the following steps inside this virtual environment.
+- Relevant links related to [conda](https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/20/conda/) in general or [its installation](https://docs.conda.io/projects/conda/en/stable/user-guide/install/linux.html) for Ubuntu distributions (OS dependent).
 
 ### Step 1: Install PyTorch 
 
@@ -97,7 +99,7 @@ run_goufhi --input /path/to/input/folder/ --output path/to/output/folder/
 ## Input Requirements
 
 - File:
-    - Format: NIfTI (`.nii or .nii.gz`)
+    - Format: compressed NIfTI (`.nii.gz`)
     - Naming convention: The nnUNet naming convention (i.e., `{CASE_IDENTIFIER}_0000.nii.gz`). More details [here](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/dataset_format_inference.md).
     - If you want to segment >1 image/subject, all images should be inside the input directory defined by `--input` under distinctive filenames. The output segmentations will follow the same naming convention as the input filenames minus the `_0000` string.  
 
@@ -159,16 +161,23 @@ This project is licensed under the Apache 2.0 License. See the `LICENSE` file fo
 
 ---
 
-## Related Projects
+## Third-Party softwares/librairies related to GOUHFI
 
-- [nnU-Net v2](https://github.com/MIC-DKFZ/nnUNet)
-    - For the training, inference, post-processing and evaluation of the 3D U-Net.
-- [SynthSeg](https://github.com/BBillot/SynthSeg)
-    - Used to generate the synthetic images for the training dataset, **not** required if you just want to do inference.
-- [FastSurfer](https://github.com/Deep-MI/FastSurfer)
-    - For the conforming step of images to be segmented, **not** required if your images are already LIA oriented.
-- [ANTsPyNet](https://github.com/ANTsX/ANTsPyNet)
-    - For brain extraction only, **not** required for segmentation.
+This project incorporates code from the following projects, used under the Apache License 2.0:
+
+Image preparation/preprocessing:
+- [FastSurfer/FastSurferVINN](https://github.com/Deep-MI/FastSurfer):
+    - In this project, the script `conform.py` from FastSurfer/FastSurferVINN was used for 'conforming' the images to be segmented by GOUHFI (i.e., reorienting to LIA, resampling to isotropic resolution and normalizing signal values between 0 and 255). The script has been used as is, without modification, and is shared as part of the GOUHFI repository to make the repository more self-contained. If you have an already up and running FastSurfer installation, you can use it directly from there. In this repository, the function `run_conforming` will execute this script.
+- [ANTsPyNet](https://github.com/ANTsX/ANTsPyNet):
+    - For brain extraction. Quick and efficient brain extraction tool (`antspynet.brain_extraction`) if you need to do this for your images to be segmented. We provide a script called `brain_extraction_antspynet.py` where we wrapped an unmodified implementation of `antspynet.brain_extraction` to make the repository more self-contained. If you have an already up and running ANTsPyNet installation, you can use it directly from there. In this repository, the function `run_brain_extraction` will execute this script.
+
+Retraining:
+- [nnU-Net v2](https://github.com/MIC-DKFZ/nnUNet):
+    - The nnUNet v2 framework was used for training, inference, post-processing and evaluation of GOUHFI. When you are installing GOUHFI as explained above in this README file, you should have all the required nnUNet functions to run inference, post-processing and evaluation as done by the nnUNet. However, if you would like to reproduce the full training as explained in the related paper, you would need a full local installation of the nnUNet, which is not provided by this repository. See the [nnUNet installation documentation](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/installation_instructions.md) for more information on how to proceed.
+
+Generating synthetic images for training:
+- [SynthSeg](https://github.com/BBillot/SynthSeg):
+    - The synthetic images used to train GOUHFI were generated from the generative model proposed in SynthSeg. The generative model parameters used are described in the appendices of the paper related to this repository. 
 
 ---
 

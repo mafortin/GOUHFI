@@ -1,3 +1,24 @@
+#!/usr/bin/env python3
+#----------------------------------------------------------------------------------# 
+# Copyright 2025 [Marc-Antoine Fortin, MR Physics, NTNU]
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# This file is based from ANTsPyNet (https://github.com/ANTsX/ANTsPyNet)
+# under the terms of the Apache License, Version 2.0.
+#---------------------------------------------------------------------------------#
+
+
 import os
 import ants
 import antspynet
@@ -130,11 +151,11 @@ def brain_extraction(input_folder, output_folder=None, modality="t1", skip_morph
                     print(f"Mask saved to {mask_output_path}")
 
 
-if __name__ == "__main__":
     
+def main():
     parser = argparse.ArgumentParser(description="Brain Extraction using ANTsPyNet")
-    parser.add_argument("--input_folder", type=str, help="Path to the input folder containing images")
-    parser.add_argument("--output_folder", type=str, default=None,
+    parser.add_argument("-i", "--input_dir", type=str, help="Path to the input folder containing images")
+    parser.add_argument("-o", "--output_dir", type=str, default=None,
                         help="Path to the output folder (default: input folder)")
     parser.add_argument("--modality", type=str, default="t1", help="Modality for brain extraction (default: t1)")
     parser.add_argument("--skip_morpho", action="store_true",
@@ -144,5 +165,9 @@ if __name__ == "__main__":
     parser.add_argument("--dilation_voxels", type=int, default=0, help="Number of voxels for dilation (default: 0)")
 
     args = parser.parse_args()
-    brain_extraction(args.input_folder, args.output_folder, args.modality, args.skip_morpho, args.mask_folder,
+
+    brain_extraction(args.input_dir, args.output_dir, args.modality, args.skip_morpho, args.mask_folder,
                      args.dilation_voxels)
+
+if __name__ == "__main__":
+    main()
