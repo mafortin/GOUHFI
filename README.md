@@ -28,7 +28,7 @@ The Generalized and Optimized segmentation tool for Ultra-High Field Images (GOU
 
 ### Step 1: Install PyTorch 
 
-- Follow the instructions on the [PyTorch website](https://pytorch.org/get-started/locally/).
+- Follow the instructions on the [PyTorch website](https://pytorch.org/get-started/locally/) to install the stable PyTorch version based on your OS, package manager, language (Python here) and compute platform (usually the latest CUDA is recommended).
 - This step **has to be done before** step 2 below as recommended by the nnUNet team. See step #1 [here](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/installation_instructions.md#installation-instructions).
 
 ### Step 2: Install the repository locally
@@ -51,8 +51,8 @@ pip install -e .
 
 ### Step 3: Download the trained model weights
 
-1) A Zenodo link to the trained model weights is included in the repository under `trained_model/` subdirectory or simply with this [link](https://zenodo.org/records/15255556). This might require to have a Zenodo account (free).
-2) Move this `GOUHFI.zip` in the `trained-model` folder.
+1) A Zenodo link to the trained model weights is included in the repository under `trained_model/` subdirectory or simply with this [link](https://zenodo.org/records/15255556). This might require you to have a Zenodo account (free).
+2) Move this `GOUHFI.zip` in the `trained-model` folder before unzipping it.
 
 ### Step 4: Unzip the `GOUHFI.zip`
 
