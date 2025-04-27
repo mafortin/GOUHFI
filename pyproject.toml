@@ -42,5 +42,6 @@ run_conforming = "data-utils.conform_images:main"
 run_brain_extraction = "data-utils.brain_extraction_antspynet:main"
 
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools>=42"]
 build-backend = "setuptools.build_meta"
+
