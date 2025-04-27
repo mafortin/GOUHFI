@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# This file is based from ANTsPyNet (https://github.com/ANTsX/ANTsPyNet)
+# This file is based on the ANTsPyNet (https://github.com/ANTsX/ANTsPyNet)
 # under the terms of the Apache License, Version 2.0.
 #---------------------------------------------------------------------------------#
 
