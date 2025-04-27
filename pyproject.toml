@@ -40,6 +40,7 @@ repository = "https://github.com/mafortin/GOUHFI"
 run_goufhi = "run-inference.gouhfi_inference_postpro:main"
 run_conforming = "data-utils.conform_images:main"
 run_brain_extraction = "data-utils.brain_extraction_antspynet:main"
+run_labels_reordering = "data-utils.reorder_labels_freesurfer_lut:main"
 
 [build-system]
 requires = ["setuptools>=42"]
