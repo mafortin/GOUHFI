@@ -21,7 +21,7 @@
 import os
 import argparse
 import pandas as pd
-from fastsurfer.conform import conform  # Import the conform function from conform.py
+from fastsurfer.conform import conform 
 
 def conform_images(input_dir, output_dir, order, rename, dtype, seg_input):
     # Ensure output directory exists

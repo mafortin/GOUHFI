@@ -58,14 +58,27 @@ pip install -e .
 
 - To unzip `GOUHFI.zip`, use the following command:
 ```bash
-cd /path/to/GOUHFI.zip
+cd trained_model/
 unzip GOUHFI.zip
 ```
 
 - Once unzipped, you should have a folder called `Dataset014_gouhfi` with all trained folds and related files in the `trained_model` folder.
 
+### Step 6: Set GOUHFI's directory as an environment variable
 
-### Step 6: Test the installation
+- For Linux/MacOS:
+Add the following line to your `.bashrc` or `.zshrc` file (depending which shell you are using. `.bashrc` for `.sh` and `.zshrc` for `.zsh`.)
+```bash
+export GOUHFI_HOME=/full/path/to/GOUHFI
+```
+- You can double-check if this step worked properly by typing in your terminal:
+```bash
+echo ${GOUHFI_HOME}
+```
+
+- For more information, the [nnUNet documentation](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/set_environment_variables.md) on how to do this is quite helpful.
+
+### Step 7: Test the installation
 
 - In your terminal, type:
 
