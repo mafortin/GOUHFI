@@ -1,8 +1,27 @@
+#!/usr/bin/env python3
+#----------------------------------------------------------------------------------# 
+# Copyright 2025 [Marc-Antoine Fortin, MR Physics, NTNU]
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# This file is based from FastSurfer (https://github.com/Deep-MI/FastSurfer)
+# under the terms of the Apache License, Version 2.0.
+#---------------------------------------------------------------------------------#
+
 import os
 import argparse
-import subprocess
 import pandas as pd
-
+from fastsurfer.conform import conform  # Import the conform function from conform.py
 
 def conform_images(input_dir, output_dir, order, rename, dtype, seg_input):
     # Ensure output directory exists
@@ -17,32 +36,17 @@ def conform_images(input_dir, output_dir, order, rename, dtype, seg_input):
 
     # Iterate over all files in the input directory
     for idx, filename in enumerate(sorted(os.listdir(input_dir))):
-        if filename.endswith(".nii.gz"):
+        if filename.endswith(".nii") or filename.endswith(".nii.gz"):
             input_path = os.path.join(input_dir, filename)
             if rename:
-                new_filename = f"image_{idx:04d}_0000.nii.gz"
+                new_filename = f"image_{idx:04d}_0000.nii.gz" # Following nnUNet naming convention
                 output_path = os.path.join(output_dir, new_filename)
                 rename_mapping.append({'Old Filename': filename, 'New Filename': new_filename})
             else:
                 output_path = os.path.join(output_dir, filename)
 
-            # Construct the command
-            command = [
-                "python", "./FastSurferCNN/data_loader/conform.py",
-                "-i", input_path,
-                "-o", output_path,
-                "--conform_min",
-                "--verbose",
-                "--order", str(order),
-                "--dtype", dtype
-            ]
-
-            # Add the --seg_input flag if specified
-            if seg_input:
-                command.append("--seg_input")
-
-            # Run the command
-            subprocess.run(command, check=True)
+            # Call the conform function
+            conform(input_path, output_path, order, dtype, seg_input)
             print(f"Processed {filename}")
 
     # Save rename mapping if renaming was done
@@ -51,8 +55,8 @@ def conform_images(input_dir, output_dir, order, rename, dtype, seg_input):
         rename_df.to_csv(os.path.join(output_dir, 'rename_mapping.csv'), index=False)
         print(f"Rename mapping saved to {os.path.join(output_dir, 'rename_mapping.csv')}")
 
+def main():
 
-if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Conform NIfTI images in a directory.")
     parser.add_argument("-i", "--input_dir", required=True, help="Path to the input directory containing NIfTI images.")
     parser.add_argument("-o", "--output_dir",
@@ -61,10 +65,13 @@ if __name__ == "__main__":
     parser.add_argument("--rename", action='store_true',
                         help="Rename conformed images in a chronological order and save the mapping to a CSV file.")
     parser.add_argument("--dtype", type=str, default="float32",
-                        help="Data type to use for the conformed images (default: float32. Other options: uin8, int16, int32).")
+                        help="Data type to use for the conformed images (default: float32. Other options: uint8, int16, int32).")
     parser.add_argument("--seg_input", action='store_true',
-                        help="Indicate that the image to be conformed is a label map.")
+                        help="Indicate that the image to be conformed is a label map and nearest neighbor interpolation will be used instead of linear interpolation or spline.")
 
     args = parser.parse_args()
 
     conform_images(args.input_dir, args.output_dir, args.order, args.rename, args.dtype, args.seg_input)
+
+if __name__ == "__main__":
+    main()
