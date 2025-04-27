@@ -20,41 +20,34 @@ The Generalized and Optimized segmentation tool for Ultra-High Field Images (GOU
 
 ## Installation
 
-### Step 0: Create a Python virtual environment
+### Step 1: Create a Python virtual environment
 
 - As for any Python project, we highly recommend you to install GOUHFI inside a virtual environment. Whether you use pip, anaconda or miniconda is up to you. 
 - Once your (empty) virtual environment is created, execute the following steps inside this virtual environment.
 - Relevant links related to [conda](https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/20/conda/) in general or [its installation](https://docs.conda.io/projects/conda/en/stable/user-guide/install/linux.html) for Ubuntu distributions (OS dependent).
 
-### Step 1: Install PyTorch 
+### Step 2: Install PyTorch 
 
 - Follow the instructions on the [PyTorch website](https://pytorch.org/get-started/locally/) to install the stable PyTorch version based on your OS, package manager, language (Python here) and compute platform (usually the latest CUDA is recommended).
 - This step **has to be done before** step 2 below as recommended by the nnUNet team. See step #1 [here](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/installation_instructions.md#installation-instructions).
 
-### Step 2: Install the repository locally
-
-#### Option 1: Install Directly from GitHub (Recommended)
+### Step 3: Clone & install the repository locally
 
 ```bash
-pip install git+https://github.com/mafortin/GOUHFI.git
-```
-
----
-
-#### Option 2: Clone and Install Locally
-
-```bash
+cd path/where/you/want/gouhfi/to/be/installed
 git clone https://github.com/mafortin/GOUHFI.git
 cd GOUHFI
 pip install -e .
 ```
 
-### Step 3: Download the trained model weights
+---
 
-1) A Zenodo link to the trained model weights is included in the repository under `trained_model/` subdirectory or simply with this [link](https://zenodo.org/records/15255556). This might require you to have a Zenodo account (free).
+### Step 4: Download the trained model weights
+
+1) A Zenodo link to the trained model weights is included in the repository in the `trained_model/gouhfi-trained-model-weights.md` file or simply with this [link](https://zenodo.org/records/15255556). This might require you to have a Zenodo account (free).
 2) Move this `GOUHFI.zip` in the `trained-model` folder before unzipping it.
 
-### Step 4: Unzip the `GOUHFI.zip`
+### Step 5: Unzip the `GOUHFI.zip`
 
 - To unzip `GOUHFI.zip`, use the following command:
 ```bash
@@ -65,7 +58,7 @@ unzip GOUHFI.zip
 - Once unzipped, you should have a folder called `Dataset014_gouhfi` with all trained folds and related files in the `trained_model` folder.
 
 
-### Step 5: Test the installation
+### Step 6: Test the installation
 
 - In your terminal, type:
 
