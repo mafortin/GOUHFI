@@ -71,10 +71,14 @@ Add the following line to your `.bashrc` or `.zshrc` file (depending which shell
 ```bash
 export GOUHFI_HOME=/full/path/to/GOUHFI
 ```
-- You can double-check if this step worked properly by typing in your terminal:
+- where `/full/path/to/GOUHFI` is the full path to your GOUHFI installation directory. 
+
+You can double-check if this step worked properly by typing in your terminal:
 ```bash
-echo ${GOUHFI_HOME}
+source ~/.bashrc
+echo $GOUHFI_HOME
 ```
+- where `~/.bashrc` can be `~/.zshrc`.
 
 - For more information, the [nnUNet documentation](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/set_environment_variables.md) on how to do this is quite helpful.
 
@@ -96,16 +100,16 @@ run_goufhi --help
 ### Run Inference
 
 ```bash
-run_goufhi --input /path/to/input/folder/ --output path/to/output/folder/
+run_goufhi -i /path/to/input/folder/ -o path/to/output/folder/
 ```
 
 | Argument  | Description                        |
 |-----------|------------------------------------|
-| `--input`  | Path to the directory containing the input image(s) to be segmented. |
-| `--output` | Folder where the segmentations will be saved. |
+| `-i`/`--input_dir`  | Path to the directory containing the input image(s) to be segmented. |
+| `-o`/`--output_dir` | Folder where the segmentations will be saved. |
 
 - This command runs the model on your input image(s) and saves the corresponding output segmentations/label maps to the specified folder.
-- Moreover, this command **needs** to be performed inside your newly created virtual python environment (see step 0 from [go to instllation](#installation)).
+- Moreover, this command **needs** to be performed inside your newly created virtual python environment (see step 0 from [go to installation](#installation)).
 
 ---
 
