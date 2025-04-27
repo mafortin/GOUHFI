@@ -27,7 +27,9 @@ keywords = [
 
 dependencies = [
     "nnunetv2",
-    "antspynet"
+    "ants",
+    "antspynet",
+    "skimage"
 ]
 
 [project.urls]
@@ -37,6 +39,7 @@ repository = "https://github.com/mafortin/GOUHFI"
 [project.scripts]
 run_goufhi = "run-inference.inf-postpro-eval-nnunet:main"
 run_conforming = "data-utils.conform_images:main"
+run_brain_extraction = "data-utils.brain_extraction_antspynet:main"
 
 [build-system]
 requires = ["setuptools", "wheel"]
