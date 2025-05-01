@@ -288,7 +288,7 @@ Generating synthetic images for training:
             1) Swapping the original *labels_classes_priors* files from SynthSeg in the [2-generation_explained.py](https://github.com/BBillot/SynthSeg/blob/master/scripts/tutorials/2-generation_explained.py) file by the ones shared in the [/misc/](https://github.com/mafortin/GOUHFI/tree/main/misc) subdirectory here in this repository (the four `.npy` files),
             2) setting the variable `n_neutral_labels` to 6 and `randomise_res` to False, and
             3) using the model parameters described in the appendices of the paper (under submission) for the generative model,
-            You can create synthetic images for label maps containing the 'Extra-Cerebral' label (see the `run_add_label` command on how to perform this). 
+            - You can create synthetic images for label maps containing the 'Extra-Cerebral' label (see the `run_add_label` command on how to perform this). 
     - More details about the generative model can be found in the [brain_generator.py](https://github.com/BBillot/SynthSeg/blob/master/SynthSeg/brain_generator.py) script and questions about the generative model should be addressed to the [SynthSeg team](https://github.com/BBillot/SynthSeg).
 
 ---
