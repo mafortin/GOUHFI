@@ -125,14 +125,14 @@ run_gouhfi.py -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0
 - File:
     - Format: compressed NIfTI (`.nii.gz`)
     - Naming convention: The nnUNet naming convention (i.e., `{CASE_IDENTIFIER}_0000.nii.gz`). More details [here](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/dataset_format_inference.md).
-    - If you have >1 image to segment, all images should be inside the input directory defined by `--input` under distinctive filenames, and **not** inside different sub-directories. The output segmentations will follow the same naming convention as the input filenames minus the `_0000` string.  
+    - If you have >1 image to segment, all images should be inside the input directory defined by `--input_dir` under distinctive filenames, and **not** inside different sub-directories. The output segmentations will follow the same naming convention as the input filenames minus the `_0000` string.  
 
 - Image:
     - Contrast: Any
-    - Resolution: Any (resampling to isotropic resolution is processed internally. Not tested for highly anisotropic images, but always worth a try.)
+    - Resolution: Any (resampling to isotropic resolution is processed internally. Not tested for highly anisotropic images, but always worth a try).
     - Field Strength: Any (extensively validated at 3T, 7T and 9.4T)
-    - Orientation: LIA (like FastSurfer [see the `run_conforming` command below])
-    - Brain-extracted/Skull-stripped [see the `run_brain_extraction` command below]
+    - Orientation: LIA (like FastSurfer [see the [run_conforming](#run_conforming)])
+    - Brain-extracted/Skull-stripped [see the [run_brain_extraction](#run_brain_extraction)]
 
 
 #### Output
