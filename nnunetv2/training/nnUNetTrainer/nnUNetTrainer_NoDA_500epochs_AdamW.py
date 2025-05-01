@@ -1,7 +1,6 @@
 import torch
-import torch.nn as nn
-from torch.optim import Adam, AdamW # Added by MAF
-from nnunet.nnunetv2.training.lr_scheduler.polylr import PolyLRScheduler
+from torch.optim import AdamW
+from nnunetv2.training.lr_scheduler.polylr import PolyLRScheduler
 from nnunetv2.training.nnUNetTrainer.nnUNetTrainer import nnUNetTrainer
 from typing import Union, Tuple, List
 import numpy as np
