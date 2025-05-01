@@ -21,9 +21,10 @@
 import os
 import argparse
 import pandas as pd
-from fastsurfer.conform import conform 
+from data_utils.fastsurfer.conform import conform 
 
-def conform_images(input_dir, output_dir, order, rename, dtype, seg_input):
+def conform_images(input_dir, output_dir, order, rename, dtype, seg_input, conform_vox_size="min"):
+
     # Ensure output directory exists
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
@@ -46,8 +47,8 @@ def conform_images(input_dir, output_dir, order, rename, dtype, seg_input):
                 output_path = os.path.join(output_dir, filename)
 
             # Call the conform function
-            conform(input_path, output_path, order, dtype, seg_input)
-            print(f"Processed {filename}")
+            conform(img=input_path, order=order, conform_vox_size=conform_vox_size, dtype=dtype)
+            print(f"Conformed {filename} to {output_path}")
 
     # Save rename mapping if renaming was done
     if rename:
@@ -68,10 +69,12 @@ def main():
                         help="Data type to use for the conformed images (default: float32. Other options: uint8, int16, int32).")
     parser.add_argument("--seg_input", action='store_true',
                         help="Indicate that the image to be conformed is a label map and nearest neighbor interpolation will be used instead of linear interpolation or spline.")
+    parser.add_argument("--vol_size_cfm", type=str, default="min",
+                        help="Voxel size for conforming. Options: 'min' (default), or a specific size in mm (e.g., '1.0').")
 
     args = parser.parse_args()
-
-    conform_images(args.input_dir, args.output_dir, args.order, args.rename, args.dtype, args.seg_input)
+    
+    conform_images(args.input_dir, args.output_dir, args.order, args.rename, args.dtype, args.seg_input, args.vol_size_cfm)
 
 if __name__ == "__main__":
     main()
