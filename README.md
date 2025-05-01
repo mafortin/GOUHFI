@@ -229,13 +229,13 @@ run_renaming -i /path/to/input_dir -o /path/to/output_dir [--start_substring ./m
 | `--end_substring`      | `_`            | Substring that marks the end of the subject ID within filenames. See `--start_substring` for default behavior if omitted.                                   |
 | `--segms`              | -              | Use this flag if the files are label maps. The renamed files will **not** include the `_0000` suffix.                                                       |
 
-A `subject_id_correspondence.json` file will be created and saved in `input_dir` to keep tract of the correspondence between the old and new filenames.
+- **Note**: A `subject_id_correspondence.json` file will be created and saved in `input_dir` to keep tract of the correspondence between the old and new filenames.
 
 
 ### `run_add_label`:
 
-- If you want to reproduce what we did for creating the synthetic images for training from label maps with the addition 'Extra-Cerebral' label, use the following shown below.
-    - As mentioned in [Third-Party softwares related to GOUHFI](#third-party-softwares-related-to-gouhfi), this repository does **not** include the necessary codes to create synthetic images. Please refer to [SynthSeg's repository](https://github.com/BBillot/SynthSeg) for this.
+- If you want to reproduce what we did for creating the synthetic images for training from label maps with the additional 'Extra-Cerebral' label, use the following shown below.
+    - As mentioned in [Third-Party softwares related to GOUHFI](#third-party-softwares-related-to-gouhfi), this repository does **not** include the necessary scripts to create synthetic images from SynthSeg. Please refer to [SynthSeg's repository](https://github.com/BBillot/SynthSeg) for this.
 
 ```bash
 run_add_label -i /path/to/input_dir -o /path/to/output_dir [--labelmap aseg] [--mask mask.mgz] [--image orig.mgz] [--dilate-iters 4] [--save_new_mask] [--new_label 257] [--fill_holes] [--new_labelmap_name aseg_mod.nii.gz]
@@ -244,7 +244,7 @@ run_add_label -i /path/to/input_dir -o /path/to/output_dir [--labelmap aseg] [--
 
 | Argument               | Default                          | Description                                                                                                                     |
 |------------------------|----------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
-| `-i`, `--input_dir`     | -                                | Directory containing input files (label map, mask, and MRI image) (required).                                                  |
+| `-i`, `--input_dir`     | -                                | Directory containing input files (label map, mask, and MRI image inside the **same** fodler) (required).                                                  |
 | `-o`, `--output_dir`    | -                                | Directory to save the output files. If not provided, defaults to the input directory.                                          |
 | `--labelmap`            | `aseg`                           | Substring to identify the label map file (e.g., 'aseg.mgz').                                                                   |
 | `--mask`                | `mask.mgz`                       | Substring to identify the mask file (e.g., 'mask.mgz').                                                                         |
