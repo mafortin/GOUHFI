@@ -23,7 +23,7 @@ import os
 import time
 
 
-def run_inference(dataset_id, input_dir, output_dir, config, trainer, plan, folds, num_pr):
+def run_inference(dataset_id, input_dir, output_dir, config, trainer, plan, folds, num_pr, cpu):
     start_time = time.time()
     # Command for inference
     inference_command = [
@@ -40,6 +40,11 @@ def run_inference(dataset_id, input_dir, output_dir, config, trainer, plan, fold
                             "-npp", str(num_pr),
                             "-nps", str(num_pr)
                         ]
+    # Add '-device cpu' if cpu is True
+    if cpu:
+        inference_command.append("-device")
+        inference_command.append("cpu")
+    
     print(f"Running inference with the following command: {' '.join(inference_command)}")
     subprocess.run(inference_command)
     end_time = time.time()
@@ -137,6 +142,7 @@ def main():
     parser.add_argument("--np", type=int, default=8, help="Number of CPU processes to run post-processing in parallel. Depends on your CPU.")
     parser.add_argument("--folds", default="0 1 2 3 4", help="Folds to use for inference. By default all folds are used and combined together.")
     parser.add_argument("--reorder_labels", action="store_true", help="Set flag if you want to reorder the label values from GOUHFI's values to the FreeSurfer lookuptable after post-processing.")
+    parser.add_argument("--cpu", action="store_true", help="Set flag to use the CPU to run the inference. Expect a considerable increase in inference time.")
 
     # Parse arguments
     args = parser.parse_args()
@@ -146,7 +152,8 @@ def main():
         output_dir=args.output_dir,
         np=args.np,
         folds=args.folds,
-        reorder_labels=args.reorder_labels
+        reorder_labels=args.reorder_labels,
+        cpu=args.cpu
     )
 
 
