@@ -124,7 +124,7 @@ run_gouhfi.py -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0
 
 - File:
     - Format: compressed NIfTI (`.nii.gz`)
-    - Naming convention: The nnUNet naming convention (i.e., `{SUBJECT_ID}_0000.nii.gz`). More details [here](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/dataset_format_inference.md).
+    - Naming convention: The nnUNet naming convention (i.e., `{SUBJECT_ID}_0000.nii.gz`). More details [here](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/dataset_format_inference.md). See [run_renaming](#run_renaming) if not the case.
     - If you have >1 image to segment, all images should be inside the input directory defined by `--input_dir` under distinctive filenames, and **not** inside different sub-directories. The output segmentations will follow the same naming convention as the input filenames minus the `_0000` string.  
 
 - Image:
@@ -193,10 +193,11 @@ run_brain_extraction -i /path/to/input_dir [-o /path/to/output_dir] [--modality 
 
 ### `run_labels_reordering`:
 
-- If you did not use the `--reorder_labels` flag when running `run_gouhfi`, you can reorder the labels using the `run_labels_reordering` command as shown below. Once reordered, your label maps can be used in the same quantiative pipeline as label maps produced by *FreeSurfer*/*FastSurfer*.
+- If you did not use the `--reorder_labels` flag when running `run_gouhfi`, you can reorder the labels using the `run_labels_reordering` command as shown below. 
+- Once reordered, your label maps can be used in the same quantiative pipeline as label maps produced by *FreeSurfer*/*FastSurfer*.
 
 ```bash
-run_labels_reordering -i /path/to/input_dir -o /path/to/output_dir --old_labels_file ./misc/gouhfi-label-list-lut.txt --new_labels_file ./misc/freesurfer-label-list-lut.txt
+run_labels_reordering -i /path/to/input_dir [-o /path/to/output_dir] --old_labels_file ./misc/gouhfi-label-list-lut.txt --new_labels_file ./misc/freesurfer-label-list-lut.txt
 ```
 
 #### Arguments
@@ -212,10 +213,10 @@ run_labels_reordering -i /path/to/input_dir -o /path/to/output_dir --old_labels_
 
 ### `run_renaming`:
 
-If your images are ready to be segmented, but do not respect the nnunet naming convention, you cna use the command `run_renaming` as shown here:
+- If your images are ready to be segmented, but do not respect the [nnunet naming convention](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/dataset_format_inference.md), you can use the `run_renaming` command as shown here:
 
 ```bash
-run_renaming -i /path/to/input_dir -o /path/to/output_dir --old_labels_file ./misc/gouhfi-label-list-lut.txt --new_labels_file ./misc/freesurfer-label-list-lut.txt
+run_renaming -i /path/to/input_dir -o /path/to/output_dir [--start_substring ./misc/gouhfi-label-list-lut.txt --end_substring ./misc/freesurfer-label-list-lut.txt --segms]
 ```
 
 #### Arguments
