@@ -95,10 +95,12 @@ run_goufhi --help
 
 ### Run Inference:
 
-The command `run_gouhfi` is used to run the inference (i.e., segment your images using the trained model), apply the post-processing and, if desired, reorder the label values in the segmentations from GOUHFI's lookuptable (LUT) (i.e., linearly increasing from 0 to 35) to FreeSurfer's LUT (optional).
+- The command `run_gouhfi` is used to run the inference (i.e., segment your images using the trained model), apply the post-processing and, if desired, reorder the label values in the segmentations from GOUHFI's lookuptable (LUT) (i.e., linearly increasing from 0 to 35) to FreeSurfer's LUT (optional). 
+- We recommend using a GPU (anything with ~10 Gb of more of VRAM should be strong enough) to run the inference (ca. ~10 sec/subject and can be roughly 50-75 times longer on the cpu).
+- A few images are available for testing purposes in the `test_data` directory.
 
 ```bash
-run_gouhfi.py -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0 1 2"] [--reorder_labels] [--help]
+run_gouhfi.py -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0 1 2"] [--reorder_labels] [--help] [--cpu]
 ```
 
 ### Arguments
@@ -110,7 +112,7 @@ run_gouhfi.py -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0
 | `--np`                | `int`   | `8`                                                                  | Number of parallel CPU processes to use during post-processing.                            |
 | `--folds`             | `str`   | `"0 1 2 3 4"`                                                        | Space-separated string of folds to use for inference (we recommend to use all).            |
 | `--reorder_labels`    | `flag`  | `False`                                                              | If set, reorders label values from GOUHFI's LUT to FreeSurfer's LUT after post-processing. |
-
+| `--cpu`               | `flag`  | `False`                                                              | If set, the cpu will be used instead of the GPU for running the inference.                 |
 
 #### Input Requirements
 
