@@ -1,8 +1,8 @@
 import torch
 import torch.nn as nn
 from torch.optim import Adam, AdamW # Added by MAF
-from nnUNetv2.training.lr_scheduler.polylr import PolyLRScheduler
-from nnUNetv2.training.nnUNetTrainer.nnUNetTrainer import nnUNetTrainer
+from nnunet.nnunetv2.training.lr_scheduler.polylr import PolyLRScheduler
+from nnunetv2.training.nnUNetTrainer.nnUNetTrainer import nnUNetTrainer
 from typing import Union, Tuple, List
 import numpy as np
 from batchgeneratorsv2.helpers.scalar_type import RandomScalar
@@ -10,7 +10,7 @@ from batchgeneratorsv2.transforms.base.basic_transform import BasicTransform
 
 class nnUNetTrainer_NoDA_500epochs_AdamW(nnUNetTrainer):
 
-    # MAF: setting the max number of epochs to 500 instead of 1000. Can be set to anything to be honest, just modify the value three lines below.
+    # Setting the max number of epochs to 500 instead of 1000. Can be set to anything to be honest, just modify the value three lines below.
     def __init__(self, plans: dict, configuration: str, fold: int, dataset_json: dict, unpack_dataset: bool = True,
                  device: torch.device = torch.device('cuda')):
         super().__init__(plans, configuration, fold, dataset_json, unpack_dataset, device)
@@ -18,13 +18,14 @@ class nnUNetTrainer_NoDA_500epochs_AdamW(nnUNetTrainer):
 
     # Set adamW as the new optimizer + set new base Learning Rate
     def configure_optimizers(self):
+
         self.initial_lr = 3e-4 # Base Learning Rate
         optimizer = AdamW(self.network.parameters(), lr=self.initial_lr, weight_decay=self.weight_decay, amsgrad=True) # Optimizer
         lr_scheduler = PolyLRScheduler(optimizer, self.initial_lr, self.num_epochs) # Learning Rate Scheduler
 
         return optimizer, lr_scheduler
 
-    # MAF: This is the part for removing the Data Augmentation step.
+    # This is the part where we remove the Data Augmentation step.
     @staticmethod
     def get_training_transforms(
             patch_size: Union[np.ndarray, Tuple[int]],
