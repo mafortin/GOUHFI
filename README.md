@@ -143,50 +143,70 @@ Segmentation/Label map:
 
 ---
 
-### Run conforming
+### Run conforming:
 
 The command `run_conforming` conforms all `.nii` or `.nii.gz` images in a specified input directory using FastSurfer’s `conform.py` script. The output will be saved to a specified directory or to a default `inputs-cfm/` directory.
 
 ```bash
-run_conforming -i /path/to/input_dir [-o /path/to/input_dir] [--order 3] [--dtype float32] [--seg_input]
+run_conforming -i /path/to/input_dir [-o /path/to/output_dir] [--order 3] [--dtype float32] [--seg_input]
 ```
 
-### Arguments
+#### Arguments
 
 | Argument             | Default                   | Description                                                                                                 |
-|----------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
+|----------------------|---------------------------|-------------------------------------------------------------------------------------------------------------|
 | `-i`, `--input_dir`  | -                         | Path to directory containing input NIfTI files (required).                                                  |
 | `-o`, `--output_dir` | *input_dir*/`inputs-cfm/` | Directory to save the conformed images. If not set, defaults to `inputs-cfm` next to input.                 |
 | `--order`            | `3`                       | Interpolation order for resampling. Common values: 0 (nearest), 1 (linear), 3 (cubic spline).               |
 | `--dtype`            | `"float32"`               | Data type of output images. Options include: `float32`, `uint8`, `int16`, `int32`.                          |
 | `--seg_input`        | *False*                   | Use this flag if the input images are label maps (e.g. segmentations). Uses nearest-neighbor interpolation. |
 
+
 ---
 
-### Run brain extraction
+### Run brain extraction:
 
 
 The command `run_conforming` conforms all `.nii` or `.nii.gz` images in a specified input directory using FastSurfer’s `conform.py` script. The output will be saved to a specified directory or to a default `inputs-cfm/` directory.
 
 ```bash
-run_brain_extraction -i /path/to/input_dir [-o /path/to/input_dir] [--order 3] [--dtype float32] [--seg_input]
+run_brain_extraction -i /path/to/input_dir [-o /path/to/output_dir] [--order 3] [--dtype float32] [--seg_input]
 ```
 
-### Arguments
+#### Arguments
 
 | Argument             | Default        | Description                                                                                                                            |
-|----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+|----------------------|----------------|----------------------------------------------------------------------------------------------------------------------------------------|
 | `-i`, `--input_dir`  | -              | Path to directory containing input NIfTI files (required).                                                                             |
 | `-o`, `--output_dir` | -              | Directory to save the conformed images. If not set, defaults to `inputs-cfm` next to input.                                            |
-| `--modality`         | `t1`           | Modality for brain extraction (default: t1)                                                                                            |
-| `--skip_morpho`      | -              |  Skip morphological operations on the brain mask and directly save the newly brain extracted image(s).                                 |
+| `--modality`         | `t1`           | Modality for brain extraction (default: t1).                                                                                           |
+| `--skip_morpho`      | -              | Skip morphological operations on the brain mask and directly save the newly brain-extracted image(s).                                 |
 | `--dilation_voxels`  | 0              | Number of voxels for dilation (default: 0).                                                                                            |
-|  `--rename`          | -              | Flag to rename the brain extracted image(s) by adding the '_masked' suffix. Otherwise, brain extracted images will keep the same name. |
-|  `--mask_folder`     | -              | Path to the folder containing masks for morphological operations (requires the have the morphological operations on).                  |
+| `--rename`           | -              | Flag to rename the brain-extracted image(s) by adding the '_masked' suffix. Otherwise, brain extracted images will keep the same name. |
+| `--mask_folder`      | -              | Path to the folder containing masks for morphological operations (requires the morphological operations to be applied).               |
+
 
 ---
 
-### Run label reordering
+### Run label map reordering:
+
+If you did not use the `--reorder_labels` flag when running `run_gouhfi`, you can reorder the labels using the `run_labels_reordering` command as shown below.
+
+```bash
+run_labels_reordering -i /path/to/input_dir -o /path/to/output_dir --old_labels_file ./misc/gouhfi-label-list-lut.txt --new_labels_file ./misc/freesurfer-label-list-lut.txt
+```
+
+#### Arguments
+
+| Argument             | Default        | Description                                                                                                                       |
+|----------------------|----------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| `-i`, `--input_dir`  | -              | Path to the input directory containing label maps (required).                                                                      |
+| `-o`, `--output_dir` | -              | Path to the output directory to save processed label maps (optional).                                                               |
+| `--old_labels_file`  | -              | Path to the text file containing GOUHFI's label definitions (label IDs and names) [in the `/misc/` subdirectory] (required).        |
+| `--new_labels_file`  | -              | Path to the text file containing FreeSurfer/new label definitions (label IDs and names) [in the `/misc/` subdirectory] (required). |
+
+
+---
 
 ## Citation
 
