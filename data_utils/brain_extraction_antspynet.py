@@ -18,8 +18,8 @@
 # under the terms of the Apache License, Version 2.0.
 #---------------------------------------------------------------------------------#
 
-
 import os
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"  # Suppress INFO, WARNING, and ERROR logs from TensorFlow
 import ants
 import antspynet
 import argparse
@@ -28,8 +28,7 @@ from scipy.ndimage import label
 from skimage.morphology import binary_closing, ball, binary_dilation
 
 
-def brain_extraction(input_folder, output_folder=None, modality="t1", skip_morpho=False, mask_folder=None,
-                     dilation_voxels=0):
+def brain_extraction(input_folder, output_folder=None, modality="t1", skip_morpho=False, mask_folder=None, dilation_voxels=0, rename=False):
     if output_folder is None:
         output_folder = input_folder
 
@@ -101,10 +100,14 @@ def brain_extraction(input_folder, output_folder=None, modality="t1", skip_morph
                 input_path = os.path.join(input_folder, filename)
                 input_basename = os.path.basename(input_path)
 
-                if ".nii.gz" in input_basename:
-                    new_output_name = os.path.splitext(os.path.splitext(input_basename)[0])[0] + "_masked.nii.gz"
+                if rename:
+                    if ".nii.gz" in input_basename:
+                        new_output_name = os.path.splitext(os.path.splitext(input_basename)[0])[0] + "_masked.nii.gz"
+                    else:
+                        new_output_name = os.path.splitext(os.path.splitext(input_basename)[0])[0] + "_masked.nii"
                 else:
-                    new_output_name = os.path.splitext(os.path.splitext(input_basename)[0])[0] + "_masked.nii"
+                    new_output_name = input_basename
+
 
                 output_path = os.path.join(output_folder, new_output_name)
                 new_mask_name = 'mask_' + input_basename
@@ -117,9 +120,15 @@ def brain_extraction(input_folder, output_folder=None, modality="t1", skip_morph
                 initial_mask = antspynet.brain_extraction(image, modality=modality)
 
                 if skip_morpho:
-                    # Save the initial mask without morphological operations
-                    ants.image_write(initial_mask, mask_output_path)
-                    print(f"Initial mask saved to {mask_output_path}")
+                
+                    # Convert the brain-extracted image to a binary mask
+                    binary_mask = initial_mask.numpy() > 0.01
+                    # Apply the mask to the original image
+                    masked_image = image * binary_mask
+
+                    ants.image_write(masked_image, output_path)
+                    print(f"Brain extraction completed for {filename}, saved to {output_path}")
+
                 else:
                     # Convert the brain-extracted image to a binary mask
                     binary_mask = initial_mask.numpy() > 0.01
@@ -159,15 +168,16 @@ def main():
                         help="Path to the output folder (default: input folder)")
     parser.add_argument("--modality", type=str, default="t1", help="Modality for brain extraction (default: t1)")
     parser.add_argument("--skip_morpho", action="store_true",
-                        help="Skip morphological operations and only save the newly created masks")
+                        help="Skip morphological operations and only save the newly brain extracted image(s).")
     parser.add_argument("--mask_folder", type=str,
                         help="Path to the folder containing masks for morphological operations")
     parser.add_argument("--dilation_voxels", type=int, default=0, help="Number of voxels for dilation (default: 0)")
+    parser.add_argument("--rename", action="store_true", help="Flag to rename the brain extracted image(s) by adding the '_masked' suffix. Otherwise, brain extracted images will keep the same name.")
 
     args = parser.parse_args()
 
     brain_extraction(args.input_dir, args.output_dir, args.modality, args.skip_morpho, args.mask_folder,
-                     args.dilation_voxels)
+                     args.dilation_voxels, args.rename)
 
 if __name__ == "__main__":
     main()
