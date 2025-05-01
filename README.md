@@ -147,7 +147,7 @@ Segmentation/Label map:
 
 ### `run_conforming`:
 
-- The command `run_conforming` *conforms* all `.nii` or `.nii.gz` images in a specified input directory using FastSurfer’s `conform.py` script.
+- The command `run_conforming` *conforms* all the `.nii` or `.nii.gz` images found in the specified input directory using FastSurfer’s `conform.py` script.
 - This step basically reorients your image to LIA orientation, rescales the values between 0 and 255 and resamples the image to the minimal isotropic resolution (i.e., to the smallest voxel dimension). More details [here](https://github.com/deep-mi/FastSurfer/blob/dev/FastSurferCNN/data_loader/conform.py).
 
 ```bash
@@ -170,10 +170,10 @@ run_conforming -i /path/to/input_dir [-o /path/to/output_dir] [--order 3] [--dty
 ### `run_brain_extraction`:
 
 
-The command `run_conforming` conforms all `.nii` or `.nii.gz` images in a specified input directory using FastSurfer’s `conform.py` script. The output will be saved to a specified directory or to a default `inputs-cfm/` directory.
+- The command `run_brain_extraction` brain-extracts/skull-strips all the `.nii` or `.nii.gz` images found in the specified input directory using `antspynet.brain_extraction` function.
 
 ```bash
-run_brain_extraction -i /path/to/input_dir [-o /path/to/output_dir] [--order 3] [--dtype float32] [--seg_input]
+run_brain_extraction -i /path/to/input_dir [-o /path/to/output_dir] [--modality t1] [--dilatation_voxels 2] [--mask_folder /path/to/new/masked] [--skip_morpho --rename ]
 ```
 
 #### Arguments
@@ -193,7 +193,7 @@ run_brain_extraction -i /path/to/input_dir [-o /path/to/output_dir] [--order 3] 
 
 ### `run_labels_reordering`:
 
-If you did not use the `--reorder_labels` flag when running `run_gouhfi`, you can reorder the labels using the `run_labels_reordering` command as shown below. Once reordered, your label maps can be used in the same quantiative pipeline as label maps produced by *FreeSurfer*/*FastSurfer*.
+- If you did not use the `--reorder_labels` flag when running `run_gouhfi`, you can reorder the labels using the `run_labels_reordering` command as shown below. Once reordered, your label maps can be used in the same quantiative pipeline as label maps produced by *FreeSurfer*/*FastSurfer*.
 
 ```bash
 run_labels_reordering -i /path/to/input_dir -o /path/to/output_dir --old_labels_file ./misc/gouhfi-label-list-lut.txt --new_labels_file ./misc/freesurfer-label-list-lut.txt
