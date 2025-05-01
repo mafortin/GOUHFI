@@ -1,8 +1,8 @@
 import torch
 import torch.nn as nn
 from torch.optim import Adam, AdamW # Added by MAF
-from trainer.training.lr_scheduler.polylr import PolyLRScheduler
-from trainer.training.nnUNetTrainer.nnUNetTrainer import nnUNetTrainer
+from nnUNetv2.training.lr_scheduler.polylr import PolyLRScheduler
+from nnUNetv2.training.nnUNetTrainer.nnUNetTrainer import nnUNetTrainer
 from typing import Union, Tuple, List
 import numpy as np
 from batchgeneratorsv2.helpers.scalar_type import RandomScalar
