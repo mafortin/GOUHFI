@@ -124,30 +124,31 @@ run_gouhfi.py -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0
 
 - File:
     - Format: compressed NIfTI (`.nii.gz`)
-    - Naming convention: The nnUNet naming convention (i.e., `{CASE_IDENTIFIER}_0000.nii.gz`). More details [here](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/dataset_format_inference.md).
+    - Naming convention: The nnUNet naming convention (i.e., `{SUBJECT_ID}_0000.nii.gz`). More details [here](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/dataset_format_inference.md).
     - If you have >1 image to segment, all images should be inside the input directory defined by `--input_dir` under distinctive filenames, and **not** inside different sub-directories. The output segmentations will follow the same naming convention as the input filenames minus the `_0000` string.  
 
 - Image:
     - Contrast: Any
     - Resolution: Any (resampling to isotropic resolution is processed internally. Not tested for highly anisotropic images, but always worth a try).
     - Field Strength: Any (extensively validated at 3T, 7T and 9.4T)
-    - Orientation: LIA (like FastSurfer [see the [run_conforming](#run_conforming)])
-    - Brain-extracted/Skull-stripped [see the [run_brain_extraction](#run_brain_extraction)]
+    - Orientation: LIA (like FastSurfer [see [run_conforming](#run_conforming)])
+    - Brain-extracted/Skull-stripped [see [run_brain_extraction](#run_brain_extraction)]
 
 
-#### Output
+#### Outputs
 
 File:
-- `{CASE_IDENTIFIER}.nii.gz` —> Segmentation result/Label map for the `{CASE_IDENTIFIER}` subject.
+- `{SUBJECT_ID}.nii.gz` —> Segmentation/Label map for the `{SUBJECT_ID}` subject.
 
 Segmentation/Label map:
-- The labels are linearly ordered from 0 (background) to 35 by default. The complete list of labels is shown in file `misc/label-list-lut.txt`.
+- The labels are linearly ordered from 0 (background) to 35 by default if not reordered as described above. The complete list of labels is shown in file [misc/gouhfi-label-list-lut.txt](https://github.com/mafortin/GOUHFI/blob/main/misc/gouhfi-label-list-lut.txt).
 
 ---
 
 ### `run_conforming`:
 
-The command `run_conforming` conforms all `.nii` or `.nii.gz` images in a specified input directory using FastSurfer’s `conform.py` script. The output will be saved to a specified directory or to a default `inputs-cfm/` directory.
+- The command `run_conforming` *conforms* all `.nii` or `.nii.gz` images in a specified input directory using FastSurfer’s `conform.py` script.
+- This step basically reorients your image to LIA orientation, rescales the values between 0 and 255 and resamples the image to the minimal isotropic resolution (i.e., to the smallest voxel dimension). More details [here](https://github.com/deep-mi/FastSurfer/blob/dev/FastSurferCNN/data_loader/conform.py).
 
 ```bash
 run_conforming -i /path/to/input_dir [-o /path/to/output_dir] [--order 3] [--dtype float32] [--seg_input]
