@@ -27,7 +27,7 @@ import sys
 # Add the 'trainer' directory to the Python path so that the trainer can be found
 #sys.path.append(os.path.join(os.path.dirname(__file__), 'trainer'))
 # Import your custom trainer
-from nnunet.nnunetv2.training.nnUNetTrainer.nnUNetTrainer_NoDA_500epochs_AdamW import nnUNetTrainer_NoDA_500epochs_AdamW
+#from nnunetv2.training.nnUNetTrainer.nnUNetTrainer_NoDA_500epochs_AdamW import nnUNetTrainer_NoDA_500epochs_AdamW
 
 
 def run_inference(dataset_id, input_dir, output_dir, config, trainer, plan, folds, num_pr):
@@ -92,7 +92,7 @@ def run_inference_postproc(dataset_id='014', input_dir=os.getcwd(), output_dir=o
     output_pp_dir = os.path.join(base_dir, "outputs_postprocessed")
     results_dir = os.path.join(gouhfi_home, "trained_model/Dataset014_gouhfi/nnUNetTrainer_NoDA_500epochs_AdamW__nnUNetResEncL__3d_fullres/crossval_results_folds_0_1_2_3_4")
     pp_pkl_file = os.path.join(results_dir, "postprocessing.pkl")
-    plans_json = os.path.join(gouhfi_home, "trained_model/Dataset014_gouhfi/nnUNetTrainer_NoDA_500epochs_AdamW__nnUNetResEncL__3d_fullres")
+    plans_json = os.path.join(gouhfi_home, "trained_model/Dataset014_gouhfi/nnUNetTrainer_NoDA_500epochs_AdamW__nnUNetResEncL__3d_fullres/plans.json")
 
     # Run inference
     inference_duration = run_inference(dataset_id, input_dir, output_dir, config, trainer, plan, folds_list, np)
