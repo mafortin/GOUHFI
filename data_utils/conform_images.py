@@ -20,10 +20,9 @@
 
 import os
 import argparse
-import pandas as pd
 import subprocess
 
-def conform_images(input_dir, output_dir, order, rename, dtype, seg_input):
+def conform_images(input_dir, output_dir, order, dtype, seg_input):
 
     # Ensure output directory exists
     if output_dir:
@@ -32,33 +31,15 @@ def conform_images(input_dir, output_dir, order, rename, dtype, seg_input):
         output_dir = os.path.join(os.path.dirname(input_dir), 'inputs-cfm')
         os.makedirs(output_dir, exist_ok=True)
 
-    # Prepare for renaming if needed
-    rename_mapping = []
-
     # Iterate over all files in the input directory
-    for idx, filename in enumerate(sorted(os.listdir(input_dir))):
+    for filename in sorted(os.listdir(input_dir)):
+
         if filename.endswith(".nii") or filename.endswith(".nii.gz"):
+            
             input_path = os.path.join(input_dir, filename)
-            if rename:
-                new_filename = f"image_{idx:04d}_0000.nii.gz" # Following nnUNet naming convention
-                output_path = os.path.join(output_dir, new_filename)
-                rename_mapping.append({'Old Filename': filename, 'New Filename': new_filename})
-            else:
-                output_path = os.path.join(output_dir, filename)
-
-
-            # Debugging print statements
-            print(f"Processing file: {filename}")
-            #print(f"Input path: {input_path}")
-            #print(f"Output path: {output_path}")
-            #print(f"Order: {order}, Conform voxel size: {conform_vox_size}, Data type: {dtype}")
-
-            gouhfi_home = os.environ.get("GOUHFI_HOME")
-            if not gouhfi_home:
-                raise EnvironmentError("The environment variable $GOUHFI_HOME is not set.")
+            output_path = os.path.join(output_dir, filename)
             
             # Construct the command
-            conform_script_path = os.path.join(gouhfi_home, "data_utils/fastsurfer/conform.py")
             conform_module = "data_utils.fastsurfer.conform"
             command = [
                 "python3", "-m", conform_module,
@@ -78,12 +59,6 @@ def conform_images(input_dir, output_dir, order, rename, dtype, seg_input):
             print("--------------------------------------------------------------")
 
 
-    # Save rename mapping if renaming was done
-    if rename:
-        rename_df = pd.DataFrame(rename_mapping)
-        rename_df.to_csv(os.path.join(output_dir, 'rename_mapping.csv'), index=False)
-        print(f"Rename mapping saved to {os.path.join(output_dir, 'rename_mapping.csv')}")
-
 def main():
 
     parser = argparse.ArgumentParser(description="Conform NIfTI images in a directory.")
@@ -91,8 +66,6 @@ def main():
     parser.add_argument("-o", "--output_dir",
                         help="Path to the output directory to save conformed images. If not provided, input files will be overwritten.")
     parser.add_argument("--order", type=int, default=3, help="Order of interpolation to use (default: 3).")
-    parser.add_argument("--rename", action='store_true',
-                        help="Rename conformed images in a chronological order and save the mapping to a CSV file.")
     parser.add_argument("--dtype", type=str, default="float32",
                         help="Data type to use for the conformed images (default: float32. Other options: uint8, int16, int32).")
     parser.add_argument("--seg_input", action='store_true',
@@ -100,7 +73,7 @@ def main():
 
     args = parser.parse_args()
     
-    conform_images(args.input_dir, args.output_dir, args.order, args.rename, args.dtype, args.seg_input)
+    conform_images(args.input_dir, args.output_dir, args.order, args.dtype, args.seg_input)
 
 if __name__ == "__main__":
     main()
