@@ -1,12 +1,12 @@
 # GOUHFI: novel contrast- and resolution-agnostic segmentation tool for Ultra-High Field MRI
  
-Welcome to **GOUHFI**, a novel deep learning (DL) tool for segmentation of brain MR images of **any** contrast, resolution or even field strength. This repository provides detailed instructions on [installation](#installation), [usage](#usage), [related work](#third-party-softwares-related-to-gouhfi) and [licensing](#license).
+Welcome to **GOUHFI**, a novel deep learning (DL) tool for segmentation of brain MR images of **any** contrast, resolution or even field strength. This repository provides detailed instructions on [Installation](#installation), [Usage](#usage), [Related work](#third-party-softwares-related-to-gouhfi) and [Licensing](#license).
 
 ---
 
 ## How was GOUHFI developed?
 
-GOUHFI is a fully automatic, contrast- and resolution-agnostic, DL-based brain segmentation tool optimized for Ultra-High Field MRI (UHF-MRI), while also demonstrating strong performance at 3T compared to other well-established techniques. Using the domain randomization approach proposed in [SynthSeg](https://github.com/BBillot/SynthSeg) and a state-of-the-art 3D U-Net with Residual Encoders from [nnUNetv2](https://github.com/MIC-DKFZ/nnUNet), GOUHFI is able to handle various contrasts, resolutions and even field strengths without requiring fine-tuning or retraining. Tested on multiple datasets, it showed high accuracy and impressive robustness to noise and inhomogeneities, making it a valuable tool for neuroscientists working at both 3T and UHF-MRI. For more details about how GOUHFI was developed please refer to the [following paper]() which i currently under submission.
+GOUHFI is a fully automatic, contrast- and resolution-agnostic, DL-based brain segmentation tool optimized for Ultra-High Field MRI (UHF-MRI), while also demonstrating strong performance at 3T compared to other well-established techniques. Using the domain randomization approach proposed in [SynthSeg](https://github.com/BBillot/SynthSeg) and a state-of-the-art 3D U-Net with Residual Encoders from the [nnUNetv2](https://github.com/MIC-DKFZ/nnUNet) framework, GOUHFI is able to handle various contrasts, resolutions and even field strengths without requiring fine-tuning or retraining. Tested on multiple datasets, it showed high accuracy and impressive robustness to noise and inhomogeneities, making it a valuable tool for neuroscientists working at both 3T and UHF-MRI. For more details on how GOUHFI was developed, please refer to the [following paper]() which i currently under submission.
 
 ![GOUHFI](figs/fig-readme.png)
 
@@ -23,15 +23,15 @@ GOUHFI is a fully automatic, contrast- and resolution-agnostic, DL-based brain s
 conda create --name gouhfi python=3.10 
 ```
 - `gouhfi` in the above command line is the name of the virtual environment and can be replaced by anything else if preferred.
-- Once your python virtual environment is created, you need to execute the remaining steps inside this virtual environment. Thus, activate thi virtual environment by typing:
+- Once your python virtual environment is created, you need to execute the remaining steps inside this virtual environment. Thus, activate the virtual environment by typing:
 ```bash
 conda activate gouhfi
 ```
 
 ### Step 2: Install PyTorch 
 
-- Follow the instructions on the [PyTorch website](https://pytorch.org/get-started/locally/) to install the stable PyTorch version based on your OS, package manager, language (Python here) and compute platform (CUDA 11.8 tested for GOUHFI, but your system requirements might be different).
-- This step **has to be done before** step 2 below as recommended by the nnUNet team. See step #1 [here](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/installation_instructions.md#installation-instructions).
+- Follow the instructions on the [PyTorch website](https://pytorch.org/get-started/locally/) to install the stable PyTorch version based on your OS (Linux, Mac or Windows), package manager (choose `pip` if unsure), language (Python) and compute platform (CUDA 11.8 was tested for GOUHFI, but your system requirements might be different and more recent versions probably work [but not tested]).
+- This step should be done before step 3 below [as recommended at step #1 here](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/installation_instructions.md#installation-instructions) by the nnUNet team. I do not know why, but better safe than sorry.
 
 
 ### Step 3: Clone & install the repository locally
