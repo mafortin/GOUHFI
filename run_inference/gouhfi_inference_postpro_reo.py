@@ -67,7 +67,7 @@ def apply_post_processing(input_dir, output_dir, pp_pkl_file, np, plans_json):
     return duration
 
 
-def reorder_labels(input_dir, output_dir, in_lut, out_lut):
+def apply_reordering(input_dir, output_dir, in_lut, out_lut):
     start_time = time.time()
     # Command for reordering labels
     reorder_command = [
@@ -84,7 +84,17 @@ def reorder_labels(input_dir, output_dir, in_lut, out_lut):
     print(f"Label reordering completed in {duration:.2f} seconds.")
     return duration
 
-def run_all(dataset_id='014', input_dir=os.getcwd(), output_dir=os.getcwd(), config="3d_fullres", trainer="nnUNetTrainer_NoDA_500epochs_AdamW", plan="nnUNetResEncL", np=8, folds="0 1 2 3 4", reorder_labels=False):
+def run_all(dataset_id='014', 
+            input_dir=os.getcwd(), 
+            output_dir=os.getcwd(), 
+            config="3d_fullres", 
+            trainer="nnUNetTrainer_NoDA_500epochs_AdamW", 
+            plan="nnUNetResEncL", 
+            np=8, 
+            folds="0 1 2 3 4", 
+            reorder_labels=False,
+            in_lut="/home/marcantf/Code/GOUHFI/misc/gouhfi-label-list-lut.txt",
+            out_lut="/home/marcantf/Code/GOUHFI/misc/freesurfer-label-list-lut.txt"):
 
     # Fetch the GOUHFI_HOME environment variable
     gouhfi_home = os.getenv('GOUHFI_HOME')
@@ -92,26 +102,30 @@ def run_all(dataset_id='014', input_dir=os.getcwd(), output_dir=os.getcwd(), con
         print("Error: GOUHFI_HOME is not set. Please set the GOUHFI_HOME environment variable as explained in the installation steps.")
         exit(1)
 
-    # Convert folds argument to a list of strings + Construct paths 
+    # Convert folds argument to a list of strings 
     folds_list = folds.split()
+    # Construct paths
     input_dir = input_dir.rstrip('/')
     base_dir = os.path.dirname(input_dir)
     output_dir = os.path.join(base_dir, "outputs")
     output_pp_dir = os.path.join(base_dir, "outputs_postprocessed")
-    results_dir = os.path.join(gouhfi_home, "trained_model/Dataset014_gouhfi/nnUNetTrainer_NoDA_500epochs_AdamW__nnUNetResEncL__3d_fullres/crossval_results_folds_0_1_2_3_4")
-    pp_pkl_file = os.path.join(results_dir, "postprocessing.pkl")
-    plans_json = os.path.join(gouhfi_home, "trained_model/Dataset014_gouhfi/nnUNetTrainer_NoDA_500epochs_AdamW__nnUNetResEncL__3d_fullres/plans.json")
+    pp_dir = os.path.join(gouhfi_home, "trained_model/Dataset014_gouhfi/nnUNetTrainer_NoDA_500epochs_AdamW__nnUNetResEncL__3d_fullres/crossval_results_folds_0_1_2_3_4")
+    pp_pkl_file = os.path.join(pp_dir, "postprocessing.pkl")
+    plans_dir = os.path.join(gouhfi_home, "trained_model/Dataset014_gouhfi/nnUNetTrainer_NoDA_500epochs_AdamW__nnUNetResEncL__3d_fullres")
+    plans_json_file = os.path.join(plans_dir, "plans.json")
+    output_pp_reo_dir = os.path.join(base_dir, "outputs_postprocessed_reordered")
+
 
     # Run inference
     inference_duration = run_inference(dataset_id, input_dir, output_dir, config, trainer, plan, folds_list, np)
 
     # Apply post-processing
-    post_processing_duration = apply_post_processing(output_dir, output_pp_dir, pp_pkl_file, np, plans_json)
+    post_processing_duration = apply_post_processing(output_dir, output_pp_dir, pp_pkl_file, np, plans_json_file)
 
     # Reorder label maps to Freesurfer's lookuptable
     if reorder_labels:
         print("Reordering label maps to Freesurfer's lookuptable...")
-        reordering_duration = reorder_labels(input_dir, output_dir, in_lut, out_lut)
+        reordering_duration = apply_reordering(input_dir=output_pp_dir, output_dir=output_pp_reo_dir, in_lut=in_lut, out_lut=out_lut)
 
 
 
