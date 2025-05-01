@@ -138,6 +138,10 @@ Segmentation/Label map:
 
 ---
 
+### Run conformin
+
+### run brain extraction
+
 ## Citation
 
 If you use **GOUHFI** in your research, please cite the following:
@@ -188,9 +192,9 @@ Image preparation/preprocessing:
 - [ANTsPyNet](https://github.com/ANTsX/ANTsPyNet):
     - For brain extraction. Quick and efficient brain extraction tool (`antspynet.brain_extraction`) if you need to do this for your images to be segmented. We provide a script called `brain_extraction_antspynet.py` where we wrapped an unmodified implementation of `antspynet.brain_extraction` to make the repository more self-contained. If you have an already up and running ANTsPyNet installation, you can use it directly from there. In this repository, the function `run_brain_extraction` will execute this script.
 
-Retraining:
+Training:
 - [nnU-Net v2](https://github.com/MIC-DKFZ/nnUNet):
-    - The nnUNet v2 framework was used for training, inference, post-processing and evaluation of GOUHFI. When you are installing GOUHFI as explained above in this README file, you should have all the required nnUNet functions to run inference, post-processing and evaluation as done by the nnUNet. However, if you would like to reproduce the full training as explained in the related paper, you would need a full local installation of the nnUNet, which is not provided by this repository. See the [nnUNet installation documentation](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/installation_instructions.md) for more information on how to proceed.
+    - The nnUNet v2 framework was used for training, inference, post-processing and evaluation of GOUHFI. This repository contains the full `nnunetv2` directory from v2.4.1 of the nnUNet. If you would like to reproduce the full training as explained in the GOUHFI paper, you should be able to do so with GOUHFI's installation alone. However, we recommend the users to refer to the [nnUNet documentation](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/) for more information on how to proceed since the documentation is not included in this repository.
 
 Generating synthetic images for training:
 - [SynthSeg](https://github.com/BBillot/SynthSeg):
