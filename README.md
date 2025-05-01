@@ -1,6 +1,6 @@
 # GOUHFI: novel contrast- and resolution-agnostic segmentation tool for Ultra-High Field MRI
  
-Welcome to **GOUHFI**, a novel deep learning (DL) tool for segmentation of brain MR images of **any** contrast, resolution or even field strength. This repository provides detailed instructions on [Installation](#installation), [Usage](#usage), [Related work](#third-party-softwares-related-to-gouhfi) and [Licensing](#license).
+Welcome to **GOUHFI**, a novel deep learning (DL) tool for segmentation of brain MR images of **any** contrast, resolution or even field strength. This repository provides detailed instructions on [Installation](#installation), [Usage](#usage), [Related work](#third-party-softwares-related-to-gouhfi) and [Licensing](#license). While the main goal of this repository is to share GOUHFI with the community, few commands useful for neuroscientists/neuroimagers working with label maps are also shared (see [Usage section](#usage) for some examples). 
 
 ---
 
@@ -43,6 +43,8 @@ cd GOUHFI
 pip install -e .
 ```
 
+- The `pip install -e .` command allows you to install the GOUHFI repository in "editable" mode where you can modify the different scripts to your liking.
+
 ### Step 4: Download the trained model weights
 
 1) A Zenodo link to the trained model weights is included in the repository in the `trained_model/gouhfi-trained-model-weights.md` file or simply with this [link](https://zenodo.org/records/15255556). This might require you to have a Zenodo account (free).
@@ -61,11 +63,11 @@ unzip GOUHFI.zip
 ### Step 6: Set GOUHFI's directory as an environment variable
 
 - For Linux/MacOS:
-Add the following line to your `.bashrc` or `.zshrc` file (depending which shell you are using. `.bashrc` for `.sh` and `.zshrc` for `.zsh`.)
+Add the following line to your `.bashrc` or `.zshrc` file (depending on which shell you are using. `.bashrc` for `.sh` and `.zshrc` for `.zsh`.)
 ```bash
 export GOUHFI_HOME=/full/path/to/GOUHFI
 ```
-- where `/full/path/to/GOUHFI` is the full path to your GOUHFI installation directory. 
+- where `/full/path/to/GOUHFI` is the full path to your GOUHFI installation directory.  
 
 You can double-check if this step worked properly by typing in your terminal:
 ```bash
@@ -74,7 +76,7 @@ echo $GOUHFI_HOME
 ```
 - where `~/.bashrc` can be `~/.zshrc`.
 
-- For more information, the [nnUNet documentation](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/set_environment_variables.md) is quite helpful.
+- For more information, the [nnUNet documentation](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/set_environment_variables.md) is quite helpful (no need to set the nnUNet environment variables as described in this link **except** if you plan on retraining GOUHFI).
 
 ### Step 7: Test the installation
 
@@ -84,7 +86,7 @@ echo $GOUHFI_HOME
 run_goufhi --help
 ```
 
-- If you see the help function for `run_gouhfi` (or any other functions related to GOUHFI), you have installed the repository properly. Congrats and happy segmenting!
+- If you see the help function for `run_gouhfi` (or any other functions related to GOUHFI described [below](#usage)), you have installed the repository properly. Congrats and happy segmenting!
 
 ---
 
@@ -93,9 +95,10 @@ run_goufhi --help
 
 - **Reminder**: All these functions need to be executed inside your virtual environment.
 
-### `run_gouhfi`:
+### `run_gouhfi`: 
 
-- The command `run_gouhfi` is used to run the inference (i.e., segment your images using the trained model), apply the post-processing and, if desired, reorder the label values in the segmentations from GOUHFI's lookuptable (LUT) (i.e., linearly increasing from 0 to 35) to FreeSurfer's LUT (optional). 
+- This is the command to obtain the whole brain segmentation into 35 labels from GOUHFI. The command `run_gouhfi` is used to (1) run the inference (i.e., segment your images using the trained model), (2) apply the post-processing step and (3), if desired, reorder the label values in the segmentations produced from GOUHFI (optional). 
+    - More precisely, it changes GOUHFI's lookuptable (LUT) (i.e., label values from 0 to 35) to the FreeSurfer's LUT which is commonly used by the neuroimaging community. 
 - We strongly recommend to use a GPU (anything with ~10 Gb of more of VRAM should be strong enough) to run the inference. CPU can be used but expect considerable computation time (ca. ~10 sec/subject on GPU and can be roughly ~75 times longer or even more on the CPU).
 - A few images are available for testing purposes in the `test_data` directory.
 
