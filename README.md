@@ -99,7 +99,7 @@ run_goufhi --help
 
 - **Reminder**: All these functions need to be executed inside your virtual environment.
 
-### Run Inference
+### Run Inference:
 
 The command `run_gouhfi` is used to run the inference (i.e., segment your images using the trained model), apply the post-processing and, if desired, reorder the label values in the segmentations from GOUHFI's lookuptable (LUT) (i.e., linearly increasing from 0 to 35) to FreeSurfer's LUT (optional).
 
@@ -107,14 +107,14 @@ The command `run_gouhfi` is used to run the inference (i.e., segment your images
 run_gouhfi.py -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0 1 2"] [--reorder_labels] [--help]
 ```
 
-### Available Arguments
+### Arguments
 
-| Argument              | Type    | Default                                                              | Description                                                                 |
-|-----------------------|---------|----------------------------------------------------------------------|-----------------------------------------------------------------------------|
-| `-i`, `--input_dir`   | `str`   | **Required**                                                         | Path to the directory containing input `.nii.gz` files.                     |
-| `-o`, `--output_dir`  | `str`   | Derived from `input_dir` as `../outputs/`                            | Directory where the segmentation will be saved.                             |
-| `--np`                | `int`   | `8`                                                                  | Number of parallel CPU processes to use during post-processing.             |
-| `--folds`             | `str`   | `"0 1 2 3 4"`                                                        | Space-separated string of folds to use for inference (we recommend to use all).    |
+| Argument              | Type    | Default                                                              | Description                                                                                |
+|-----------------------|---------|----------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
+| `-i`, `--input_dir`   | `str`   | **Required**                                                         | Path to the directory containing input `.nii.gz` files.                                    |
+| `-o`, `--output_dir`  | `str`   | Derived from `input_dir` as `../outputs/`                            | Directory where the segmentation will be saved.                                            |
+| `--np`                | `int`   | `8`                                                                  | Number of parallel CPU processes to use during post-processing.                            |
+| `--folds`             | `str`   | `"0 1 2 3 4"`                                                        | Space-separated string of folds to use for inference (we recommend to use all).            |
 | `--reorder_labels`    | `flag`  | `False`                                                              | If set, reorders label values from GOUHFI's LUT to FreeSurfer's LUT after post-processing. |
 
 
@@ -129,24 +129,62 @@ run_gouhfi.py -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0
     - Contrast: Any
     - Resolution: Any (resampling to isotropic resolution is processed internally. Not tested for highly anisotropic images, but always worth a try.)
     - Field Strength: Any (extensively validated at 3T, 7T and 9.4T)
-    - Orientation: LIA (like FastSurfer [see the `run_conforming` command])
+    - Orientation: LIA (like FastSurfer [see the `run_conforming` command below])
+    - Brain-extracted/Skull-stripped [see the `run_brain_extraction` command below]
 
----
 
-## Output
+#### Output
 
 File:
 - `{CASE_IDENTIFIER}.nii.gz` —> Segmentation result/Label map for the `{CASE_IDENTIFIER}` subject.
 
 Segmentation/Label map:
-- The labels are linearly ordered from 0 (background) to 35. The complete list of labels is shown in file `misc/label-list-lut.txt`.
-    - **Tip**: If you have a version of [*FreeSurfer*](https://surfer.nmr.mgh.harvard.edu/fswiki) installed with *Freeview*, you can easily visualize the segmentation outputs overlaid on your input images. In order to visualize the segmentations wih the same color scheme/lookuptable as used by the *FreeSurfer/FastSurfer* team, simply copy the `label-list-lut.txt` inside your `$FREESURFER_HOME/luts/` folder (label values are not the same, but the colors will be). Then, this new lookuptable should be available in your Colormap/Lookuptable dropdown menu.
+- The labels are linearly ordered from 0 (background) to 35 by default. The complete list of labels is shown in file `misc/label-list-lut.txt`.
 
 ---
 
-### Run conformin
+### Run conforming
+
+The command `run_conforming` conforms all `.nii` or `.nii.gz` images in a specified input directory using FastSurfer’s `conform.py` script. The output will be saved to a specified directory or to a default `inputs-cfm/` directory.
+
+```bash
+run_conforming -i /path/to/input_dir [-o /path/to/input_dir] [--order 3] [--dtype float32] [--seg_input]
+```
+
+### Arguments
+
+| Argument             | Default                   | Description                                                                                                 |
+|----------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| `-i`, `--input_dir`  | -                         | Path to directory containing input NIfTI files (required).                                                  |
+| `-o`, `--output_dir` | *input_dir*/`inputs-cfm/` | Directory to save the conformed images. If not set, defaults to `inputs-cfm` next to input.                 |
+| `--order`            | `3`                       | Interpolation order for resampling. Common values: 0 (nearest), 1 (linear), 3 (cubic spline).               |
+| `--dtype`            | `"float32"`               | Data type of output images. Options include: `float32`, `uint8`, `int16`, `int32`.                          |
+| `--seg_input`        | *False*                   | Use this flag if the input images are label maps (e.g. segmentations). Uses nearest-neighbor interpolation. |
+
+---
 
 ### Run brain extraction
+
+
+The command `run_conforming` conforms all `.nii` or `.nii.gz` images in a specified input directory using FastSurfer’s `conform.py` script. The output will be saved to a specified directory or to a default `inputs-cfm/` directory.
+
+```bash
+run_brain_extraction -i /path/to/input_dir [-o /path/to/input_dir] [--order 3] [--dtype float32] [--seg_input]
+```
+
+### Arguments
+
+| Argument             | Default        | Description                                                                                                                            |
+|----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `-i`, `--input_dir`  | -              | Path to directory containing input NIfTI files (required).                                                                             |
+| `-o`, `--output_dir` | -              | Directory to save the conformed images. If not set, defaults to `inputs-cfm` next to input.                                            |
+| `--modality`         | `t1`           | Modality for brain extraction (default: t1)                                                                                            |
+| `--skip_morpho`      | -              |  Skip morphological operations on the brain mask and directly save the newly brain extracted image(s).                                 |
+| `--dilation_voxels`  | 0              | Number of voxels for dilation (default: 0).                                                                                            |
+|  `--rename`          | -              | Flag to rename the brain extracted image(s) by adding the '_masked' suffix. Otherwise, brain extracted images will keep the same name. |
+|  `--mask_folder`     | -              | Path to the folder containing masks for morphological operations (requires the have the morphological operations on).                  |
+
+---
 
 ### Run label reordering
 
