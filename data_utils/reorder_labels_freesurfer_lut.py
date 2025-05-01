@@ -99,9 +99,9 @@ def process_directory(input_dir, output_dir, old_labels_file, new_labels_file):
 def main():
     # Argument parser
     parser = argparse.ArgumentParser(description="Process and rename label maps in a directory.")
-    parser.add_argument('--input_dir', type=str, required=True,
+    parser.add_argument('-i','--input_dir', type=str, required=True,
                         help="Path to the input directory containing label maps.")
-    parser.add_argument('--output_dir', type=str, required=False,
+    parser.add_argument('-o','--output_dir', type=str, required=False,
                         help="Path to the output directory to save processed label maps.")
     parser.add_argument('--old_labels_file', type=str, required=True, default=None,
                         help="Path to the text file containing GOUHFI's label definitions (label IDs and names).")
