@@ -106,7 +106,7 @@ run_goufhi --help
 Example command line:
 
 ```bash
-run_gouhfi.py -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0 1 2"] [--reorder_labels] [--help] [--cpu]
+run_gouhfi.py -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0 1 2 3 4"] [--reorder_labels] [--cpu]
 ```
 
 ### Arguments
@@ -114,7 +114,7 @@ run_gouhfi.py -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0
 | Argument              | Type    | Default                                                              | Description                                                                                |
 |-----------------------|---------|----------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
 | `-i`, `--input_dir`   | `str`   | **Required**                                                         | Path to the directory containing input `.nii.gz` files.                                    |
-| `-o`, `--output_dir`  | `str`   | Derived from `input_dir` as `../outputs/`                            | Directory where the segmentation will be saved.                                            |
+| `-o`, `--output_dir`  | `str`   | Derived from `input_dir` as `../outputs/`                            | Directory where the segmentations will be saved.                                            |
 | `--np`                | `int`   | `8`                                                                  | Number of parallel CPU processes to use during post-processing.                            |
 | `--folds`             | `str`   | `"0 1 2 3 4"`                                                        | Space-separated string of folds to use for inference (we recommend to use all).            |
 | `--reorder_labels`    | `flag`  | `False`                                                              | If set, reorders label values from GOUHFI's LUT to FreeSurfer's LUT after post-processing. |
