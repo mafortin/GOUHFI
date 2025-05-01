@@ -20,14 +20,7 @@
 import argparse
 import subprocess
 import os
-import glob
 import time
-import sys
-
-# Add the 'trainer' directory to the Python path so that the trainer can be found
-#sys.path.append(os.path.join(os.path.dirname(__file__), 'trainer'))
-# Import your custom trainer
-#from nnunetv2.training.nnUNetTrainer.nnUNetTrainer_NoDA_500epochs_AdamW import nnUNetTrainer_NoDA_500epochs_AdamW
 
 
 def run_inference(dataset_id, input_dir, output_dir, config, trainer, plan, folds, num_pr):
@@ -74,10 +67,24 @@ def apply_post_processing(input_dir, output_dir, pp_pkl_file, np, plans_json):
     return duration
 
 
-def run_inference_postproc(dataset_id='014', input_dir=os.getcwd(), output_dir=os.getcwd(), config="3d_fullres", trainer="nnUNetTrainer_NoDA_500epochs_AdamW", plan="nnUNetResEncL", np=8, folds="0 1 2 3 4"):
-    
-    # Convert folds argument to a list of strings
-    folds_list = folds.split()
+def reorder_labels(input_dir, output_dir, in_lut, out_lut):
+    start_time = time.time()
+    # Command for reordering labels
+    reorder_command = [
+        "run_labels_reordering",
+        "--input_dir", input_dir,
+        "--output_dir", output_dir,
+        "--old_labels_file", in_lut,
+        "--new_labels_file", out_lut
+    ]
+    print(f"Reordering labels with the following command: {' '.join(reorder_command)}")
+    subprocess.run(reorder_command)
+    end_time = time.time()
+    duration = end_time - start_time
+    print(f"Label reordering completed in {duration:.2f} seconds.")
+    return duration
+
+def run_all(dataset_id='014', input_dir=os.getcwd(), output_dir=os.getcwd(), config="3d_fullres", trainer="nnUNetTrainer_NoDA_500epochs_AdamW", plan="nnUNetResEncL", np=8, folds="0 1 2 3 4", reorder_labels=False):
 
     # Fetch the GOUHFI_HOME environment variable
     gouhfi_home = os.getenv('GOUHFI_HOME')
@@ -85,7 +92,8 @@ def run_inference_postproc(dataset_id='014', input_dir=os.getcwd(), output_dir=o
         print("Error: GOUHFI_HOME is not set. Please set the GOUHFI_HOME environment variable as explained in the installation steps.")
         exit(1)
 
-    # Construct paths
+    # Convert folds argument to a list of strings + Construct paths 
+    folds_list = folds.split()
     input_dir = input_dir.rstrip('/')
     base_dir = os.path.dirname(input_dir)
     output_dir = os.path.join(base_dir, "outputs")
@@ -100,7 +108,11 @@ def run_inference_postproc(dataset_id='014', input_dir=os.getcwd(), output_dir=o
     # Apply post-processing
     post_processing_duration = apply_post_processing(output_dir, output_pp_dir, pp_pkl_file, np, plans_json)
 
-    print(f"Total duration for inference and post-processing: {inference_duration + post_processing_duration:.2f} seconds.")
+    # Reorder label maps to Freesurfer's lookuptable
+    if reorder_labels:
+        print("Reordering label maps to Freesurfer's lookuptable...")
+        reordering_duration = reorder_labels(input_dir, output_dir, in_lut, out_lut)
+
 
 
 def main():
@@ -108,21 +120,19 @@ def main():
     parser = argparse.ArgumentParser(description="Run nnUNet_v2 inference and post-processing.")
     parser.add_argument("-i", "--input_dir", required=True, help="Directory containing input data.")
     parser.add_argument("-o", "--output_dir", help="Directory to save output data.")
-    parser.add_argument("--np", type=int, default=8, help="Number of processes for post-processing. Depends on your CPU.")
+    parser.add_argument("--np", type=int, default=8, help="Number of CPU processes to run post-processing in parallel. Depends on your CPU.")
     parser.add_argument("--folds", default="0 1 2 3 4", help="Folds to use for inference. By default all folds are used and combined together.")
-    #parser.add_argument("--config", default="3d_fullres", help="Configuration to use for inference.")
-    #parser.add_argument("--trainer", default="nnUNetTrainer_NoDA_500epochs_AdamW", help="Trainer to use for inference.")
-    #parser.add_argument("--plan", default="nnUNetResEncL", help="Plan to use for inference.")
-    #parser.add_argument("--dataset_id", required=True, help="Dataset ID in the format DatasetXXX_YYYY.")
+    parser.add_argument("--reorder_labels", action="store_true", help="Set flag if you want to reorder the label values from GOUHFI's values to the FreeSurfer lookuptable after post-processing.")
 
     # Parse arguments
     args = parser.parse_args()
 
-    run_inference_postproc(
+    run_all(
         input_dir=args.input_dir,
         output_dir=args.output_dir,
         np=args.np,
-        folds=args.folds
+        folds=args.folds,
+        reorder_labels=args.reorder_labels
     )
 
 
