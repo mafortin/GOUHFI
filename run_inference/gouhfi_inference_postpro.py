@@ -25,9 +25,9 @@ import time
 import sys
 
 # Add the 'trainer' directory to the Python path so that the trainer can be found
-sys.path.append(os.path.join(os.path.dirname(__file__), 'trainer'))
+#sys.path.append(os.path.join(os.path.dirname(__file__), 'trainer'))
 # Import your custom trainer
-from trainer.nnUNetTrainer_NoDA_500epochs_AdamW import nnUNetTrainer_NoDA_500epochs_AdamW
+from nnunet.nnunetv2.training.nnUNetTrainer.nnUNetTrainer_NoDA_500epochs_AdamW import nnUNetTrainer_NoDA_500epochs_AdamW
 
 
 def run_inference(dataset_id, input_dir, output_dir, config, trainer, plan, folds, num_pr):
