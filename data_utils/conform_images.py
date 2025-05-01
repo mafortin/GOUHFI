@@ -21,7 +21,7 @@
 import os
 import argparse
 import pandas as pd
-from data_utils.fastsurfer.conform import conform 
+import subprocess
 
 def conform_images(input_dir, output_dir, order, rename, dtype, seg_input, conform_vox_size="min"):
 
@@ -46,8 +46,37 @@ def conform_images(input_dir, output_dir, order, rename, dtype, seg_input, confo
             else:
                 output_path = os.path.join(output_dir, filename)
 
-            # Call the conform function
-            conform(img=input_path, order=order, conform_vox_size=conform_vox_size, dtype=dtype)
+
+            # Debugging print statements
+            print(f"Processing file: {filename}")
+            print(f"Input path: {input_path}")
+            print(f"Output path: {output_path}")
+            print(f"Order: {order}, Conform voxel size: {conform_vox_size}, Data type: {dtype}")
+
+            gouhfi_home = os.environ.get("GOUHFI_HOME")
+            if not gouhfi_home:
+                raise EnvironmentError("The environment variable $GOUHFI_HOME is not set.")
+            
+            # Construct the command
+            conform_script_path = os.path.join(gouhfi_home, "data_utils/fastsurfer/conform.py")
+            conform_module = "data_utils.fastsurfer.conform"
+            command = [
+                "python3", "-m", conform_module,
+                "-i", input_path,
+                "-o", output_path,
+                "--conform_min", # "--verbose",
+                "--order", str(order),
+                "--dtype", dtype
+            ]
+
+            # Add the --seg_input flag if specified
+            if seg_input:
+                command.append("--seg_input")
+
+            # Run the command
+            subprocess.run(command, check=True)
+
+            #conform(img=input_path, order=order, conform_vox_size=conform_vox_size, dtype=dtype)
             print(f"Conformed {filename} to {output_path}")
 
     # Save rename mapping if renaming was done
