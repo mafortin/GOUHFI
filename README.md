@@ -96,7 +96,7 @@ run_goufhi --help
 ### Run Inference:
 
 - The command `run_gouhfi` is used to run the inference (i.e., segment your images using the trained model), apply the post-processing and, if desired, reorder the label values in the segmentations from GOUHFI's lookuptable (LUT) (i.e., linearly increasing from 0 to 35) to FreeSurfer's LUT (optional). 
-- We recommend using a GPU (anything with ~10 Gb of more of VRAM should be strong enough) to run the inference (ca. ~10 sec/subject and can be roughly 50-75 times longer on the cpu).
+- We strongly recommend to use a GPU (anything with ~10 Gb of more of VRAM should be strong enough) to run the inference. CPU can be used but expect considerable computation time (ca. ~10 sec/subject on GPU and can be roughly ~75 times longer or even more on the CPU).
 - A few images are available for testing purposes in the `test_data` directory.
 
 ```bash
@@ -186,7 +186,7 @@ run_brain_extraction -i /path/to/input_dir [-o /path/to/output_dir] [--order 3] 
 
 ### Run label map reordering:
 
-If you did not use the `--reorder_labels` flag when running `run_gouhfi`, you can reorder the labels using the `run_labels_reordering` command as shown below.
+If you did not use the `--reorder_labels` flag when running `run_gouhfi`, you can reorder the labels using the `run_labels_reordering` command as shown below. Once reordered, your label maps can be used in the same quantiative pipeline as label maps produced by *FreeSurfer*/*FastSurfer*.
 
 ```bash
 run_labels_reordering -i /path/to/input_dir -o /path/to/output_dir --old_labels_file ./misc/gouhfi-label-list-lut.txt --new_labels_file ./misc/freesurfer-label-list-lut.txt
