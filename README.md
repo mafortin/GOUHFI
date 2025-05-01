@@ -241,7 +241,7 @@ Training:
 
 Generating synthetic images for training:
 - [SynthSeg](https://github.com/BBillot/SynthSeg):
-    - The synthetic images used to train GOUHFI were generated from the generative model proposed in SynthSeg. The generative model parameters used are described in the appendices of the paper related to this repository. 
+    - The synthetic images used to train GOUHFI were generated from the generative model proposed in SynthSeg. More precisely, the `BrainGenerator` object defined in [brain_generator.py](https://github.com/BBillot/SynthSeg/blob/master/SynthSeg/brain_generator.py) was used to create the synthetic images with the *labels_classes_priors* present in `/misc/` (the four `.npy` files). The generative model parameters used are described in the appendices of the paper related to this repository. 
 
 ---
 
