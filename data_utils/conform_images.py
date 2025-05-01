@@ -20,10 +20,10 @@
 
 import os
 import argparse
-import pandas as pd
-from fastsurfer.conform import conform 
+import subprocess
 
-def conform_images(input_dir, output_dir, order, rename, dtype, seg_input):
+def conform_images(input_dir, output_dir, order, dtype, seg_input):
+
     # Ensure output directory exists
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
@@ -31,29 +31,33 @@ def conform_images(input_dir, output_dir, order, rename, dtype, seg_input):
         output_dir = os.path.join(os.path.dirname(input_dir), 'inputs-cfm')
         os.makedirs(output_dir, exist_ok=True)
 
-    # Prepare for renaming if needed
-    rename_mapping = []
-
     # Iterate over all files in the input directory
-    for idx, filename in enumerate(sorted(os.listdir(input_dir))):
+    for filename in sorted(os.listdir(input_dir)):
+
         if filename.endswith(".nii") or filename.endswith(".nii.gz"):
+            
             input_path = os.path.join(input_dir, filename)
-            if rename:
-                new_filename = f"image_{idx:04d}_0000.nii.gz" # Following nnUNet naming convention
-                output_path = os.path.join(output_dir, new_filename)
-                rename_mapping.append({'Old Filename': filename, 'New Filename': new_filename})
-            else:
-                output_path = os.path.join(output_dir, filename)
+            output_path = os.path.join(output_dir, filename)
+            
+            # Construct the command
+            conform_module = "data_utils.fastsurfer.conform"
+            command = [
+                "python3", "-m", conform_module,
+                "-i", input_path,
+                "-o", output_path,
+                "--conform_min",
+                "--order", str(order),
+                "--dtype", dtype
+            ]
 
-            # Call the conform function
-            conform(input_path, output_path, order, dtype, seg_input)
-            print(f"Processed {filename}")
+            # Add the --seg_input flag if specified
+            if seg_input:
+                command.append("--seg_input")
 
-    # Save rename mapping if renaming was done
-    if rename:
-        rename_df = pd.DataFrame(rename_mapping)
-        rename_df.to_csv(os.path.join(output_dir, 'rename_mapping.csv'), index=False)
-        print(f"Rename mapping saved to {os.path.join(output_dir, 'rename_mapping.csv')}")
+            # Run the command
+            subprocess.run(command, check=True)
+            print("--------------------------------------------------------------")
+
 
 def main():
 
@@ -62,16 +66,14 @@ def main():
     parser.add_argument("-o", "--output_dir",
                         help="Path to the output directory to save conformed images. If not provided, input files will be overwritten.")
     parser.add_argument("--order", type=int, default=3, help="Order of interpolation to use (default: 3).")
-    parser.add_argument("--rename", action='store_true',
-                        help="Rename conformed images in a chronological order and save the mapping to a CSV file.")
     parser.add_argument("--dtype", type=str, default="float32",
                         help="Data type to use for the conformed images (default: float32. Other options: uint8, int16, int32).")
     parser.add_argument("--seg_input", action='store_true',
                         help="Indicate that the image to be conformed is a label map and nearest neighbor interpolation will be used instead of linear interpolation or spline.")
 
     args = parser.parse_args()
-
-    conform_images(args.input_dir, args.output_dir, args.order, args.rename, args.dtype, args.seg_input)
+    
+    conform_images(args.input_dir, args.output_dir, args.order, args.dtype, args.seg_input)
 
 if __name__ == "__main__":
     main()

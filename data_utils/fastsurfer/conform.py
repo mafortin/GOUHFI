@@ -48,11 +48,11 @@ import nibabel as nib
 import numpy as np
 import numpy.typing as npt
 
-from fastsurfer import logging
-from fastsurfer.arg_types import VoxSizeOption
-from fastsurfer.arg_types import float_gt_zero_and_le_one as __conform_to_one_mm
-from fastsurfer.arg_types import target_dtype as __target_dtype
-from fastsurfer.arg_types import vox_size as __vox_size
+from . import logging_fsv
+from .arg_types import VoxSizeOption
+from .arg_types import float_gt_zero_and_le_one as __conform_to_one_mm
+from .arg_types import target_dtype as __target_dtype
+from .arg_types import vox_size as __vox_size
 
 
 HELPTEXT = """
@@ -606,6 +606,7 @@ def conform(
     conformed_vox_size, conformed_img_size = get_conformed_vox_img_size(
         img, conform_vox_size, conform_to_1mm_threshold=conform_to_1mm_threshold,
     )
+
     from nibabel.freesurfer.mghformat import MGHHeader
 
     # may copy some parameters if input was MGH format
@@ -842,7 +843,7 @@ def is_conform(
     _is_conform = all(map(lambda x: x[0], checks.values()))
 
     if verbose:
-        logger = logging.getLogger(__name__)
+        logger = logging_fsv.getLogger(__name__)
         if not _is_conform:
             logger.info("The input image is not conformed.")
 
@@ -935,7 +936,7 @@ def get_conformed_vox_img_size(
 
 def check_affine_in_nifti(
         img: nib.Nifti1Image | nib.Nifti2Image,
-        logger: logging.Logger | None = None
+        logger: logging_fsv.Logger | None = None
 ) -> bool:
     """
     Check the affine in nifti Image.
@@ -1014,7 +1015,7 @@ if __name__ == "__main__":
     except RuntimeError as e:
         sys.exit(*e.args)
 
-    logging.setup_logging(options.logfile) # logging to only the console
+    logging_fsv.setup_logging(options.logfile) # logging to only the console
 
     print(f"Reading input: {options.input} ...")
     image = nib.load(options.input)
