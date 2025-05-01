@@ -181,7 +181,7 @@ run_brain_extraction -i /path/to/input_dir [-o /path/to/output_dir] [--modality 
 | Argument             | Default        | Description                                                                                                                            |
 |----------------------|----------------|----------------------------------------------------------------------------------------------------------------------------------------|
 | `-i`, `--input_dir`  | -              | Path to directory containing input NIfTI files (required).                                                                             |
-| `-o`, `--output_dir` | -              | Directory to save the conformed images. If not set, defaults to `inputs-cfm` next to input.                                            |
+| `-o`, `--output_dir` | -              | Directory to save the brain-extracted images. If not set, defaults to `--input_dir`.                                         |
 | `--modality`         | `t1`           | Modality for brain extraction (default: t1).                                                                                           |
 | `--skip_morpho`      | -              | Skip morphological operations on the brain mask and directly save the newly brain-extracted image(s).                                 |
 | `--dilation_voxels`  | 0              | Number of voxels for dilation (default: 0).                                                                                            |
