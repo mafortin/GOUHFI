@@ -23,7 +23,7 @@ import argparse
 import pandas as pd
 import subprocess
 
-def conform_images(input_dir, output_dir, order, rename, dtype, seg_input, conform_vox_size="min"):
+def conform_images(input_dir, output_dir, order, rename, dtype, seg_input):
 
     # Ensure output directory exists
     if output_dir:
@@ -49,9 +49,9 @@ def conform_images(input_dir, output_dir, order, rename, dtype, seg_input, confo
 
             # Debugging print statements
             print(f"Processing file: {filename}")
-            print(f"Input path: {input_path}")
-            print(f"Output path: {output_path}")
-            print(f"Order: {order}, Conform voxel size: {conform_vox_size}, Data type: {dtype}")
+            #print(f"Input path: {input_path}")
+            #print(f"Output path: {output_path}")
+            #print(f"Order: {order}, Conform voxel size: {conform_vox_size}, Data type: {dtype}")
 
             gouhfi_home = os.environ.get("GOUHFI_HOME")
             if not gouhfi_home:
@@ -64,7 +64,7 @@ def conform_images(input_dir, output_dir, order, rename, dtype, seg_input, confo
                 "python3", "-m", conform_module,
                 "-i", input_path,
                 "-o", output_path,
-                "--conform_min", # "--verbose",
+                "--conform_min",
                 "--order", str(order),
                 "--dtype", dtype
             ]
@@ -75,9 +75,8 @@ def conform_images(input_dir, output_dir, order, rename, dtype, seg_input, confo
 
             # Run the command
             subprocess.run(command, check=True)
+            print("--------------------------------------------------------------")
 
-            #conform(img=input_path, order=order, conform_vox_size=conform_vox_size, dtype=dtype)
-            print(f"Conformed {filename} to {output_path}")
 
     # Save rename mapping if renaming was done
     if rename:
@@ -98,12 +97,10 @@ def main():
                         help="Data type to use for the conformed images (default: float32. Other options: uint8, int16, int32).")
     parser.add_argument("--seg_input", action='store_true',
                         help="Indicate that the image to be conformed is a label map and nearest neighbor interpolation will be used instead of linear interpolation or spline.")
-    parser.add_argument("--vol_size_cfm", type=str, default="min",
-                        help="Voxel size for conforming. Options: 'min' (default), or a specific size in mm (e.g., '1.0').")
 
     args = parser.parse_args()
     
-    conform_images(args.input_dir, args.output_dir, args.order, args.rename, args.dtype, args.seg_input, args.vol_size_cfm)
+    conform_images(args.input_dir, args.output_dir, args.order, args.rename, args.dtype, args.seg_input)
 
 if __name__ == "__main__":
     main()
