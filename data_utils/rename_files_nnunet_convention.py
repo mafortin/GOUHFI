@@ -1,71 +1,68 @@
 import os
-import csv
+import json
 import argparse
 
-def extract_sub_id(filename, start_substring='sub', end_substring='_'):
-    start = filename.find(start_substring)
+def extract_sub_id(filename, start_substring=None, end_substring=None):
+    base = os.path.splitext(os.path.splitext(filename)[0])[0]  # Remove .nii.gz or .nii
+    if not start_substring and not end_substring:
+        return base
+    start = base.find(start_substring) if start_substring else 0
     if start == -1:
         return None
-    start += len(start_substring)  # Move start to the end of the start_substring
-    end = filename.find(end_substring, start)
+    start += len(start_substring)
+    end = base.find(end_substring, start) if end_substring else len(base)
     if end == -1:
         return None
-    return filename[start:end]
+    return base[start:end]
 
-def rename_files_in_subfolder(subfolder, output_folder=None, start_substring='sub', end_substring='_', segs=False):
-    # If output folder is not provided, use the same as the input folder
+def rename_files_in_subfolder(input_dir, output_folder=None, start_substring=None, end_substring=None, segms=False):
     if output_folder is None:
-        output_folder = subfolder
+        output_folder = input_dir
+    os.makedirs(output_folder, exist_ok=True)
 
-    # Create output folder if it doesn't exist
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
+    json_file_path = os.path.join(input_dir, 'file_correspondence.json')
+    rename_mapping = {}
 
-    # Determine the path for the CSV file in the parent directory of the input folder
-    parent_dir = os.path.abspath(os.path.join(subfolder, os.pardir))
-    csv_file_path = os.path.join(parent_dir, 'file_correspondence.csv')
+    if os.path.exists(json_file_path):
+        with open(json_file_path, 'r') as jsonfile:
+            rename_mapping = json.load(jsonfile)
 
-    # Check if the CSV file already exists
-    if os.path.exists(csv_file_path):
-        # Read the existing CSV file
-        with open(csv_file_path, 'r') as csvfile:
-            csvreader = csv.reader(csvfile)
-            next(csvreader)  # Skip the header
-            rename_mapping = {rows[0]: rows[1] for rows in csvreader}
-    else:
-        rename_mapping = {}
-        # Initialize the CSV file to save the correspondence
-        with open(csv_file_path, 'w', newline='') as csvfile:
-            csvwriter = csv.writer(csvfile)
-            csvwriter.writerow(['Old ID', 'New ID'])
-
-    # Iterate over each file in the subfolder
-    for i, file_name in enumerate(os.listdir(subfolder)):
-        old_file_path = os.path.join(subfolder, file_name)
+    for file_name in os.listdir(input_dir):
+        if not file_name.endswith(('.nii.gz', '.nii')):
+            continue
+        old_file_path = os.path.join(input_dir, file_name)
         old_id = extract_sub_id(file_name, start_substring, end_substring)
         if old_id is None:
             continue
         if old_id in rename_mapping:
             new_id = rename_mapping[old_id]
         else:
-            new_id = f"image_{i:04d}" if segs else f"image_{i:04d}_0000"
+            new_id = f"{old_id}" if segms else f"{old_id}_0000"
             rename_mapping[old_id] = new_id
-            with open(csv_file_path, 'a', newline='') as csvfile:
-                csvwriter = csv.writer(csvfile)
-                csvwriter.writerow([old_id, new_id])
+
         new_file_name = f"{new_id}.nii.gz"
         new_file_path = os.path.join(output_folder, new_file_name)
-
-        # Rename the file by moving it to the output folder with the new name
         os.rename(old_file_path, new_file_path)
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Rename files in a subfolder and save the correspondence to a CSV file.')
-    parser.add_argument('--input_folder', type=str, help='Path to the subfolder containing files to rename', required=True)
-    parser.add_argument('--output_folder', type=str, help='Path to the output folder to save the renamed files and CSV file')
-    parser.add_argument('--start_substring', type=str, default='sub', help='Substring to start extracting the sub_id')
-    parser.add_argument('--end_substring', type=str, default='_', help='Substring to end extracting the sub_id')
-    parser.add_argument('--segs', action='store_true', help='Flag indicating that the files to rename are label maps and should not have the _0000 suffix')
+    with open(json_file_path, 'w') as jsonfile:
+        json.dump(rename_mapping, jsonfile, indent=4)
+
+def main():
+    parser = argparse.ArgumentParser(description='Rename files and store correspondence in a JSON file.')
+    parser.add_argument('-i', '--input_dir', required=True, help='Input folder containing files to rename')
+    parser.add_argument('-o', '--output_dir', help='Optional output folder to save renamed files')
+    parser.add_argument('--start_substring', type=str, help='Start substring to extract sub_id')
+    parser.add_argument('--end_substring', type=str, help='End substring to extract sub_id')
+    parser.add_argument('--segms', action='store_true', help='Flag for label maps (omit _0000 in filename)')
     args = parser.parse_args()
 
-    rename_files_in_subfolder(args.input_folder, args.output_folder, args.start_substring, args.end_substring, args.segs)
+    rename_files_in_subfolder(
+        input_dir=args.input_dir,
+        output_folder=args.output_dir,
+        start_substring=args.start_substring,
+        end_substring=args.end_substring,
+        segms=args.segms
+    )
+
+if __name__ == "__main__":
+    main()
