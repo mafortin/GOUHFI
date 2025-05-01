@@ -1,6 +1,7 @@
 import os
 import json
 import argparse
+import shutil
 
 def extract_sub_id(filename, start_substring=None, end_substring=None):
     base = os.path.splitext(os.path.splitext(filename)[0])[0]  # Remove .nii.gz or .nii
@@ -20,7 +21,7 @@ def rename_files_in_subfolder(input_dir, output_folder=None, start_substring=Non
         output_folder = input_dir
     os.makedirs(output_folder, exist_ok=True)
 
-    json_file_path = os.path.join(input_dir, 'file_correspondence.json')
+    json_file_path = os.path.join(input_dir, 'subject_id_correspondence.json')
     rename_mapping = {}
 
     if os.path.exists(json_file_path):
@@ -42,7 +43,7 @@ def rename_files_in_subfolder(input_dir, output_folder=None, start_substring=Non
 
         new_file_name = f"{new_id}.nii.gz"
         new_file_path = os.path.join(output_folder, new_file_name)
-        os.rename(old_file_path, new_file_path)
+        shutil.copy2(old_file_path, new_file_path)
 
     with open(json_file_path, 'w') as jsonfile:
         json.dump(rename_mapping, jsonfile, indent=4)
