@@ -1,20 +1,14 @@
 # GOUHFI: novel contrast- and resolution-agnostic segmentation tool for Ultra-High Field MRI
-
-The Generalized and Optimized segmentation tool for Ultra-High Field Images (GOUHFI) is a deep learning-based fully automatic brain segmentation tool optimized for ultra-high field MRI (i.e., ≥ 7T MRI). Using the domain randomization approach proposed in [SynthSeg](https://github.com/BBillot/SynthSeg), GOUHFI is able to segment images of any contrast, resolution and field strength, making it broadly applicable across scanners, imaging protocols and centers. 
-
-![GOUHFI](figs/fig-readme.png)
+ 
+Welcome to **GOUHFI**, a novel deep learning (DL) tool for segmentation of brain MR images of **any** contrast, resolution or even field strength. This repository provides detailed instructions on [installation](#installation), [usage](#usage), [related work](#third-party-softwares-related-to-gouhfi) and [licensing](#license).
 
 ---
 
 ## How was GOUHFI developed?
 
-- ***MAF: TO BE DONE More detailed explanation of what we did? [long abstract style]***
-- This repository is based on the nnUNet v2 framework and uses the same naming convention and requirements for running inference and postprocessing.
-- Robust 3D U-Net model trained using [nnU-Net v2](https://github.com/MIC-DKFZ/nnUNet)
-- Domain randomization for contrast and resolution generalization
-- Validated on both UHF (7T) and standard 3T MRI
-- Easy-to-use CLI for inference
-- Fully open-source and Pythonic
+GOUHFI is a fully automatic, contrast- and resolution-agnostic, DL-based brain segmentation tool optimized for Ultra-High Field MRI (UHF-MRI), while also demonstrating strong performance at 3T compared to other well-established techniques. Using the domain randomization approach proposed in [SynthSeg](https://github.com/BBillot/SynthSeg) and a state-of-the-art 3D U-Net with Residual Encoders from [nnUNetv2](https://github.com/MIC-DKFZ/nnUNet), GOUHFI is able to handle various contrasts, resolutions and even field strengths without requiring fine-tuning or retraining. Tested on multiple datasets, it showed high accuracy and impressive robustness to noise and inhomogeneities, making it a valuable tool for neuroscientists working at both 3T and UHF-MRI. For more details about how GOUHFI was developed please refer to the [following paper]() which i currently under submission.
+
+![GOUHFI](figs/fig-readme.png)
 
 ---
 
@@ -205,19 +199,61 @@ run_labels_reordering -i /path/to/input_dir -o /path/to/output_dir --old_labels_
 | `--old_labels_file`  | -              | Path to the text file containing GOUHFI's label definitions (label IDs and names) [in the `/misc/` subdirectory] (required).        |
 | `--new_labels_file`  | -              | Path to the text file containing FreeSurfer/new label definitions (label IDs and names) [in the `/misc/` subdirectory] (required). |
 
+---
+
+### Run rename_images:
+
+If your images are ready to be segmented, but do not respect the nnunet naming convention, you cna use the command `run_renaming` as shown here:
+
+```bash
+run_renaming -i /path/to/input_dir -o /path/to/output_dir --old_labels_file ./misc/gouhfi-label-list-lut.txt --new_labels_file ./misc/freesurfer-label-list-lut.txt
+```
+
+#### Arguments
+
+| Argument               | Default        | Description                                                                                                                                                 |
+|------------------------|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `-i`, `--input_dir`    | -              | Path to the input directory containing files to rename (required).                                                                                          |
+| `-o`, `--output_dir`   | *input_dir*    | Path to the output directory to save the renamed files and JSON correspondence file. Defaults to same as input directory.                                   |
+| `--start_substring`    | `sub`          | Substring that marks the beginning of the subject ID within filenames. If omitted along with `--end_substring`, the full filename (minus extension) is used. |
+| `--end_substring`      | `_`            | Substring that marks the end of the subject ID within filenames. See `--start_substring` for default behavior if omitted.                                   |
+| `--segms`              | -              | Use this flag if the files are label maps. The renamed files will **not** include the `_0000` suffix.                                                       |
+
+A `subject_id_correspondence.json` file will be created and saved in `input_dir` to keep tract of the correspondence between the old and new filenames.
 
 ---
+
+## Third-Party softwares related to GOUHFI
+
+This project incorporates code from the following projects, used under the Apache License 2.0:
+
+Image preparation/preprocessing:
+- [FastSurfer/FastSurferVINN](https://github.com/Deep-MI/FastSurfer):
+    - In this project, the script `conform.py` from FastSurfer/FastSurferVINN was used for 'conforming' the images to be segmented by GOUHFI (i.e., reorienting to LIA, resampling to isotropic resolution and normalizing signal values between 0 and 255). The script has been used as is, without modification, and is shared as part of the GOUHFI repository to make the repository more self-contained. If you have an already up and running FastSurfer installation, you can use it directly from there. In this repository, the function `run_conforming` will execute this script.
+- [ANTsPyNet](https://github.com/ANTsX/ANTsPyNet):
+    - For brain extraction. Quick and efficient brain extraction tool (`antspynet.brain_extraction`) if you need to do this for your images to be segmented. We provide a script called `brain_extraction_antspynet.py` where we wrapped an unmodified implementation of `antspynet.brain_extraction` to make the repository more self-contained. If you have an already up and running ANTsPyNet installation, you can use it directly from there. In this repository, the function `run_brain_extraction` will execute this script.
+
+Training:
+- [nnU-Net v2](https://github.com/MIC-DKFZ/nnUNet):
+    - The nnUNet v2 framework was used for training, inference, post-processing and evaluation of GOUHFI. This repository contains the full `nnunetv2` directory from v2.4.1 of the nnUNet. If you would like to reproduce the full training as explained in the GOUHFI paper, you should be able to do so with GOUHFI's installation alone. However, we recommend the users to refer to the [nnUNet documentation](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/) for more information on how to proceed since the documentation is not included in this repository.
+
+Generating synthetic images for training:
+- [SynthSeg](https://github.com/BBillot/SynthSeg):
+    - The synthetic images used to train GOUHFI were generated from the generative model proposed in SynthSeg. The generative model parameters used are described in the appendices of the paper related to this repository. 
+
+---
+
 
 ## Citation
 
 If you use **GOUHFI** in your research, please cite the following:
 
-For the paper:
+For the paper (currently under submission):
 ```
 @article{fortin2025gouhfi,
   title={GOUHFI: a novel contrast- and resolution-agnostic segmentation tool for Ultra-High Field MRI},
   author={Fortin, Marc-Antoine et al.},
-  journal={Imaging Neuroscience},
+  journal={Imaging Neuroscience (currently under submission)},
   year={2025}
 }
 ```
@@ -245,26 +281,6 @@ We welcome contributions. If you find bugs, have suggestions, or would like to e
 ## License
 
 This project is licensed under the Apache 2.0 License. See the `LICENSE` file for details.
-
----
-
-## Third-Party softwares/librairies related to GOUHFI
-
-This project incorporates code from the following projects, used under the Apache License 2.0:
-
-Image preparation/preprocessing:
-- [FastSurfer/FastSurferVINN](https://github.com/Deep-MI/FastSurfer):
-    - In this project, the script `conform.py` from FastSurfer/FastSurferVINN was used for 'conforming' the images to be segmented by GOUHFI (i.e., reorienting to LIA, resampling to isotropic resolution and normalizing signal values between 0 and 255). The script has been used as is, without modification, and is shared as part of the GOUHFI repository to make the repository more self-contained. If you have an already up and running FastSurfer installation, you can use it directly from there. In this repository, the function `run_conforming` will execute this script.
-- [ANTsPyNet](https://github.com/ANTsX/ANTsPyNet):
-    - For brain extraction. Quick and efficient brain extraction tool (`antspynet.brain_extraction`) if you need to do this for your images to be segmented. We provide a script called `brain_extraction_antspynet.py` where we wrapped an unmodified implementation of `antspynet.brain_extraction` to make the repository more self-contained. If you have an already up and running ANTsPyNet installation, you can use it directly from there. In this repository, the function `run_brain_extraction` will execute this script.
-
-Training:
-- [nnU-Net v2](https://github.com/MIC-DKFZ/nnUNet):
-    - The nnUNet v2 framework was used for training, inference, post-processing and evaluation of GOUHFI. This repository contains the full `nnunetv2` directory from v2.4.1 of the nnUNet. If you would like to reproduce the full training as explained in the GOUHFI paper, you should be able to do so with GOUHFI's installation alone. However, we recommend the users to refer to the [nnUNet documentation](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/) for more information on how to proceed since the documentation is not included in this repository.
-
-Generating synthetic images for training:
-- [SynthSeg](https://github.com/BBillot/SynthSeg):
-    - The synthetic images used to train GOUHFI were generated from the generative model proposed in SynthSeg. The generative model parameters used are described in the appendices of the paper related to this repository. 
 
 ---
 
