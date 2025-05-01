@@ -68,6 +68,6 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["data_utils*", "run_inference*", "nnUNetv2*"]
+include = ["data_utils*", "run_inference*", "nnunetv2*"]
 exclude = ["misc*", "figs*", "test_data*", "trained_model*"]
 
