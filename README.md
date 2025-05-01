@@ -90,41 +90,46 @@ echo $GOUHFI_HOME
 run_goufhi --help
 ```
 
-- If you see the help function for `run_gouhfi`, you have installed the repository properly. Congrats and happy segmenting!
+- If you see the help function for `run_gouhfi` (or any other functions related to GOUHFI), you have installed the repository properly. Congrats and happy segmenting!
 
 ---
 
 
 ## Usage
 
+- **Reminder**: All these functions need to be executed inside your virtual environment.
+
 ### Run Inference
 
+The command `run_gouhfi` is used to run the inference (i.e., segment your images using the trained model), apply the post-processing and, if desired, reorder the label values in the segmentations from GOUHFI's lookuptable (LUT) (i.e., linearly increasing from 0 to 35) to FreeSurfer's LUT (optional).
+
 ```bash
-run_goufhi -i /path/to/input/folder/ -o path/to/output/folder/
+run_gouhfi.py -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0 1 2"] [--reorder_labels] [--help]
 ```
 
-| Argument  | Description                        |
-|-----------|------------------------------------|
-| `-i`/`--input_dir`  | Path to the directory containing the input image(s) to be segmented. |
-| `-o`/`--output_dir` | Folder where the segmentations will be saved. |
+### Available Arguments
 
-- This command runs the model on your input image(s) and saves the corresponding output segmentations/label maps to the specified folder.
-- Moreover, this command **needs** to be performed inside your newly created virtual python environment (see step 0 from [go to installation](#installation)).
+| Argument              | Type    | Default                                                              | Description                                                                 |
+|-----------------------|---------|----------------------------------------------------------------------|-----------------------------------------------------------------------------|
+| `-i`, `--input_dir`   | `str`   | **Required**                                                         | Path to the directory containing input `.nii.gz` files.                     |
+| `-o`, `--output_dir`  | `str`   | Derived from `input_dir` as `../outputs/`                            | Directory where the segmentation will be saved.                             |
+| `--np`                | `int`   | `8`                                                                  | Number of parallel CPU processes to use during post-processing.             |
+| `--folds`             | `str`   | `"0 1 2 3 4"`                                                        | Space-separated string of folds to use for inference (we recommend to use all).    |
+| `--reorder_labels`    | `flag`  | `False`                                                              | If set, reorders label values from GOUHFI's LUT to FreeSurfer's LUT after post-processing. |
 
----
 
-## Input Requirements
+#### Input Requirements
 
 - File:
     - Format: compressed NIfTI (`.nii.gz`)
     - Naming convention: The nnUNet naming convention (i.e., `{CASE_IDENTIFIER}_0000.nii.gz`). More details [here](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/dataset_format_inference.md).
-    - If you want to segment >1 image/subject, all images should be inside the input directory defined by `--input` under distinctive filenames. The output segmentations will follow the same naming convention as the input filenames minus the `_0000` string.  
+    - If you have >1 image to segment, all images should be inside the input directory defined by `--input` under distinctive filenames, and **not** inside different sub-directories. The output segmentations will follow the same naming convention as the input filenames minus the `_0000` string.  
 
 - Image:
     - Contrast: Any
     - Resolution: Any (resampling to isotropic resolution is processed internally. Not tested for highly anisotropic images, but always worth a try.)
     - Field Strength: Any (extensively validated at 3T, 7T and 9.4T)
-    - Orientation: LIA (like FastSurfer [see the `conform_images` command])
+    - Orientation: LIA (like FastSurfer [see the `run_conforming` command])
 
 ---
 
