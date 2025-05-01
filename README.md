@@ -93,7 +93,7 @@ run_goufhi --help
 
 - **Reminder**: All these functions need to be executed inside your virtual environment.
 
-### Run `run_gouhfi`:
+### `run_gouhfi`:
 
 - The command `run_gouhfi` is used to run the inference (i.e., segment your images using the trained model), apply the post-processing and, if desired, reorder the label values in the segmentations from GOUHFI's lookuptable (LUT) (i.e., linearly increasing from 0 to 35) to FreeSurfer's LUT (optional). 
 - We strongly recommend to use a GPU (anything with ~10 Gb of more of VRAM should be strong enough) to run the inference. CPU can be used but expect considerable computation time (ca. ~10 sec/subject on GPU and can be roughly ~75 times longer or even more on the CPU).
@@ -139,7 +139,7 @@ Segmentation/Label map:
 
 ---
 
-### Run `run_conforming`:
+### `run_conforming`:
 
 The command `run_conforming` conforms all `.nii` or `.nii.gz` images in a specified input directory using FastSurfer’s `conform.py` script. The output will be saved to a specified directory or to a default `inputs-cfm/` directory.
 
@@ -160,7 +160,7 @@ run_conforming -i /path/to/input_dir [-o /path/to/output_dir] [--order 3] [--dty
 
 ---
 
-### Run `run_brain_extraction`:
+### `run_brain_extraction`:
 
 
 The command `run_conforming` conforms all `.nii` or `.nii.gz` images in a specified input directory using FastSurfer’s `conform.py` script. The output will be saved to a specified directory or to a default `inputs-cfm/` directory.
@@ -184,7 +184,7 @@ run_brain_extraction -i /path/to/input_dir [-o /path/to/output_dir] [--order 3] 
 
 ---
 
-### Run `run_labels_reordering`:
+### `run_labels_reordering`:
 
 If you did not use the `--reorder_labels` flag when running `run_gouhfi`, you can reorder the labels using the `run_labels_reordering` command as shown below. Once reordered, your label maps can be used in the same quantiative pipeline as label maps produced by *FreeSurfer*/*FastSurfer*.
 
@@ -203,7 +203,7 @@ run_labels_reordering -i /path/to/input_dir -o /path/to/output_dir --old_labels_
 
 ---
 
-### Run `run_renaming`:
+### `run_renaming`:
 
 If your images are ready to be segmented, but do not respect the nnunet naming convention, you cna use the command `run_renaming` as shown here:
 
@@ -224,7 +224,10 @@ run_renaming -i /path/to/input_dir -o /path/to/output_dir --old_labels_file ./mi
 A `subject_id_correspondence.json` file will be created and saved in `input_dir` to keep tract of the correspondence between the old and new filenames.
 
 
-### Run `run_add_label`:
+### `run_add_label`:
+
+- If you want to reproduce what we did for creating the synthetic images for training from label maps with the addition 'Extra-Cerebral' label, use the following shown below.
+    - As mentioned in [Third-Party softwares related to GOUHFI](#third-party-softwares-related-to-gouhfi), this repository does **not** include the necessary codes to create synthetic images. Please refer to [SynthSeg's repository](https://github.com/BBillot/SynthSeg) for this.
 
 ```bash
 run_add_label -i /path/to/input_dir -o /path/to/output_dir [--labelmap aseg] [--mask mask.mgz] [--image orig.mgz] [--dilate-iters 4] [--save_new_mask] [--new_label 257] [--fill_holes] [--new_labelmap_name aseg_mod.nii.gz]
@@ -263,12 +266,15 @@ Training:
 
 Generating synthetic images for training:
 - [SynthSeg](https://github.com/BBillot/SynthSeg):
-    - The synthetic images used to train GOUHFI were generated from the generative model proposed in SynthSeg. Since *SynthSeg* is a complete beast on its own (with many other dependencies), we have decided to **not** include it in this repository. However, the approach used to create the synthetic training data for GOUHFI is completely analogous to the one shown in the [2-generation_explained.py](https://github.com/BBillot/SynthSeg/blob/master/scripts/tutorials/2-generation_explained.py) tutorial script available in the [SynthSeg GitHub repository](https://github.com/BBillot/SynthSeg). Thus, we recommend to people interested in reproducing the synthetic image generation process to install SynthSeg on its own and follow their well designed tutorials.
-    - Basically, by swapping the original *labels_classes_priors* files from SynthSeg in the [2-generation_explained.py](https://github.com/BBillot/SynthSeg/blob/master/scripts/tutorials/2-generation_explained.py) file by the ones shared in the `/misc/` subdirectory here in this repository (the four `.npy` files), you can create synthetic images for label maps with the Extra-Cerebral label (see the `run_add_label` command on how to perform this). The parameters used for the generative model are described in the appendices of the paper related to this repository (under submission). 
+    - The synthetic images used to train GOUHFI were generated from the generative model proposed in SynthSeg. Since SynthSeg is a complex beast on its own, we have decided to **not** include it in this repository. However, the approach used to create the synthetic training data for GOUHFI is very similar to the one shown in the [2-generation_explained.py](https://github.com/BBillot/SynthSeg/blob/master/scripts/tutorials/2-generation_explained.py) tutorial script available in the [SynthSeg GitHub repository](https://github.com/BBillot/SynthSeg). Thus, we recommend to people interested in reproducing the full pipeline with the synthetic image generation process to install SynthSeg on its own and follow their well designed tutorials.
+        - Basically, by 
+            1) Swapping the original *labels_classes_priors* files from SynthSeg in the [2-generation_explained.py](https://github.com/BBillot/SynthSeg/blob/master/scripts/tutorials/2-generation_explained.py) file by the ones shared in the `/misc/` subdirectory here in this repository (the four `.npy` files),
+            2) setting the variable `n_neutral_labels` to 6, and
+            3) using the model parameters described in the appendices of the paper (under submission) for the generative model,
+            You can create synthetic images for label maps containing the 'Extra-Cerebral' label (see the `run_add_label` command on how to perform this). 
     - More details about the generative model can be found in the [brain_generator.py](https://github.com/BBillot/SynthSeg/blob/master/SynthSeg/brain_generator.py) script and questions about the generative model should be addressed to the [SynthSeg team](https://github.com/BBillot/SynthSeg).
 
 ---
-
 
 ## Citation
 
