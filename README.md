@@ -1,6 +1,6 @@
 # GOUHFI: novel contrast- and resolution-agnostic segmentation tool for Ultra-High Field MRI
  
-Welcome to **GOUHFI**, a novel deep learning (DL) tool for segmentation of brain MR images of **any** contrast, resolution or even field strength. This repository provides detailed instructions on [Installation](#installation), [Usage](#usage), [Related work](#third-party-softwares-related-to-gouhfi) and [Licensing](#license). While the main goal of this repository is to share GOUHFI with the community, few commands useful for neuroscientists/neuroimagers working with label maps are also shared (see [Usage section](#usage) for some examples). 
+Welcome to **GOUHFI**, a novel deep learning (DL) tool for segmentation of brain MR images of **any** contrast, resolution or even field strength. This repository provides detailed instructions on [Installation](#installation), [Usage](#usage), [Related work](#third-party-softwares-related-to-gouhfi) and [Licensing](#license). While the main goal of this repository is to share GOUHFI with the community, few useful commands/scripts for neuroscientists/neuroimagers working with label maps are also shared (see [Usage section](#usage) for some examples). 
 
 ---
 
@@ -97,8 +97,9 @@ run_goufhi --help
 
 ### `run_gouhfi`: 
 
-- This is the command to obtain the whole brain segmentation into 35 labels from GOUHFI. The command `run_gouhfi` is used to (1) run the inference (i.e., segment your images using the trained model), (2) apply the post-processing step and (3), if desired, reorder the label values in the segmentations produced from GOUHFI (optional). 
-    - More precisely, it changes GOUHFI's lookuptable (LUT) (i.e., label values from 0 to 35) to the FreeSurfer's LUT which is commonly used by the neuroimaging community. 
+- This is the command to obtain the whole brain segmentation into 35 labels from GOUHFI.
+    - The command `run_gouhfi` is used to (1) run the inference (i.e., segment your images using the trained model), (2) apply the post-processing step and (3), if desired, reorder the label values in the segmentations produced from GOUHFI (optional). 
+    -   More precisely, the third step changes GOUHFI's lookuptable (LUT) (i.e., label values from 0 to 35) to the FreeSurfer's LUT which is commonly used by the neuroimaging community. 
 - We strongly recommend to use a GPU (anything with ~10 Gb of more of VRAM should be strong enough) to run the inference. CPU can be used but expect considerable computation time (ca. ~10 sec/subject on GPU and can be roughly ~75 times longer or even more on the CPU).
 - A few images are available for testing purposes in the `test_data` directory.
 
