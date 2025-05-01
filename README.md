@@ -244,7 +244,7 @@ run_add_label -i /path/to/input_dir -o /path/to/output_dir [--labelmap aseg] [--
 
 | Argument               | Default                          | Description                                                                                                                     |
 |------------------------|----------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
-| `-i`, `--input_dir`     | -                                | Directory containing input files (label map, mask, and MRI image inside the **same** fodler) (required).                                                  |
+| `-i`, `--input_dir`     | -                                | Directory containing input files (label map, mask, and MRI image inside the **same** folder) (required).                                                  |
 | `-o`, `--output_dir`    | -                                | Directory to save the output files. If not provided, defaults to the input directory.                                          |
 | `--labelmap`            | `aseg`                           | Substring to identify the label map file (e.g., 'aseg.mgz').                                                                   |
 | `--mask`                | `mask.mgz`                       | Substring to identify the mask file (e.g., 'mask.mgz').                                                                         |
@@ -264,19 +264,28 @@ This project incorporates code from the following projects, used under the Apach
 
 Image preparation/preprocessing:
 - [FastSurfer/FastSurferVINN](https://github.com/Deep-MI/FastSurfer):
-    - In this project, the script `conform.py` from FastSurfer/FastSurferVINN was used for 'conforming' the images to be segmented by GOUHFI (i.e., reorienting to LIA, resampling to isotropic resolution and normalizing signal values between 0 and 255). The script has been used as is, without modification, and is shared as part of the GOUHFI repository to make the repository more self-contained. If you have an already up and running FastSurfer installation, you can use it directly from there. In this repository, the function `run_conforming` will execute this script.
+    - In this project, the script `conform.py` from FastSurfer/FastSurferVINN was used for *conforming* the images to be segmented by GOUHFI (i.e., reorienting to LIA, resampling to isotropic resolution and normalizing signal values between 0 and 255). 
+    - The script has been used as is, without modification, and is shared as part of the GOUHFI repository to make the repository more self-contained. 
+    - If you have an already up and running FastSurfer installation, you can use it directly from there. In this repository, the function `run_conforming` will execute this script.
 - [ANTsPyNet](https://github.com/ANTsX/ANTsPyNet):
-    - For brain extraction. Quick and efficient brain extraction tool (`antspynet.brain_extraction`) if you need to do this for your images to be segmented. We provide a script called `brain_extraction_antspynet.py` where we wrapped an unmodified implementation of `antspynet.brain_extraction` to make the repository more self-contained. If you have an already up and running ANTsPyNet installation, you can use it directly from there. In this repository, the function `run_brain_extraction` will execute this script.
+    - For brain extraction. Quick and efficient brain extraction tool (`antspynet.brain_extraction`) if you need to do this for your images to be segmented. 
+    - We provide a script called `brain_extraction_antspynet.py` where we wrapped an unmodified implementation of `antspynet.brain_extraction` to make the repository more self-contained. 
+    - If you have an already up and running ANTsPyNet installation, you can use it directly from there. In this repository, the function `run_brain_extraction` will execute this script.
 
 Training:
 - [nnU-Net v2](https://github.com/MIC-DKFZ/nnUNet):
-    - The nnUNet v2 framework was used for training, inference, post-processing and evaluation of GOUHFI. This repository contains the full `nnunetv2` directory from v2.4.1 of the nnUNet. If you would like to reproduce the full training as explained in the GOUHFI paper, you should be able to do so with GOUHFI's installation alone. However, we recommend the users to refer to the [nnUNet documentation](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/) for more information on how to proceed since the documentation is not included in this repository.
+    - The nnUNet v2 framework was used for training, inference, post-processing and evaluation of GOUHFI.
+    - This repository contains the full nnUNetv2 directory (version [v2.4.1](https://github.com/MIC-DKFZ/nnUNet/releases/tag/v2.4.1)).
+    - If you would like to reproduce the full training pipeline as explained in the GOUHFI paper (or retrain a model from scratch), you should be able to do so with GOUHFI's installation alone. 
+        - However, we recommend the users to refer to the [nnUNet documentation](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/) for more information on how to proceed since the documentation is not included in this repository.
 
 Generating synthetic images for training:
 - [SynthSeg](https://github.com/BBillot/SynthSeg):
-    - The synthetic images used to train GOUHFI were generated from the generative model proposed in SynthSeg. Since SynthSeg is a complex beast on its own, we have decided to **not** include it in this repository. However, the approach used to create the synthetic training data for GOUHFI is very similar to the one shown in the [2-generation_explained.py](https://github.com/BBillot/SynthSeg/blob/master/scripts/tutorials/2-generation_explained.py) tutorial script available in the [SynthSeg GitHub repository](https://github.com/BBillot/SynthSeg). Thus, we recommend to people interested in reproducing the full pipeline with the synthetic image generation process to install SynthSeg on its own and follow their well designed tutorials.
+    - The synthetic images used to train GOUHFI were generated from the generative model proposed in SynthSeg. 
+    - Since SynthSeg is a complex beast on its own, we have decided to **not** include it in this repository. 
+    - However, the approach used to create the synthetic training data for GOUHFI is very similar to the one shown in the [2-generation_explained.py](https://github.com/BBillot/SynthSeg/blob/master/scripts/tutorials/2-generation_explained.py) tutorial script available in the [SynthSeg GitHub repository](https://github.com/BBillot/SynthSeg). Thus, we recommend to people interested in reproducing the full pipeline with the synthetic image generation process to install SynthSeg on its own and follow their well designed tutorials.
         - Basically, by 
-            1) Swapping the original *labels_classes_priors* files from SynthSeg in the [2-generation_explained.py](https://github.com/BBillot/SynthSeg/blob/master/scripts/tutorials/2-generation_explained.py) file by the ones shared in the `/misc/` subdirectory here in this repository (the four `.npy` files),
+            1) Swapping the original *labels_classes_priors* files from SynthSeg in the [2-generation_explained.py](https://github.com/BBillot/SynthSeg/blob/master/scripts/tutorials/2-generation_explained.py) file by the ones shared in the [/misc/](https://github.com/mafortin/GOUHFI/tree/main/misc) subdirectory here in this repository (the four `.npy` files),
             2) setting the variable `n_neutral_labels` to 6 and `randomise_res` to False, and
             3) using the model parameters described in the appendices of the paper (under submission) for the generative model,
             You can create synthetic images for label maps containing the 'Extra-Cerebral' label (see the `run_add_label` command on how to perform this). 
