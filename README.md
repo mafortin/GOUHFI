@@ -29,14 +29,14 @@ The Generalized and Optimized segmentation tool for Ultra-High Field Images (GOU
 conda create --name gouhfi python=3.10 
 ```
 - `gouhfi` in the above command line is the name of the virtual environment and can be replaced by anything else if preferred.
-- Once your (empty) virtual environment is created, execute the following steps inside this virtual environment by typing:
+- Once your python virtual environment is created, you need to execute the remaining steps inside this virtual environment. Thus, activate thi virtual environment by typing:
 ```bash
 conda activate gouhfi
 ```
 
 ### Step 2: Install PyTorch 
 
-- Follow the instructions on the [PyTorch website](https://pytorch.org/get-started/locally/) to install the stable PyTorch version based on your OS, package manager, language (Python here) and compute platform (usually the latest CUDA is recommended).
+- Follow the instructions on the [PyTorch website](https://pytorch.org/get-started/locally/) to install the stable PyTorch version based on your OS, package manager, language (Python here) and compute platform (CUDA 11.8 tested for GOUHFI, but your system requirements might be different).
 - This step **has to be done before** step 2 below as recommended by the nnUNet team. See step #1 [here](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/installation_instructions.md#installation-instructions).
 
 
@@ -80,7 +80,7 @@ echo $GOUHFI_HOME
 ```
 - where `~/.bashrc` can be `~/.zshrc`.
 
-- For more information, the [nnUNet documentation](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/set_environment_variables.md) on how to do this is quite helpful.
+- For more information, the [nnUNet documentation](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/set_environment_variables.md) is quite helpful.
 
 ### Step 7: Test the installation
 
@@ -123,6 +123,7 @@ run_goufhi -i /path/to/input/folder/ -o path/to/output/folder/
 - Image:
     - Contrast: Any
     - Resolution: Any (resampling to isotropic resolution is processed internally. Not tested for highly anisotropic images, but always worth a try.)
+    - Field Strength: Any (extensively validated at 3T, 7T and 9.4T)
     - Orientation: LIA (like FastSurfer [see the `conform_images` command])
 
 ---
@@ -140,7 +141,9 @@ Segmentation/Label map:
 
 ### Run conformin
 
-### run brain extraction
+### Run brain extraction
+
+### Run label reordering
 
 ## Citation
 
