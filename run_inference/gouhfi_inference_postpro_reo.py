@@ -42,8 +42,8 @@ def run_inference(dataset_id, input_dir, output_dir, config, trainer, plan, fold
                         ]
     # Add '-device cpu' if cpu is True
     if cpu:
-        inference_command.append("-device")
-        inference_command.append("cpu")
+        print("CPU will be used to run the inference. Expect a considerable increase in inference time.")
+        inference_command.append("-device cpu")
     
     print(f"Running inference with the following command: {' '.join(inference_command)}")
     subprocess.run(inference_command)
@@ -90,14 +90,15 @@ def apply_reordering(input_dir, output_dir, in_lut, out_lut):
     return duration
 
 def run_all(dataset_id='014', 
-            input_dir=os.getcwd(), 
-            output_dir=os.getcwd(), 
+            input_dir=None, 
+            output_dir=None, 
             config="3d_fullres", 
             trainer="nnUNetTrainer_NoDA_500epochs_AdamW", 
             plan="nnUNetResEncL", 
             np=8, 
             folds="0 1 2 3 4", 
             reorder_labels=False,
+            cpu=False,
             in_lut="/home/marcantf/Code/GOUHFI/misc/gouhfi-label-list-lut.txt",
             out_lut="/home/marcantf/Code/GOUHFI/misc/freesurfer-label-list-lut.txt"):
 
@@ -112,17 +113,25 @@ def run_all(dataset_id='014',
     # Construct paths
     input_dir = input_dir.rstrip('/')
     base_dir = os.path.dirname(input_dir)
-    output_dir = os.path.join(base_dir, "outputs")
-    output_pp_dir = os.path.join(base_dir, "outputs_postprocessed")
+
+    if output_dir is None:
+        output_dir = os.path.join(base_dir, "outputs")
+        output_pp_dir = os.path.join(base_dir, "outputs_postprocessed")
+        output_pp_reo_dir = os.path.join(base_dir, "outputs_postprocessed_reordered")
+    else:
+        output_dir = output_dir.rstrip('/')
+        base_out_dir = os.path.dirname(output_dir)
+        output_pp_dir = os.path.join(base_out_dir, "outputs_postprocessed")
+        output_pp_reo_dir = os.path.join(base_out_dir, "outputs_postprocessed_reordered")
+
     pp_dir = os.path.join(gouhfi_home, "trained_model/Dataset014_gouhfi/nnUNetTrainer_NoDA_500epochs_AdamW__nnUNetResEncL__3d_fullres/crossval_results_folds_0_1_2_3_4")
     pp_pkl_file = os.path.join(pp_dir, "postprocessing.pkl")
     plans_dir = os.path.join(gouhfi_home, "trained_model/Dataset014_gouhfi/nnUNetTrainer_NoDA_500epochs_AdamW__nnUNetResEncL__3d_fullres")
     plans_json_file = os.path.join(plans_dir, "plans.json")
-    output_pp_reo_dir = os.path.join(base_dir, "outputs_postprocessed_reordered")
 
 
     # Run inference
-    inference_duration = run_inference(dataset_id, input_dir, output_dir, config, trainer, plan, folds_list, np)
+    inference_duration = run_inference(dataset_id, input_dir, output_dir, config, trainer, plan, folds_list, np, cpu)
 
     # Apply post-processing
     post_processing_duration = apply_post_processing(output_dir, output_pp_dir, pp_pkl_file, np, plans_json_file)
@@ -146,7 +155,7 @@ def main():
 
     # Parse arguments
     args = parser.parse_args()
-
+    
     run_all(
         input_dir=args.input_dir,
         output_dir=args.output_dir,
