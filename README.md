@@ -142,6 +142,8 @@ File:
 
 Segmentation/Label map:
 - The labels are linearly ordered from 0 (background) to 35 by default if not reordered as described above. The complete list of labels is shown in file [misc/gouhfi-label-list-lut.txt](https://github.com/mafortin/GOUHFI/blob/main/misc/gouhfi-label-list-lut.txt).
+- As for **any** automatic segmentation tool, we recommend the user to visually inspect the quality of the segmetation outputs produced by GOUHFI.
+   - While the technique has been extensively tested, it may still have unknown limitations. We kindly encourage users to report any issues or unexpected behavior to help guide future improvements and development. 
 
 ---
 
