@@ -337,6 +337,6 @@ This project is licensed under the Apache 2.0 License. See the `LICENSE` file fo
 
 ## Maintainer
 
-Marc-Antoine Fortin  
+[Marc-Antoine Fortin](https://www.ntnu.no/ansatte/marc.a.fortin)  
 Norwegian University of Science and Technology (NTNU)  
 Contact: [marc.a.fortin@ntnu.no](mailto:marc.a.fortin@ntnu.no)
