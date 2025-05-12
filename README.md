@@ -70,7 +70,7 @@ export nnUNet_results=/path/to/nnUNet_results
 ```
 - where `/full/path/to/GOUHFI` is the full path to your GOUHFI installation directory.
 - where `/path/to/nnUNet_results` is the full path to the nnUNet results directory.
-   - **Note**: Setting this variable as the `trained_model` directory can be a good idea, while not an actual requirement. If you alread have a nnUNet installation installed from previous work, this line is probably already set, and no need to add a second time.
+   - **Note**: Setting this variable as the `trained_model` directory can be a good idea, while not an actual requirement. If you already have a nnUNet installation installed from previous work, this line is probably already set (no need to add it a second time).
 
 You can double-check if this step worked properly by typing in your terminal:
 ```bash
