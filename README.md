@@ -63,11 +63,14 @@ unzip GOUHFI.zip
 ### Step 6: Set GOUHFI's directory as an environment variable
 
 - For Linux/MacOS:
-Add the following line to your `.bashrc` or `.zshrc` file (depending on which shell you are using. `.bashrc` for `.sh` and `.zshrc` for `.zsh`.)
+Add the following lines to your `.bashrc` or `.zshrc` file (depending on which shell you are using. `.bashrc` for `.sh` and `.zshrc` for `.zsh`.)
 ```bash
 export GOUHFI_HOME=/full/path/to/GOUHFI
+export nnUNet_results=/path/to/nnUNet_results
 ```
-- where `/full/path/to/GOUHFI` is the full path to your GOUHFI installation directory.  
+- where `/full/path/to/GOUHFI` is the full path to your GOUHFI installation directory.
+- where `/path/to/nnUNet_results` is the full path to where the nnUNet results directory is.
+ - **Note**: This can be anything, but the `trained_model` directory can be a good idea, while not a requirement. If you alread have a nnUNet installation installed from previous work, this line is probably already set, and no need to add a second time.
 
 You can double-check if this step worked properly by typing in your terminal:
 ```bash
@@ -106,7 +109,7 @@ run_goufhi --help
 Example command line:
 
 ```bash
-run_gouhfi.py -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0 1 2 3 4"] [--reorder_labels] [--cpu]
+run_gouhfi -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0 1 2 3 4"] [--reorder_labels] [--cpu]
 ```
 
 ### Arguments
