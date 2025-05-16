@@ -302,13 +302,16 @@ Generating synthetic images for training:
 
 If you use **GOUHFI** in your research, please cite the following:
 
-For the paper (currently under submission):
+For the paper (pre-print, currently under peer-review process):
 ```
 @article{fortin2025gouhfi,
-  title={GOUHFI: a novel contrast- and resolution-agnostic segmentation tool for Ultra-High Field MRI},
-  author={Fortin, Marc-Antoine et al.},
-  journal={Imaging Neuroscience (currently under submission)},
-  year={2025}
+  title         = {GOUHFI: A Novel Contrast- and Resolution-Agnostic Segmentation Tool for Ultra-High Field MRI},
+  author        = {Fortin, Marc-Antoine and others},
+  journal       = {arXiv preprint arXiv:XXXX.XXXXX},
+  year          = {2025},
+  archivePrefix = {arXiv},
+  eprint        = {XXXX.XXXXX},
+  primaryClass  = {eess.IV}
 }
 ```
 
