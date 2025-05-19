@@ -66,11 +66,15 @@ unzip GOUHFI.zip
 Add the following lines to your `.bashrc` or `.zshrc` file (depending on which shell you are using. `.bashrc` for `.sh` and `.zshrc` for `.zsh`.)
 ```bash
 export GOUHFI_HOME=/full/path/to/GOUHFI
+export nnUNet_raw=/path/to/nnUNet_raw
+export nnUNet_preprocessed=/path/to/nnUNet_preprocessed
 export nnUNet_results=/path/to/nnUNet_results
 ```
-- where `/full/path/to/GOUHFI` is the full path to your GOUHFI installation directory.
-- where `/path/to/nnUNet_results` is the full path to the nnUNet results directory.
-   - **Note**: Setting this variable as the `trained_model` directory can be a good idea, while not an actual requirement. If you already have a nnUNet installation installed from previous work, this line is probably already set (no need to add it a second time).
+- where `/path/to/GOUHFI` is the full path to your GOUHFI installation directory.
+- where `/path/to/nnUNet_raw/preprocessed/results` is the full path to your nnUNet raw/preprocessed/results directories.
+   - **Note**: Setting the `nnUNet_results` variable as the `trained_model` directory can be a good idea, while not an actual requirement.
+   - If you already have a nnUNet installation installed from previous work, these lines are probably already set (no need to add it a second time).
+   - For more information about how to setup these environment variables for different OS or shell types, please refer to the [nnUNet documentation](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/set_environment_variables.md).
 
 You can double-check if this step worked properly by typing in your terminal:
 ```bash
