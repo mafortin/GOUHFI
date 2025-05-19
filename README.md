@@ -6,7 +6,7 @@ Welcome to **GOUHFI**, a novel deep learning (DL) tool for segmentation of brain
 
 ## How was GOUHFI developed?
 
-GOUHFI is a fully automatic, contrast- and resolution-agnostic, DL-based brain segmentation tool optimized for Ultra-High Field MRI (UHF-MRI), while also demonstrating strong performance at 3T compared to other well-established techniques. Using the domain randomization approach proposed in [SynthSeg](https://github.com/BBillot/SynthSeg) and a state-of-the-art 3D U-Net with Residual Encoders from the [nnUNetv2](https://github.com/MIC-DKFZ/nnUNet) framework, GOUHFI is able to handle various contrasts, resolutions and even field strengths without requiring fine-tuning or retraining. Tested on multiple datasets, it showed high accuracy and impressive robustness to noise and inhomogeneities, making it a valuable tool for neuroscientists working at both 3T and UHF-MRI. For more details on how GOUHFI was developed, please refer to the [following paper]() which i currently under submission.
+GOUHFI is a fully automatic, contrast- and resolution-agnostic, DL-based brain segmentation tool optimized for Ultra-High Field MRI (UHF-MRI), while also demonstrating strong performance at 3T compared to other well-established techniques. Using the domain randomization approach proposed in [SynthSeg](https://github.com/BBillot/SynthSeg) and a state-of-the-art 3D U-Net with Residual Encoders from the [nnUNetv2](https://github.com/MIC-DKFZ/nnUNet) framework, GOUHFI is able to handle various contrasts, resolutions and even field strengths without requiring fine-tuning or retraining. Tested on multiple datasets, it showed high accuracy and impressive robustness to noise and inhomogeneities, making it a valuable tool for neuroscientists working at both 3T and UHF-MRI. For more details on how GOUHFI was developed, please refer to the [following preprint](https://arxiv.org/abs/2505.11445) (paper currently submitted).
 
 ![GOUHFI](figs/fig-readme.png)
 
@@ -305,14 +305,13 @@ If you use **GOUHFI** in your research, please cite the following:
 For the paper (pre-print version, manuscript currently submitted to a peer-reviewed journal):
 ```
 @article{fortin2025gouhfi,
-  title         = {GOUHFI: A Novel Contrast- and Resolution-Agnostic Segmentation Tool for Ultra-High Field MRI},
-  author        = {Fortin, Marc-Antoine and others},
-  journal       = {arXiv preprint arXiv:XXXX.XXXXX},
-  year          = {2025},
-  archivePrefix = {arXiv},
-  eprint        = {XXXX.XXXXX},
-  primaryClass  = {eess.IV}
+  title={GOUHFI: a novel contrast- and resolution-agnostic segmentation tool for Ultra-High Field MRI},
+  author={Fortin, Marc-Antoine and Kristoffersen, Anne Louise and Larsen, Michael Staff and Lamalle, Laurent and Stirnberg, Ruediger and Goa, Paal Erik},
+  journal={arXiv preprint arXiv:2505.11445},
+  year={2025},
+  doi={10.48550/arXiv.2505.11445}
 }
+
 ```
 
 For the trained model:
