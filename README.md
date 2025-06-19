@@ -205,7 +205,7 @@ run_brain_extraction -i /path/to/input_dir [-o /path/to/output_dir] [--modality 
 ### `run_labels_reordering`:
 
 - If you did not use the `--reorder_labels` flag when running `run_gouhfi`, you can reorder the labels using the `run_labels_reordering` command as shown below. 
-- Once reordered, your label maps can be used in the same quantiative pipeline as label maps produced by *FreeSurfer*/*FastSurfer*.
+- Once reordered, your label maps can be used in the same quantitative pipeline as label maps produced by *FreeSurfer*/*FastSurfer*.
 
 ```bash
 run_labels_reordering -i /path/to/input_dir [-o /path/to/output_dir] --old_labels_file ./misc/gouhfi-label-list-lut.txt --new_labels_file ./misc/freesurfer-label-list-lut.txt
