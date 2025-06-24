@@ -51,7 +51,7 @@ def rescale_intensity(image_data, out_min=0, out_max=255, lower_percentile=0.5, 
 
     return scaled.astype(np.float32)
 
-def main():
+def main(custom_args=None):
     parser = argparse.ArgumentParser(
         description="Reorient and rescale all NIfTI images in a directory (default orientation: LIA, intensity range: 0-255)"
     )
@@ -63,8 +63,10 @@ def main():
     parser.add_argument('--pmin', type=float, default=0.5, help='Lower percentile for intensity rescaling (default: 0.5)')
     parser.add_argument('--pmax', type=float, default=99.5, help='Upper percentile for intensity rescaling (default: 99.5)')
 
-
-    args = parser.parse_args()
+    if custom_args is None:
+        args = parser.parse_args()
+    else:
+        args = custom_args
 
     if not os.path.isdir(args.input_dir):
         print(f"Input directory does not exist: {args.input_dir}")

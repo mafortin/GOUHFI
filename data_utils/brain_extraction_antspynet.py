@@ -161,7 +161,7 @@ def brain_extraction(input_folder, output_folder=None, modality="t1", skip_morph
 
 
     
-def main():
+def main(custom_args=None):
     parser = argparse.ArgumentParser(description="Brain Extraction using ANTsPyNet")
     parser.add_argument("-i", "--input_dir", type=str, help="Path to the input folder containing images")
     parser.add_argument("-o", "--output_dir", type=str, default=None,
@@ -174,7 +174,10 @@ def main():
     parser.add_argument("--dilation_voxels", type=int, default=0, help="Number of voxels for dilation (default: 0)")
     parser.add_argument("--rename", action="store_true", help="Flag to rename the brain extracted image(s) by adding the '_masked' suffix. Otherwise, brain extracted images will keep the same name.")
 
-    args = parser.parse_args()
+    if custom_args is None:
+        args = parser.parse_args()
+    else:
+        args = custom_args
 
     brain_extraction(args.input_dir, args.output_dir, args.modality, args.skip_morpho, args.mask_folder,
                      args.dilation_voxels, args.rename)
