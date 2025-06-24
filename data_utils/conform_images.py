@@ -38,15 +38,17 @@ def reorient_image(img, orientation='LIA'):
 
     return nib.Nifti1Image(reoriented_data, new_affine)
 
-def rescale_intensity(image_data, out_min=0, out_max=255):
-    in_min = image_data.min()
-    in_max = image_data.max()
+def rescale_intensity(image_data, out_min=0, out_max=255, lower_percentile=0.5, upper_percentile=99.5):
+    lower = np.percentile(image_data, lower_percentile)
+    upper = np.percentile(image_data, upper_percentile)
 
-    if in_max - in_min == 0:
+    if upper - lower == 0:
         return np.full_like(image_data, out_min, dtype=np.float32)
 
-    scaled = (image_data - in_min) / (in_max - in_min)
+    clipped = np.clip(image_data, lower, upper)
+    scaled = (clipped - lower) / (upper - lower)
     scaled = scaled * (out_max - out_min) + out_min
+
     return scaled.astype(np.float32)
 
 def main():
@@ -58,6 +60,9 @@ def main():
     parser.add_argument('-r', '--orientation', default='LIA', help='Target orientation (e.g., LIA, RAS)')
     parser.add_argument('--min', type=float, default=0, help='Rescale output minimum (default: 0)')
     parser.add_argument('--max', type=float, default=255, help='Rescale output maximum (default: 255)')
+    parser.add_argument('--pmin', type=float, default=0.5, help='Lower percentile for intensity rescaling (default: 0.5)')
+    parser.add_argument('--pmax', type=float, default=99.5, help='Upper percentile for intensity rescaling (default: 99.5)')
+
 
     args = parser.parse_args()
 
@@ -74,10 +79,11 @@ def main():
         sys.exit(0)
 
     print(f"Found {len(input_files)} NIfTI images to process in: {args.input_dir}")
-    print(f"  Output directory   : {args.output_dir}")
-    print(f"  Target orientation : {args.orientation.upper()}")
-    print(f"  Output data type   : float32")
-    print(f"  Intensity range    : {args.min} to {args.max}\n")
+    print(f"  Output directory    : {args.output_dir}")
+    print(f"  Target orientation  : {args.orientation.upper()}")
+    print(f"  Output data type    : float32")
+    print(f"  Intensity range     : {args.min} to {args.max}")
+    print(f"  Intensity rescaling : {args.pmin} to {args.pmax} percentile\n")
 
     for input_path in input_files:
         filename = os.path.basename(input_path)
@@ -85,7 +91,7 @@ def main():
 
         original_img = nib.load(input_path)
         reoriented_img = reorient_image(original_img, args.orientation.upper())
-        rescaled_data = rescale_intensity(reoriented_img.get_fdata(), args.min, args.max)
+        rescaled_data = rescale_intensity(reoriented_img.get_fdata(), args.min, args.max, args.pmin, args.pmax)
         final_img = nib.Nifti1Image(rescaled_data, reoriented_img.affine)
         nib.save(final_img, output_path)
 
