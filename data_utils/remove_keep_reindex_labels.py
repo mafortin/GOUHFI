@@ -7,7 +7,9 @@ from concurrent.futures import ProcessPoolExecutor
 
 
 def process_file(args):
-    file_path, output_dir, keep_labels, min_label, reindex, set_to_one = args
+    # In the function signature:
+    file_path, output_dir, keep_labels, min_label, max_label, reindex, set_to_one, combine_ctx = args
+
 
     seg_nii = nib.load(file_path)
     seg = seg_nii.get_fdata()
@@ -18,6 +20,13 @@ def process_file(args):
 
     if min_label is not None:
         seg[seg < min_label] = 0
+
+    if max_label is not None:
+        seg[seg > max_label] = 0
+
+    if combine_ctx:
+        seg[(seg >= 1000) & (seg < 2000)] = 3    # Left cortex in FS LUT
+        seg[(seg >= 2000) & (seg < 3000)] = 42   # Right cortex in FS LUT
 
     if set_to_one == "all":
         seg[seg != 0] = 1
@@ -52,8 +61,10 @@ def main():
     parser.add_argument("--output", required=True, help="Output directory to save processed label maps.")
     parser.add_argument("--keep-labels", type=int, nargs="+", help="Labels to keep (all others set to 0).")
     parser.add_argument("--min-label", type=int, help="Minimum label value to keep (others set to 0).")
+    parser.add_argument("--max-label", type=int, help="Maximum label value to keep (others set to 0).")
     parser.add_argument("--set-to-one", nargs="+", type=str, help="Labels to set to 1, or 'all' to set all non-zero labels.")
     parser.add_argument("--reindex", action="store_true", help="Reindex remaining labels to 1..N.")
+    parser.add_argument("--combine-ctx", action="store_true", help="Combine left cortex labels (1000s) to 3 and right cortex labels (2000s) to 42.")
     parser.add_argument("--num-workers", type=int, default=4, help="Number of parallel workers.")
     args = parser.parse_args()
 
@@ -67,9 +78,11 @@ def main():
     print(f"Processing {len(files)} files with {args.num_workers} workers...")
 
     task_args = [
-        (f, args.output, args.keep_labels, args.min_label, args.reindex, set_to_one)
+        (f, args.output, args.keep_labels, args.min_label, args.max_label, args.reindex, set_to_one, args.combine_ctx)
         for f in files
     ]
+
+
 
     with ProcessPoolExecutor(max_workers=args.num_workers) as executor:
         list(tqdm(executor.map(process_file, task_args), total=len(files), desc="Processing"))
