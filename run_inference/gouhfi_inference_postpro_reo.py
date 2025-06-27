@@ -43,7 +43,8 @@ def run_inference(dataset_id, input_dir, output_dir, config, trainer, plan, fold
     # Add '-device cpu' if cpu is True
     if cpu:
         print("CPU will be used to run the inference. Expect a considerable increase in inference time.")
-        inference_command.append("-device cpu")
+        inference_command += ["-device", "cpu"]
+
     
     print(f"Running inference with the following command: {' '.join(inference_command)}")
     subprocess.run(inference_command)
