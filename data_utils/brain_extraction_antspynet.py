@@ -102,7 +102,7 @@ def brain_extraction(input_folder, output_folder=None, modality="t1", skip_morph
 def main(custom_args=None):
     parser = argparse.ArgumentParser(description="Brain Extraction using ANTsPyNet")
     parser.add_argument("-i", "--input_dir", type=str, required=True, help="Path to the input folder containing images")
-    parser.add_argument("-o", "--output_dir", type=str, required=True, default=None,
+    parser.add_argument("-o", "--output_dir", type=str, required=False, default=None,
                         help="Path to the output folder (default: input folder)")
     parser.add_argument("--modality", type=str, default="t1", help="Modality for brain extraction (default: t1)")
     parser.add_argument("--skip_morpho", action="store_true",
