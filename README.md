@@ -168,7 +168,7 @@ Segmentation/Label map:
 - This step reorients your images to the LIA orientation and rescales the voxel values between 0 and 255 (both steps are modifiable by passing a different value while running `run_conforming`).
 
 ```bash
-run_conforming -i /path/to/input_dir [-o /path/to/output_dir -r LIA --min 0 --max 255]
+run_conforming -i /path/to/input_dir [-o /path/to/output_dir] [-r LIA] [--min 0] [--max 255]
 ```
 
 #### Arguments
@@ -191,7 +191,7 @@ run_conforming -i /path/to/input_dir [-o /path/to/output_dir -r LIA --min 0 --ma
 - *Note*: We recommend the users to do this step as the final step before segmenting the images with GOUHFI to avoid unwanted non-zero voxels outside the brain (i.e., run `run_conforming` before this script).
 
 ```bash
-run_brain_extraction -i /path/to/input_dir [-o /path/to/output_dir] [--modality t1] [--dilatation_voxels 2] [--skip_morpho --rename ]
+run_brain_extraction -i /path/to/input_dir [-o /path/to/output_dir] [--modality t1] [--dilatation_voxels 2] [--skip_morpho] [--rename]
 ```
 
 #### Arguments
@@ -233,7 +233,7 @@ run_labels_reordering -i /path/to/input_dir [-o /path/to/output_dir] --old_label
 - If your images are ready to be segmented, but do not respect the [nnunet naming convention](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/dataset_format_inference.md), you can use the `run_renaming` command as shown here:
 
 ```bash
-run_renaming -i /path/to/input_dir -o /path/to/output_dir [--start_substring ./misc/gouhfi-label-list-lut.txt --end_substring ./misc/freesurfer-label-list-lut.txt --segms]
+run_renaming -i /path/to/input_dir -o /path/to/output_dir [--start_substring ./misc/gouhfi-label-list-lut.txt] [--end_substring ./misc/freesurfer-label-list-lut.txt] [--segms]
 ```
 
 #### Arguments
