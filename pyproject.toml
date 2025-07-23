@@ -57,7 +57,7 @@ repository = "https://github.com/mafortin/GOUHFI"
 
 # Scripts section for executable entry points
 [project.scripts]
-run_goufhi = "run_inference.gouhfi_inference_postpro_reo:main"
+run_gouhfi = "run_inference.gouhfi_inference_postpro_reo:main"
 run_conforming = "data_utils.conform_images:main"
 run_brain_extraction = "data_utils.brain_extraction_antspynet:main"
 run_preprocessing = "data_utils.preprocessing_pipeline:main"
