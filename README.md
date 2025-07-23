@@ -186,7 +186,7 @@ run_conforming -i /path/to/input_dir [-o /path/to/output_dir -r LIA --min 0 --ma
 - *Note*: We recommend the users to do this step as the final step before segmenting the images with GOUHFI to avoid unwanted non-zero voxels outside the brain (i.e., run `run_conforming` before this script).
 
 ```bash
-run_brain_extraction -i /path/to/input_dir [-o /path/to/output_dir] [--modality t1] [--dilatation_voxels 2] [--mask_folder /path/to/new/masked] [--skip_morpho --rename ]
+run_brain_extraction -i /path/to/input_dir [-o /path/to/output_dir] [--modality t1] [--dilatation_voxels 2] [--skip_morpho --rename ]
 ```
 
 #### Arguments
@@ -199,7 +199,6 @@ run_brain_extraction -i /path/to/input_dir [-o /path/to/output_dir] [--modality 
 | `--skip_morpho`      | -              | Skip morphological operations on the brain mask and directly save the newly brain-extracted image(s).                                 |
 | `--dilation_voxels`  | 0              | Number of voxels for dilation (default: 0).                                                                                            |
 | `--rename`           | -              | Flag to rename the brain-extracted image(s) by adding the '_masked' suffix. Otherwise, brain extracted images will keep the same name. |
-| `--mask_folder`      | -              | Path to the folder containing masks for morphological operations (requires the morphological operations to be applied).               |
 
 
 ---
