@@ -1,5 +1,7 @@
 # GOUHFI: novel contrast- and resolution-agnostic segmentation tool for Ultra-High Field MRI
  
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15255556.svg)](https://doi.org/10.5281/zenodo.15255556)
+
 Welcome to **GOUHFI**, a novel deep learning (DL) tool for segmentation of brain MR images of **any** contrast, resolution or even field strength. This README provides detailed instructions on [Installation](#installation), [Usage](#usage), [Related work](#third-party-softwares-related-to-gouhfi), [Citation](#citation) and [Licensing](#license). While the main goal of this repository is to share GOUHFI with the community, some useful commands for neuroscientists/imagers working with label maps are also shared (see [Usage section](#usage) for some examples). 
 
 ---
