@@ -103,6 +103,11 @@ run_goufhi --help
 ## Usage
 
 - **Reminder**: All these functions need to be executed inside your virtual environment.
+- **Tip**: A few test images are provided for testing the different command lines below in the `$GOUHFI_HOME/test_data` directory. 
+    - Feel free to replace the `-i/--input_dir` argument in the usage examples below with eiher one of the following:
+        - `$GOUHFI_HOME/test_data/input-images-lia-brain-extracted/single-sub`; 
+        - `$GOUHFI_HOME/test_data/input-images-lia-brain-extracted/all-subs`; 
+        - `$GOUHFI_HOME/test_data/input-images-raw`.
 
 ### `run_gouhfi`: 
 
@@ -110,7 +115,7 @@ run_goufhi --help
     - The command `run_gouhfi` is used to (1) run the inference (i.e., segment your images using the trained model), (2) apply the post-processing step and (3), if desired, reorder the label values in the segmentations produced from GOUHFI (optional). 
         - More precisely, the third step changes GOUHFI's lookuptable (LUT) (i.e., label values from 0 to 35) to the FreeSurfer LUT which is commonly used by the neuroimaging community. 
 - We strongly recommend to use a GPU to run the inference (anything with >8 Gb of VRAM should be strong enough, but not officially tested). CPU can be used but expect a considerable increased in computation time (e.g., ca. ~10 sec/subject on GPU and can be roughly ~75 times longer or even more on the CPU depending on the setup).
-- **Tip**: A few images are available for testing purposes in the `test_data` directory if you just want to quickly test GOUHFI.
+
 
 Example command line:
 
