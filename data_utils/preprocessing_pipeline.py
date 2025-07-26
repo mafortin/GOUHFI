@@ -28,30 +28,32 @@ def run_preprocessing(args):
 
     # Always keep conforming results, no deletion here
 
-    print("\n=== Step 2: Brain Extraction ===")
-    brain_args = argparse.Namespace(
-        input_dir=conform_output_dir,
-        output_dir=brain_output_dir,
-        modality=args.modality,
-        skip_morpho=args.skip_morpho,
-        mask_folder=args.mask_folder,
-        dilation_voxels=args.dilation_voxels,
-        rename=args.rename
-    )
-    brain_extraction_antspynet.main(brain_args)
+    if not args.no_brain_extraction:
+        print("\n=== Step 2: Brain Extraction ===")
+        brain_args = argparse.Namespace(
+            input_dir=conform_output_dir,
+            output_dir=brain_output_dir,
+            modality=args.modality,
+            skip_morpho=args.skip_morpho,
+            dilation_voxels=args.dilation_voxels,
+            rename=args.rename
+        )
+        brain_extraction_antspynet.main(brain_args)
+    else:
+        print("\n=== Skipping brain extraction as requested ===")
 
 def main():
     parser = argparse.ArgumentParser(description="Run full preprocessing: conforming + brain extraction")
 
     parser.add_argument("-i", "--input_dir", type=str, required=True, help="Path to raw input images")
     parser.add_argument("-o", "--output_dir", type=str, help="Optional: path to save brain-extracted images (default: input_dir + _preproc)")
-    parser.add_argument("--mask_folder", type=str, help="Optional: path to mask folder for brain extraction")
 
     # Brain extraction options
     parser.add_argument("--modality", type=str, default="t1", help="Modality for brain extraction (default: t1)")
     parser.add_argument("--skip_morpho", action="store_true", default=True, help="Skip morphological operations (default: True)")
     parser.add_argument("--dilation_voxels", type=int, default=0, help="Dilation radius in voxels (default: 0)")
     parser.add_argument("--rename", action="store_true", help="Rename brain-extracted files with '_masked' suffix")
+    parser.add_argument("--no_brain_extraction", action="store_true", help="Skip brain extraction step entirely")
 
     # Conforming options
     parser.add_argument("--orientation", type=str, default="LIA", help="Orientation (default: LIA)")
