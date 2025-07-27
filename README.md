@@ -162,6 +162,44 @@ Segmentation/Label map:
 
 ---
 
+### `run_preprocessing`:
+
+- The command `run_preprocessing` performs the full preprocessing pipeline required for GOUHFI in one go (i.e., reorienting to LIA + rescaling to 0-255 + brain extraction) for all `.nii` or `.nii.gz` images found in the specified input directory. You can customize both steps or skip brain extraction entirely.
+    - *Note*: This is simply a convenient wrapper for running both `run_conforming` and `run_brain_extraction` in one step. If you prefer running them individually, please check the following two functions.
+
+```bash
+run_preprocessing -i /path/to/input_dir [-o /path/to/output_dir] [--modality t1] [--skip_morpho] [--dilation_voxels 0] [--rename] [--no_brain_extraction] [--orientation LIA] [--min 0] [--max 255] [--pmin 0.5] [--pmax 99.5]
+```
+
+#### Arguments
+
+| Argument                  | Type      | Default                        | Description                                                                                                         |
+|---------------------------|-----------|--------------------------------|---------------------------------------------------------------------------------------------------------------------|
+| `-i`, `--input_dir`       | `str`     | **Required**                   | Path to raw input images.                                                                                           |
+| `-o`, `--output_dir`      | `str`     | *input_dir* + `_preproc`       | Directory to save preprocessed images. If not set, defaults to `input_dir` + `_preproc`.                            |
+| `--modality`              | `str`     | `t1`                           | Modality for brain extraction (default: t1).                                                                        |
+| `--skip_morpho`           | `flag`    | `True`                         | Skip morphological operations on the brain mask (default: True).                                                    |
+| `--dilation_voxels`       | `int`     | `0`                            | Dilation radius in voxels for brain mask (default: 0).                                                              |
+| `--rename`                | `flag`    | `False`                        | Rename brain-extracted files with '_masked' suffix.                                                                 |
+| `--no_brain_extraction`   | `flag`    | `False`                        | Skip brain extraction step entirely.                                                                                |
+| `--orientation`           | `str`     | `LIA`                          | Orientation for conforming step (default: LIA).                                                                     |
+| `--min`                   | `float`   | `0`                            | Minimum value for intensity rescaling (default: 0). Can be any value.                                                                |
+| `--max`                   | `float`   | `255`                          | Maximum value for intensity rescaling (default: 255). Can be any value.                                                               |
+| `--pmin`                  | `float`   | `0.5`                          | Lower percentile for intensity rescaling (default: 0.5). If you already have brain-extracted images, could be a good idea to set to 0.1 instead (dataset-dependent).                                                           |
+| `--pmax`                  | `float`   | `99.5`                         | Upper percentile for intensity rescaling (default: 99.5). If you already have brain-extracted images, could be a good idea to set to 99.9 instead (dataset-dependent).                                                          |
+
+#### Input Requirements
+
+- File format: compressed NIfTI (`.nii.gz`)
+- Images should be placed in the input directory, not in subdirectories.
+
+#### Outputs
+
+- Preprocessed images saved in the specified output directory.
+- If brain extraction is performed, output images will be skull-stripped and optionally renamed with the `_masked` suffix.
+
+---
+
 ### `run_conforming`:
 
 - The command `run_conforming` *conforms* all the `.nii` or `.nii.gz` images found in the specified input directory.
