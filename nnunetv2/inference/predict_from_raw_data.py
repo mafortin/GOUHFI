@@ -486,10 +486,20 @@ class nnUNetPredictor(object):
             # why not leave prediction on device if perform_everything_on_device? Because this may cause the
             # second iteration to crash due to OOM. Grabbing that with try except cause way more bloated code than
             # this actually saves computation time
+
+            """ OG code from nnunet_v2, manually modified on 27/06/25 to avoid crashing when running on CPU
             if prediction is None:
                 prediction = self.predict_sliding_window_return_logits(data).to('cpu')
             else:
                 prediction += self.predict_sliding_window_return_logits(data).to('cpu')
+            """
+            # New code to avoid crashing on CPU from 27/06/25
+            if prediction is None:
+                prediction = self.predict_sliding_window_return_logits(data).to('cpu')
+            else:
+                prediction = prediction.clone()
+                prediction += self.predict_sliding_window_return_logits(data).to('cpu')
+
 
         if len(self.list_of_parameters) > 1:
             prediction /= len(self.list_of_parameters)

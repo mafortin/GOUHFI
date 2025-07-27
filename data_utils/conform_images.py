@@ -14,66 +14,91 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# This file is based from FastSurfer (https://github.com/Deep-MI/FastSurfer)
-# under the terms of the Apache License, Version 2.0.
 #---------------------------------------------------------------------------------#
 
-import os
+
+import nibabel as nib
+from nibabel.orientations import axcodes2ornt, io_orientation, ornt_transform, apply_orientation, inv_ornt_aff
 import argparse
-import subprocess
+import os
+import sys
+import numpy as np
+from glob import glob
 
-def conform_images(input_dir, output_dir, order, dtype, seg_input):
+def reorient_image(img, orientation='LIA'):
+    data = img.get_fdata()
+    affine = img.affine
 
-    # Ensure output directory exists
-    if output_dir:
-        os.makedirs(output_dir, exist_ok=True)
+    current_ornt = io_orientation(affine)
+    target_ornt = axcodes2ornt(tuple(orientation))
+
+    transform = ornt_transform(current_ornt, target_ornt)
+    reoriented_data = apply_orientation(data, transform)
+    new_affine = affine @ inv_ornt_aff(transform, data.shape)
+
+    return nib.Nifti1Image(reoriented_data, new_affine)
+
+def rescale_intensity(image_data, out_min=0, out_max=255, lower_percentile=0.5, upper_percentile=99.5):
+    lower = np.percentile(image_data, lower_percentile)
+    upper = np.percentile(image_data, upper_percentile)
+
+    if upper - lower == 0:
+        return np.full_like(image_data, out_min, dtype=np.float32)
+
+    clipped = np.clip(image_data, lower, upper)
+    scaled = (clipped - lower) / (upper - lower)
+    scaled = scaled * (out_max - out_min) + out_min
+
+    return scaled.astype(np.float32)
+
+def main(custom_args=None):
+    parser = argparse.ArgumentParser(
+        description="Reorient and rescale all NIfTI images in a directory (default orientation: LIA, intensity range: 0-255)"
+    )
+    parser.add_argument('-i', '--input-dir', required=True, help='Directory with input NIfTI images')
+    parser.add_argument('-o', '--output-dir', required=True, help='Directory to save output images')
+    parser.add_argument('-r', '--orientation', default='LIA', help='Target orientation (e.g., LIA, RAS)')
+    parser.add_argument('--min', type=float, default=0, help='Rescale output minimum (default: 0)')
+    parser.add_argument('--max', type=float, default=255, help='Rescale output maximum (default: 255)')
+    parser.add_argument('--pmin', type=float, default=0.5, help='Lower percentile for intensity rescaling (default: 0.5)')
+    parser.add_argument('--pmax', type=float, default=99.5, help='Upper percentile for intensity rescaling (default: 99.5)')
+
+    if custom_args is None:
+        args = parser.parse_args()
     else:
-        output_dir = os.path.join(os.path.dirname(input_dir), 'inputs-cfm')
-        os.makedirs(output_dir, exist_ok=True)
+        args = custom_args
 
-    # Iterate over all files in the input directory
-    for filename in sorted(os.listdir(input_dir)):
+    if not os.path.isdir(args.input_dir):
+        print(f"Input directory does not exist: {args.input_dir}")
+        sys.exit(1)
 
-        if filename.endswith(".nii") or filename.endswith(".nii.gz"):
-            
-            input_path = os.path.join(input_dir, filename)
-            output_path = os.path.join(output_dir, filename)
-            
-            # Construct the command
-            conform_module = "data_utils.fastsurfer.conform"
-            command = [
-                "python3", "-m", conform_module,
-                "-i", input_path,
-                "-o", output_path,
-                "--conform_min",
-                "--order", str(order),
-                "--dtype", dtype
-            ]
+    os.makedirs(args.output_dir, exist_ok=True)
 
-            # Add the --seg_input flag if specified
-            if seg_input:
-                command.append("--seg_input")
+    input_files = sorted(glob(os.path.join(args.input_dir, '*.nii')) + glob(os.path.join(args.input_dir, '*.nii.gz')))
 
-            # Run the command
-            subprocess.run(command, check=True)
-            print("--------------------------------------------------------------")
+    if not input_files:
+        print("No NIfTI files found in the input directory.")
+        sys.exit(0)
 
+    print(f"Found {len(input_files)} NIfTI images to process in: {args.input_dir}")
+    print(f"  Output directory    : {args.output_dir}")
+    print(f"  Target orientation  : {args.orientation.upper()}")
+    print(f"  Output data type    : float32")
+    print(f"  Intensity range     : {args.min} to {args.max}")
+    print(f"  Intensity rescaling : {args.pmin} to {args.pmax} percentile\n")
 
-def main():
+    for input_path in input_files:
+        filename = os.path.basename(input_path)
+        output_path = os.path.join(args.output_dir, filename)
 
-    parser = argparse.ArgumentParser(description="Conform NIfTI images in a directory.")
-    parser.add_argument("-i", "--input_dir", required=True, help="Path to the input directory containing NIfTI images.")
-    parser.add_argument("-o", "--output_dir",
-                        help="Path to the output directory to save conformed images. If not provided, input files will be overwritten.")
-    parser.add_argument("--order", type=int, default=3, help="Order of interpolation to use (default: 3).")
-    parser.add_argument("--dtype", type=str, default="float32",
-                        help="Data type to use for the conformed images (default: float32. Other options: uint8, int16, int32).")
-    parser.add_argument("--seg_input", action='store_true',
-                        help="Indicate that the image to be conformed is a label map and nearest neighbor interpolation will be used instead of linear interpolation or spline.")
+        original_img = nib.load(input_path)
+        reoriented_img = reorient_image(original_img, args.orientation.upper())
+        rescaled_data = rescale_intensity(reoriented_img.get_fdata(), args.min, args.max, args.pmin, args.pmax)
+        final_img = nib.Nifti1Image(rescaled_data, reoriented_img.affine)
+        nib.save(final_img, output_path)
 
-    args = parser.parse_args()
-    
-    conform_images(args.input_dir, args.output_dir, args.order, args.dtype, args.seg_input)
+    print(f"Finished processing {len(input_files)} images.")
 
 if __name__ == "__main__":
     main()
+

@@ -103,6 +103,11 @@ run_goufhi --help
 ## Usage
 
 - **Reminder**: All these functions need to be executed inside your virtual environment.
+- **Tip**: A few test images are provided for testing the different command lines below in the `$GOUHFI_HOME/test_data` directory. 
+    - Feel free to replace the `-i/--input_dir` argument in the usage examples below with eiher one of the following:
+        - `$GOUHFI_HOME/test_data/input-images-lia-brain-extracted/single-sub`; 
+        - `$GOUHFI_HOME/test_data/input-images-lia-brain-extracted/all-subs`; 
+        - `$GOUHFI_HOME/test_data/input-images-raw`.
 
 ### `run_gouhfi`: 
 
@@ -110,7 +115,7 @@ run_goufhi --help
     - The command `run_gouhfi` is used to (1) run the inference (i.e., segment your images using the trained model), (2) apply the post-processing step and (3), if desired, reorder the label values in the segmentations produced from GOUHFI (optional). 
         - More precisely, the third step changes GOUHFI's lookuptable (LUT) (i.e., label values from 0 to 35) to the FreeSurfer LUT which is commonly used by the neuroimaging community. 
 - We strongly recommend to use a GPU to run the inference (anything with >8 Gb of VRAM should be strong enough, but not officially tested). CPU can be used but expect a considerable increased in computation time (e.g., ca. ~10 sec/subject on GPU and can be roughly ~75 times longer or even more on the CPU depending on the setup).
-- **Tip**: A few images are available for testing purposes in the `test_data` directory if you just want to quickly test GOUHFI.
+
 
 Example command line:
 
@@ -159,11 +164,11 @@ Segmentation/Label map:
 
 ### `run_conforming`:
 
-- The command `run_conforming` *conforms* all the `.nii` or `.nii.gz` images found in the specified input directory using FastSurfer’s `conform.py` script.
-- This step basically reorients your image to LIA orientation, rescales the values between 0 and 255 and resamples the image to the minimal isotropic resolution (i.e., to the smallest voxel dimension). More details [here](https://github.com/deep-mi/FastSurfer/blob/dev/FastSurferCNN/data_loader/conform.py).
+- The command `run_conforming` *conforms* all the `.nii` or `.nii.gz` images found in the specified input directory.
+- This step reorients your images to the LIA orientation and rescales the voxel values between 0 and 255 (both steps are modifiable by passing a different value while running `run_conforming`).
 
 ```bash
-run_conforming -i /path/to/input_dir [-o /path/to/output_dir] [--order 3] [--dtype float32] [--seg_input]
+run_conforming -i /path/to/input_dir [-o /path/to/output_dir] [-r LIA] [--min 0] [--max 255]
 ```
 
 #### Arguments
@@ -172,9 +177,9 @@ run_conforming -i /path/to/input_dir [-o /path/to/output_dir] [--order 3] [--dty
 |----------------------|---------------------------|-------------------------------------------------------------------------------------------------------------|
 | `-i`, `--input_dir`  | -                         | Path to directory containing input NIfTI files (required).                                                  |
 | `-o`, `--output_dir` | *input_dir*/`inputs-cfm/` | Directory to save the conformed images. If not set, defaults to `inputs-cfm` next to input.                 |
-| `--order`            | `3`                       | Interpolation order for resampling. Common values: 0 (nearest), 1 (linear), 3 (cubic spline).               |
-| `--dtype`            | `"float32"`               | Data type of output images. Options include: `float32`, `uint8`, `int16`, `int32`.                          |
-| `--seg_input`        | *False*                   | Use this flag if the input images are label maps (e.g. segmentations). Uses nearest-neighbor interpolation. |
+| `-r`, `--orientation`            | `LIA`         | Images need to be reoriented to LIA since it was trained in that orientation.             |
+| `--min`            | 0               | Minimum value to use for rescaling voxel values.                          |
+| `--max`        | 255                   | Maximum value to use for rescaling voxel values. |
 
 
 ---
@@ -183,9 +188,10 @@ run_conforming -i /path/to/input_dir [-o /path/to/output_dir] [--order 3] [--dty
 
 
 - The command `run_brain_extraction` brain-extracts/skull-strips all the `.nii` or `.nii.gz` images found in the specified input directory using `antspynet.brain_extraction` function.
+- *Note*: We recommend the users to do this step as the final step before segmenting the images with GOUHFI to avoid unwanted non-zero voxels outside the brain (i.e., run `run_conforming` before this script).
 
 ```bash
-run_brain_extraction -i /path/to/input_dir [-o /path/to/output_dir] [--modality t1] [--dilatation_voxels 2] [--mask_folder /path/to/new/masked] [--skip_morpho --rename ]
+run_brain_extraction -i /path/to/input_dir [-o /path/to/output_dir] [--modality t1] [--dilatation_voxels 2] [--skip_morpho] [--rename]
 ```
 
 #### Arguments
@@ -198,7 +204,6 @@ run_brain_extraction -i /path/to/input_dir [-o /path/to/output_dir] [--modality 
 | `--skip_morpho`      | -              | Skip morphological operations on the brain mask and directly save the newly brain-extracted image(s).                                 |
 | `--dilation_voxels`  | 0              | Number of voxels for dilation (default: 0).                                                                                            |
 | `--rename`           | -              | Flag to rename the brain-extracted image(s) by adding the '_masked' suffix. Otherwise, brain extracted images will keep the same name. |
-| `--mask_folder`      | -              | Path to the folder containing masks for morphological operations (requires the morphological operations to be applied).               |
 
 
 ---
@@ -206,7 +211,7 @@ run_brain_extraction -i /path/to/input_dir [-o /path/to/output_dir] [--modality 
 ### `run_labels_reordering`:
 
 - If you did not use the `--reorder_labels` flag when running `run_gouhfi`, you can reorder the labels using the `run_labels_reordering` command as shown below. 
-- Once reordered, your label maps can be used in the same quantiative pipeline as label maps produced by *FreeSurfer*/*FastSurfer*.
+- Once reordered, your label maps can be used in the same quantitative pipeline as label maps produced by *FreeSurfer*/*FastSurfer*.
 
 ```bash
 run_labels_reordering -i /path/to/input_dir [-o /path/to/output_dir] --old_labels_file ./misc/gouhfi-label-list-lut.txt --new_labels_file ./misc/freesurfer-label-list-lut.txt
@@ -228,7 +233,7 @@ run_labels_reordering -i /path/to/input_dir [-o /path/to/output_dir] --old_label
 - If your images are ready to be segmented, but do not respect the [nnunet naming convention](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/dataset_format_inference.md), you can use the `run_renaming` command as shown here:
 
 ```bash
-run_renaming -i /path/to/input_dir -o /path/to/output_dir [--start_substring ./misc/gouhfi-label-list-lut.txt --end_substring ./misc/freesurfer-label-list-lut.txt --segms]
+run_renaming -i /path/to/input_dir -o /path/to/output_dir [--start_substring ./misc/gouhfi-label-list-lut.txt] [--end_substring ./misc/freesurfer-label-list-lut.txt] [--segms]
 ```
 
 #### Arguments
@@ -275,10 +280,6 @@ run_add_label -i /path/to/input_dir -o /path/to/output_dir [--labelmap aseg] [--
 This project incorporates code from the following projects, used under the Apache License 2.0:
 
 Image preparation/preprocessing:
-- [FastSurfer/FastSurferVINN](https://github.com/Deep-MI/FastSurfer):
-    - In this project, the script `conform.py` from FastSurfer/FastSurferVINN was used for *conforming* the images to be segmented by GOUHFI (i.e., reorienting to LIA, resampling to isotropic resolution and normalizing signal values between 0 and 255). 
-    - The script has been used as is, without modification, and is shared as part of the GOUHFI repository to make the repository more self-contained. 
-    - If you have an already up and running FastSurfer installation, you can use it directly from there. In this repository, the function `run_conforming` will execute this script.
 - [ANTsPyNet](https://github.com/ANTsX/ANTsPyNet):
     - For brain extraction. Quick and efficient brain extraction tool (`antspynet.brain_extraction`) if you need to do this for your images to be segmented. 
     - We provide a script called `brain_extraction_antspynet.py` where we wrapped an unmodified implementation of `antspynet.brain_extraction` to make the repository more self-contained. 

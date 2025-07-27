@@ -43,7 +43,8 @@ def run_inference(dataset_id, input_dir, output_dir, config, trainer, plan, fold
     # Add '-device cpu' if cpu is True
     if cpu:
         print("CPU will be used to run the inference. Expect a considerable increase in inference time.")
-        inference_command.append("-device cpu")
+        inference_command += ["-device", "cpu"]
+
     
     print(f"Running inference with the following command: {' '.join(inference_command)}")
     subprocess.run(inference_command)
@@ -99,7 +100,7 @@ def run_all(dataset_id='014',
             folds="0 1 2 3 4", 
             reorder_labels=False,
             cpu=False,
-            in_lut="/home/marcantf/Code/GOUHFI/misc/gouhfi-label-list-lut.txt",
+            in_lut="/home/marcantf/Code/GOUHFI/misc/gouhfi_v2p0_brain_labels_lut.txt", 
             out_lut="/home/marcantf/Code/GOUHFI/misc/freesurfer-label-list-lut.txt"):
 
     # Fetch the GOUHFI_HOME environment variable
@@ -114,6 +115,7 @@ def run_all(dataset_id='014',
     input_dir = input_dir.rstrip('/')
     base_dir = os.path.dirname(input_dir)
 
+    # Set output paths
     if output_dir is None:
         output_dir = os.path.join(base_dir, "outputs")
         output_pp_dir = os.path.join(base_dir, "outputs_postprocessed")
@@ -124,6 +126,7 @@ def run_all(dataset_id='014',
         output_pp_dir = os.path.join(base_out_dir, "outputs_postprocessed")
         output_pp_reo_dir = os.path.join(base_out_dir, "outputs_postprocessed_reordered")
 
+    # Set misc paths
     pp_dir = os.path.join(gouhfi_home, "trained_model/Dataset014_gouhfi/nnUNetTrainer_NoDA_500epochs_AdamW__nnUNetResEncL__3d_fullres/crossval_results_folds_0_1_2_3_4")
     pp_pkl_file = os.path.join(pp_dir, "postprocessing.pkl")
     plans_dir = os.path.join(gouhfi_home, "trained_model/Dataset014_gouhfi/nnUNetTrainer_NoDA_500epochs_AdamW__nnUNetResEncL__3d_fullres")
@@ -139,6 +142,8 @@ def run_all(dataset_id='014',
     # Reorder label maps to Freesurfer's lookuptable
     if reorder_labels:
         print("Reordering label maps to Freesurfer's lookuptable...")
+        in_lut = os.path.join(gouhfi_home, 'misc/gouhfi_v2p0_brain_labels_lut.txt')
+        out_lut = os.path.join(gouhfi_home, 'misc/freesurfer_brain_labels_lut.txt')
         reordering_duration = apply_reordering(input_dir=output_pp_dir, output_dir=output_pp_reo_dir, in_lut=in_lut, out_lut=out_lut)
 
 
