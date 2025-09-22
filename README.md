@@ -32,20 +32,24 @@ conda activate gouhfi
 
 ### Step 2: Install PyTorch 
 
-- Follow the instructions on the [PyTorch website](https://pytorch.org/get-started/locally/) to install the stable PyTorch version based on your OS (Linux, Mac or Windows), package manager (choose `pip` if unsure), language (Python) and compute platform (CUDA 11.8 was tested for GOUHFI, but your system requirements might be different and more recent versions probably work [but not tested]).
-- This step should be done before step 3 below [as recommended at step #1 here](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/installation_instructions.md#installation-instructions) by the nnUNet team. I do not know why, but better safe than sorry.
-
+- Inside your newly created python virtual environment run the following command:
+```bash
+pip install torch==2.1.2+cu121 torchvision==0.16.2+cu121 torchaudio==2.1.2+cu121 --index-url https://download.pytorch.org/whl/cu121
+```
+- **Note**: GOUHFI was tested for CUDA 11.8 and 12.1 and created with PyTorch 2.1.2. Other versions have **not** been tested.
 
 ### Step 3: Clone & install the repository locally
 
 ```bash
-cd path/where/you/want/gouhfi/to/be/installed
+cd PATH/WHERE/THE/GOUHFI/DIRECTORY/WILL/BE/CREATED
 git clone https://github.com/mafortin/GOUHFI.git
 cd GOUHFI
 pip install -e .
 ```
 
+- where `PATH/WHERE/THE/GOUHFI/DIRECTORY/WILL/BE/CREATED` is the directory where a new directory called `GOUHFI` will be created from the `git clone` command. 
 - The `pip install -e .` command allows you to install the GOUHFI repository in "editable" mode where you can modify the different scripts to your liking.
+- **Note**: If you do not have git installed on your machine, you can manually download the ZIP file of the repository by clicking on the green `< > Code` dropdown menu on GitHub and clik on the `Download ZIP` button. Once the download is completed, move the `.zip` file downloaded into the `PATH/WHERE/THE/GOUHFI/DIRECTORY/WILL/BE/CREATED` described above, extract/unzip the file and continue with the remaining installation steps from the `cd GOUHFI` and then `pip install -e .` command.
 
 ### Step 4: Download the trained model weights
 
@@ -64,38 +68,31 @@ unzip GOUHFI.zip
 
 ### Step 6: Set GOUHFI's directory as an environment variable
 
-- For Linux/MacOS:
-Add the following lines to your `.bashrc` or `.zshrc` file (depending on which shell you are using. `.bashrc` for `.sh` and `.zshrc` for `.zsh`.)
-```bash
-export GOUHFI_HOME=/full/path/to/GOUHFI
-export nnUNet_raw=/path/to/nnUNet_raw
-export nnUNet_preprocessed=/path/to/nnUNet_preprocessed
-export nnUNet_results=/path/to/nnUNet_results
-```
-- where `/path/to/GOUHFI` is the full path to your GOUHFI installation directory.
-- where `/path/to/nnUNet_raw/preprocessed/results` is the full path to your nnUNet raw/preprocessed/results directories.
-   - **Note**: Setting the `nnUNet_results` variable as the `trained_model` directory can be a good idea, while not an actual requirement.
-   - If you already have a nnUNet installation installed from previous work, these lines are probably already set (no need to add it a second time).
-   - For more information about how to setup these environment variables for different OS or shell types, please refer to the [nnUNet documentation](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/set_environment_variables.md).
+- **Note**: If you are not familiar with how to setup environment variables for different OS or shell types, please refer to the [nnUNet documentation](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/set_environment_variables.md) where they have examples for their environment variables for all OS types (here you will do it for GOUHFI_HOME instead).
 
-You can double-check if this step worked properly by typing in your terminal:
-```bash
-source ~/.bashrc
-echo $GOUHFI_HOME
-```
-- where `~/.bashrc` can be `~/.zshrc`.
+- If yourOS is Linux:
+    -Add the following line to your `.bashrc` file by typing `nano ~/.bashrc` and adding: 
 
-- For more information, the [nnUNet documentation](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/set_environment_variables.md) is quite helpful (no need to set the nnUNet environment variables as described in this link **except** if you plan on retraining GOUHFI).
+```bash
+export GOUHFI_HOME=/PATH/WHERE/THE/GOUHFI/DIRECTORY/WILL/BE/CREATED/GOUHFI
+```
+- where `/PATH/WHERE/THE/GOUHFI/DIRECTORY/WILL/BE/CREATED/GOUHFI` is the full path to your GOUHFI installation directory.
+- **Note**: For Mac, it should be the `.zshrc` file instead of the `.bashrc` file.
+
+### Step 6b [ONLY if you have already a nnUNet installation]: Set  directory as an environment variable
+   - **Note**: If you already have a nnUNet installation installed from previous work, these lines are probably already set (no need to add it a second time).
 
 ### Step 7: Test the installation
 
 - In your terminal, type:
 
 ```bash
+conda activate gouhfi
 run_gouhfi --help
 ```
 
-- If you see the help function for `run_gouhfi` (or any other functions related to GOUHFI described [below](#usage)), you have installed the repository properly. Congrats and happy segmenting!
+- **Note**: Remember to reactivate your GOUHFI virtual environment after sourcing the `.bashrc` file.
+- If you see the help function for `run_gouhfi` (or any other functions related to GOUHFI described [below](#usage)), you have installed the repository properly. Congrats and happy segmenting! :)
 
 ---
 
