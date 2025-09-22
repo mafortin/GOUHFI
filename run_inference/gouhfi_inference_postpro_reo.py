@@ -110,7 +110,7 @@ def run_all(dataset_id='014',
             config="3d_fullres", 
             trainer="nnUNetTrainer_NoDA_500epochs_AdamW", 
             plan="nnUNetResEncL", 
-            np=8, 
+            np=4, 
             folds="0 1 2 3 4", 
             reorder_labels=False,
             cpu=False,
@@ -161,7 +161,7 @@ def main():
     parser = argparse.ArgumentParser(description="Run nnUNet_v2 inference and post-processing.")
     parser.add_argument("-i", "--input_dir", required=True, help="Directory containing input data.")
     parser.add_argument("-o", "--output_dir", help="Directory to save output data.")
-    parser.add_argument("--np", type=int, default=8, help="Number of CPU processes to run post-processing in parallel. Depends on your CPU.")
+    parser.add_argument("--np", type=int, default=4, help="Number of CPU processes to run post-processing in parallel. Depends on your CPU.")
     parser.add_argument("--folds", default="0 1 2 3 4", help="Folds to use for inference. By default all folds are used and combined together.")
     parser.add_argument("--reorder_labels", action="store_true", help="Set flag if you want to reorder the label values from GOUHFI's values to the FreeSurfer lookuptable after post-processing.")
     parser.add_argument("--cpu", action="store_true", help="Set flag to use the CPU to run the inference. Expect a considerable increase in inference time.")
