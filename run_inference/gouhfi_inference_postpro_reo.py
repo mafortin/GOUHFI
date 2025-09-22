@@ -34,8 +34,7 @@ if gouhfi_home is None:
 # a previous nnUNet installation. These paths are temporary only for GOUHFI's nnUNet usage)
 os.environ["nnUNet_raw"] = os.path.join(gouhfi_home, "nnUNet_raw") # dummy path to silent nnUNet (not used in GOUHFI)
 os.environ["nnUNet_preprocessed"] = os.path.join(gouhfi_home, "nnUNet_preprocessed") # dummy path to silent nnUNet (not used in GOUHFI)
-os.environ["nnUNet_results"] = os.path.join(gouhfi_home, "nnUNet_results") # dummy path to silent nnUNet (not used in GOUHFI)
-#---------------------------------------------------------------------------------#
+os.environ["nnUNet_results"] = os.path.join(gouhfi_home, "trained_model") # Only important path since the nnUNet framework will use it to find the trained GOUHFI#---------------------------------------------------------------------------------#
 
 
 def run_inference(dataset_id, input_dir, output_dir, config, trainer, plan, folds, num_pr, cpu):
