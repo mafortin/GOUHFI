@@ -21,6 +21,7 @@ import argparse
 import subprocess
 import os
 import time
+from pathlib import Path
 
 #---------------------------------------------------------------------------------#
 ### Setting up environment variables for nnUNet if not already set 
@@ -124,21 +125,28 @@ def run_all(dataset_id='014',
     base_dir = os.path.dirname(input_dir)
 
     # Set output paths
+    input_path = Path(input_dir).resolve()
     if output_dir is None:
-        output_dir = os.path.join(base_dir, "outputs")
-        output_pp_dir = os.path.join(base_dir, "outputs_postprocessed")
-        output_pp_reo_dir = os.path.join(base_dir, "outputs_postprocessed_reordered")
+        output_dir = input_path / "outputs"
+        output_pp_dir = input_path / "outputs_postpro"
+        output_pp_reo_dir = input_path / "outputs_postpro_reo"
     else:
-        output_dir = output_dir.rstrip('/')
-        base_out_dir = os.path.dirname(output_dir)
-        output_pp_dir = os.path.join(base_out_dir, "outputs_postprocessed")
-        output_pp_reo_dir = os.path.join(base_out_dir, "outputs_postprocessed_reordered")
+        output_path = Path(output_dir).resolve()
+        output_dir = output_path
+        output_pp_dir = output_path / "outputs_postpro"
+        output_pp_reo_dir = output_path / "outputs_postpro_reo"
 
-    # Set misc paths
-    pp_dir = os.path.join(gouhfi_home, "trained_model/Dataset014_gouhfi/nnUNetTrainer_NoDA_500epochs_AdamW__nnUNetResEncL__3d_fullres/crossval_results_folds_0_1_2_3_4")
-    pp_pkl_file = os.path.join(pp_dir, "postprocessing.pkl")
-    plans_dir = os.path.join(gouhfi_home, "trained_model/Dataset014_gouhfi/nnUNetTrainer_NoDA_500epochs_AdamW__nnUNetResEncL__3d_fullres")
-    plans_json_file = os.path.join(plans_dir, "plans.json")
+    # Ensure directories exist
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_pp_dir.mkdir(parents=True, exist_ok=True)
+    if reorder_labels:
+        output_pp_reo_dir.mkdir(parents=True, exist_ok=True)
+
+    # Set misc paths (unchanged)
+    pp_dir = Path(gouhfi_home) / "trained_model/Dataset014_gouhfi/nnUNetTrainer_NoDA_500epochs_AdamW__nnUNetResEncL__3d_fullres/crossval_results_folds_0_1_2_3_4"
+    pp_pkl_file = pp_dir / "postprocessing.pkl"
+    plans_dir = Path(gouhfi_home) / "trained_model/Dataset014_gouhfi/nnUNetTrainer_NoDA_500epochs_AdamW__nnUNetResEncL__3d_fullres"
+    plans_json_file = plans_dir / "plans.json"
 
 
     # Run inference
