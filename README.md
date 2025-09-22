@@ -16,6 +16,8 @@ GOUHFI is a fully automatic, contrast- and resolution-agnostic, DL-based brain s
 
 ## Installation
 
+If you already have `conda` and `git` running on your device, the following installation procedure should be pretty straight forward. Helpful (hopefully) links were provided in some fo the steps to guide the user. GOUHFI has been successfully installed on Linux Ubuntu, Mac and Windows Operating Systems (OS).
+
 ### Step 1: Create a Python virtual environment
 
 - As for any Python project, we highly recommend you to install GOUHFI inside a virtual environment. Whether you use pip, anaconda or miniconda is up to you, but the steps below use conda. Relevant links related to [conda](https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/20/conda/) in general or [its installation](https://docs.conda.io/projects/conda/en/stable/user-guide/install/linux.html) for Ubuntu distributions (OS dependent).
@@ -32,24 +34,28 @@ conda activate gouhfi
 
 ### Step 2: Install PyTorch 
 
-- Follow the instructions on the [PyTorch website](https://pytorch.org/get-started/locally/) to install the stable PyTorch version based on your OS (Linux, Mac or Windows), package manager (choose `pip` if unsure), language (Python) and compute platform (CUDA 11.8 was tested for GOUHFI, but your system requirements might be different and more recent versions probably work [but not tested]).
-- This step should be done before step 3 below [as recommended at step #1 here](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/installation_instructions.md#installation-instructions) by the nnUNet team. I do not know why, but better safe than sorry.
-
+- Inside your newly created python virtual environment run the following command:
+```bash
+pip install torch==2.1.2+cu121 torchvision==0.16.2+cu121 torchaudio==2.1.2+cu121 --index-url https://download.pytorch.org/whl/cu121
+```
+- **Note**: GOUHFI was tested for CUDA 11.8 and 12.1 and created with PyTorch 2.1.2. Other versions have **not** been tested.
 
 ### Step 3: Clone & install the repository locally
 
 ```bash
-cd path/where/you/want/gouhfi/to/be/installed
+cd PATH/WHERE/THE/GOUHFI/DIRECTORY/WILL/BE/CREATED
 git clone https://github.com/mafortin/GOUHFI.git
 cd GOUHFI
 pip install -e .
 ```
 
-- The `pip install -e .` command allows you to install the GOUHFI repository in "editable" mode where you can modify the different scripts to your liking.
+- where `PATH/WHERE/THE/GOUHFI/DIRECTORY/WILL/BE/CREATED` is the directory where a new directory called `GOUHFI` will be created from the `git clone` command. 
+- The `pip install -e .` command allows you to install the GOUHFI repository in editable mode where you can modify the different scripts to your liking.
+- **Note**: If you do not have git installed on your machine, you can manually download the ZIP file of the repository by clicking on the green `< > Code` dropdown menu on GitHub and click on the `Download ZIP` button. Once the download is completed, move the `.zip` file downloaded into the `PATH/WHERE/THE/GOUHFI/DIRECTORY/WILL/BE/CREATED` described above, extract/unzip the file and continue with the remaining installation steps from the `cd GOUHFI` and then `pip install -e .` command.
 
 ### Step 4: Download the trained model weights
 
-1) A Zenodo link to the trained model weights is included in the repository in the `trained_model/gouhfi-trained-model-weights.md` file or simply with this [link](https://zenodo.org/records/15255556). This might require you to have a Zenodo account (free).
+1) A Zenodo link to the trained model weights is included in the repository in the `trained_model/gouhfi-trained-model-weights.md` file or simply with this [link](https://zenodo.org/records/15255556).
 2) Move this `GOUHFI.zip` in the `trained-model` folder before unzipping it.
 
 ### Step 5: Unzip the `GOUHFI.zip`
@@ -60,42 +66,37 @@ cd trained_model/
 unzip GOUHFI.zip
 ```
 
-- Once unzipped, you should have a folder called `Dataset014_gouhfi` with all trained folds and related files in the `trained_model` folder.
+- Once unzipped, you should have a folder called `Dataset014_gouhfi` with all five trained folds and related files in the `trained_model` folder. This is the trained GOUHFI model.
+- **Note**: If you manually extracted GOUHFI with your OS GUI (i.e., not using the unzip function shown above), be careful. It might have created an additional and unwanted directory called `GOUHFI` where the `Dataset014_gouhfi` is hidden inside. Manually move `Dataset014_gouhfi` back into `trained_model` if that's the case. 
 
 ### Step 6: Set GOUHFI's directory as an environment variable
 
-- For Linux/MacOS:
-Add the following lines to your `.bashrc` or `.zshrc` file (depending on which shell you are using. `.bashrc` for `.sh` and `.zshrc` for `.zsh`.)
-```bash
-export GOUHFI_HOME=/full/path/to/GOUHFI
-export nnUNet_raw=/path/to/nnUNet_raw
-export nnUNet_preprocessed=/path/to/nnUNet_preprocessed
-export nnUNet_results=/path/to/nnUNet_results
-```
-- where `/path/to/GOUHFI` is the full path to your GOUHFI installation directory.
-- where `/path/to/nnUNet_raw/preprocessed/results` is the full path to your nnUNet raw/preprocessed/results directories.
-   - **Note**: Setting the `nnUNet_results` variable as the `trained_model` directory can be a good idea, while not an actual requirement.
-   - If you already have a nnUNet installation installed from previous work, these lines are probably already set (no need to add it a second time).
-   - For more information about how to setup these environment variables for different OS or shell types, please refer to the [nnUNet documentation](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/set_environment_variables.md).
+- **Note**: If you are not familiar with how to setup environment variables for different OS or shell types, please refer to the [nnUNet documentation](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/set_environment_variables.md) where they have examples for their environment variables for all OS types (Here you will do it for `GOUHFI_HOME` instead of their own environment variables).
 
-You can double-check if this step worked properly by typing in your terminal:
+- If you’re using Linux, open your `.bashrc` file by typing `nano ~/.bashrc` in the terminal, and then add the following line: 
+
+```bash
+export GOUHFI_HOME="/PATH/WHERE/THE/GOUHFI/DIRECTORY/WILL/BE/CREATED/GOUHFI"
+```
+- where `/PATH/WHERE/THE/GOUHFI/DIRECTORY/WAS/CREATED/GOUHFI` is the full path to your GOUHFI installation directory.
+- **Note**: For Mac, it should be the `.zshrc` file instead of the `.bashrc` file.
+
+- Now, either open a new terminal tab or source your `.bashrc` file in the same terminal tab by typing:
 ```bash
 source ~/.bashrc
-echo $GOUHFI_HOME
 ```
-- where `~/.bashrc` can be `~/.zshrc`.
-
-- For more information, the [nnUNet documentation](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/set_environment_variables.md) is quite helpful (no need to set the nnUNet environment variables as described in this link **except** if you plan on retraining GOUHFI).
+- **Note**: This will deactivate the `gouhfi` virtual environment, don't forget to reactivate it before using GOUHFI!
 
 ### Step 7: Test the installation
 
 - In your terminal, type:
 
 ```bash
-run_goufhi --help
+run_gouhfi --help
 ```
 
-- If you see the help function for `run_gouhfi` (or any other functions related to GOUHFI described [below](#usage)), you have installed the repository properly. Congrats and happy segmenting!
+- **Note**: Remember to reactivate your GOUHFI virtual environment after sourcing the `.bashrc` file.
+- If you see the help function for `run_gouhfi` (or any other functions related to GOUHFI described [below](#usage)), you have installed the repository properly. Congrats and happy segmenting! :)
 
 ---
 
@@ -116,6 +117,7 @@ run_goufhi --help
         - More precisely, the third step changes GOUHFI's lookuptable (LUT) (i.e., label values from 0 to 35) to the FreeSurfer LUT which is commonly used by the neuroimaging community. 
 - We strongly recommend to use a GPU to run the inference (anything with >8 Gb of VRAM should be strong enough, but not officially tested). CPU can be used but expect a considerable increased in computation time (e.g., ca. ~10 sec/subject on GPU and can be roughly ~75 times longer or even more on the CPU depending on the setup).
 
+- **Note**: **Before** running the example command line below, remember that the images to be segmented need to (1) be preprocessed (i.e., conformed + brain extraction, see [this](#run_preprocessing)) and (2) renamed to the nnUNet naming convention (see [that](#run_renaming)).
 
 Example command line:
 
@@ -129,7 +131,7 @@ run_gouhfi -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0 1 
 |-----------------------|---------|----------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
 | `-i`, `--input_dir`   | `str`   | **Required**                                                         | Path to the directory containing input `.nii.gz` files.                                    |
 | `-o`, `--output_dir`  | `str`   | Derived from `input_dir` as `../outputs/`                            | Directory where the segmentations will be saved.                                            |
-| `--np`                | `int`   | `8`                                                                  | Number of parallel CPU processes to use during post-processing.                            |
+| `--np`                | `int`   | `4`                                                                  | Number of parallel CPU processes to use during post-processing.                            |
 | `--folds`             | `str`   | `"0 1 2 3 4"`                                                        | Space-separated string of folds to use for inference (we recommend to use all).            |
 | `--reorder_labels`    | `flag`  | `False`                                                              | If set, reorders label values from GOUHFI's LUT to FreeSurfer's LUT after post-processing. |
 | `--cpu`               | `flag`  | `False`                                                              | If set, the cpu will be used instead of the GPU for running the inference.                 |
@@ -145,8 +147,8 @@ run_gouhfi -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0 1 
     - Contrast: Any
     - Resolution: Any (resampling to isotropic resolution is processed internally. Not tested for highly anisotropic images, but always worth a try).
     - Field Strength: Any (extensively validated at 3T, 7T and 9.4T)
-    - Orientation: LIA (like FastSurfer [see [run_conforming](#run_conforming)])
-    - Brain-extracted/Skull-stripped [see [run_brain_extraction](#run_brain_extraction)]
+    - Preprocessed --> conformed + brain-extracted (see [this](#run_preprocessing) for both steps combined into one)
+        - Each preprocessing step can be run individually if desired with the following two scripts for [conforming](#run_conforming) and [brain extraction](#run_brain_extraction).
 
 
 #### Outputs

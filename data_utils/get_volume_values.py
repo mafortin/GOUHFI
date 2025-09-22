@@ -8,11 +8,20 @@ import pandas as pd
 import glob
 
 def strip_nii_extension(filename):
+    """
+    Removes .nii/.nii.gz and special suffixes like '_0000_synthseg' from filename.
+    """
     if filename.endswith(".nii.gz"):
-        return filename[:-7]
+        filename = filename[:-7]
     elif filename.endswith(".nii"):
-        return filename[:-4]
+        filename = filename[:-4]
+
+    # Special case: SynthSeg-style suffix
+    if filename.endswith("_0000_synthseg"):
+        filename = filename[:-14]  # remove "_0000_synthseg"
+
     return filename
+
 
 def load_label_mapping(label_file):
     label_map = {}
@@ -117,9 +126,10 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
 
     default_label_files = {
-        "brain": "brain_labels.txt",
-        "cortex": "cortex_labels.txt"
+        "brain": os.path.expandvars("$GOUHFI_HOME/misc/gouhfi_v2p0_brain_labels_lut.txt"),
+        "cortex": os.path.expandvars("$GOUHFI_HOME/misc/gouhfi_v2p0_cortex_labels_lut.txt")
     }
+
     label_file = args.label_file if args.label_file else default_label_files[args.task]
 
     if not os.path.isfile(label_file):
