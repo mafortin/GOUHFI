@@ -22,6 +22,25 @@ import subprocess
 import os
 import time
 
+#---------------------------------------------------------------------------------#
+### Setting up environment variables for nnUNet if not already set 
+# GOUHFI base directory
+gouhfi_home = os.environ.get("GOUHFI_HOME")
+if gouhfi_home is None:
+        print("ERROR: GOUHFI_HOME is not set. Please set the GOUHFI_HOME environment variable as explained in the installation steps.")
+        exit(1)
+
+# Set nnUNet paths only if not already defined
+os.environ.setdefault("nnUNet_raw", os.path.join(gouhfi_home, "nnUNet_raw"))
+os.environ.setdefault("nnUNet_preprocessed", os.path.join(gouhfi_home, "nnUNet_preprocessed"))
+os.environ.setdefault("nnUNet_results", os.path.join(gouhfi_home, "trained_model"))
+
+# Optional: expose them as variables
+nnUNet_raw = os.environ["nnUNet_raw"]
+nnUNet_preprocessed = os.environ["nnUNet_preprocessed"]
+nnUNet_results = os.environ["nnUNet_results"]
+#---------------------------------------------------------------------------------#
+
 
 def run_inference(dataset_id, input_dir, output_dir, config, trainer, plan, folds, num_pr, cpu):
     start_time = time.time()
@@ -102,12 +121,6 @@ def run_all(dataset_id='014',
             cpu=False,
             in_lut="/home/marcantf/Code/GOUHFI/misc/gouhfi_v2p0_brain_labels_lut.txt", 
             out_lut="/home/marcantf/Code/GOUHFI/misc/freesurfer-label-list-lut.txt"):
-
-    # Fetch the GOUHFI_HOME environment variable
-    gouhfi_home = os.getenv('GOUHFI_HOME')
-    if gouhfi_home is None:
-        print("Error: GOUHFI_HOME is not set. Please set the GOUHFI_HOME environment variable as explained in the installation steps.")
-        exit(1)
 
     # Convert folds argument to a list of strings 
     folds_list = folds.split()
