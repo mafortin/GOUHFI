@@ -92,7 +92,7 @@ echo $GOUHFI_HOME
 - In your terminal, type:
 
 ```bash
-run_goufhi --help
+run_gouhfi --help
 ```
 
 - If you see the help function for `run_gouhfi` (or any other functions related to GOUHFI described [below](#usage)), you have installed the repository properly. Congrats and happy segmenting!
