@@ -30,15 +30,11 @@ if gouhfi_home is None:
         print("ERROR: GOUHFI_HOME is not set. Please set the GOUHFI_HOME environment variable as explained in the installation steps.")
         exit(1)
 
-# Set nnUNet paths only if not already defined
-os.environ.setdefault("nnUNet_raw", os.path.join(gouhfi_home, "nnUNet_raw"))
-os.environ.setdefault("nnUNet_preprocessed", os.path.join(gouhfi_home, "nnUNet_preprocessed"))
-os.environ.setdefault("nnUNet_results", os.path.join(gouhfi_home, "trained_model"))
-
-# Optional: expose them as variables
-nnUNet_raw = os.environ["nnUNet_raw"]
-nnUNet_preprocessed = os.environ["nnUNet_preprocessed"]
-nnUNet_results = os.environ["nnUNet_results"]
+# Always set GOUHFI-specific nnUNet paths (won't overwrite existing nnUNet paths if already set from
+# a previous nnUNet installation. These paths are temporary only for GOUHFI's nnUNet usage)
+os.environ["nnUNet_raw"] = os.path.join(gouhfi_home, "nnUNet_raw") # dummy path to silent nnUNet (not used in GOUHFI)
+os.environ["nnUNet_preprocessed"] = os.path.join(gouhfi_home, "nnUNet_preprocessed") # dummy path to silent nnUNet (not used in GOUHFI)
+os.environ["nnUNet_results"] = os.path.join(gouhfi_home, "nnUNet_results") # dummy path to silent nnUNet (not used in GOUHFI)
 #---------------------------------------------------------------------------------#
 
 
