@@ -117,6 +117,7 @@ run_gouhfi --help
         - More precisely, the third step changes GOUHFI's lookuptable (LUT) (i.e., label values from 0 to 35) to the FreeSurfer LUT which is commonly used by the neuroimaging community. 
 - We strongly recommend to use a GPU to run the inference (anything with >8 Gb of VRAM should be strong enough, but not officially tested). CPU can be used but expect a considerable increased in computation time (e.g., ca. ~10 sec/subject on GPU and can be roughly ~75 times longer or even more on the CPU depending on the setup).
 
+- **Note**: **Before** running the example command line below, remember that the images to be segmented need to (1) be preprocessed (i.e., conformed + brain extraction, see [this](#run_preprocessing)) and (2) renamed to the nnUNet naming convention (see [that](#run_renaming)).
 
 Example command line:
 
@@ -130,7 +131,7 @@ run_gouhfi -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0 1 
 |-----------------------|---------|----------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
 | `-i`, `--input_dir`   | `str`   | **Required**                                                         | Path to the directory containing input `.nii.gz` files.                                    |
 | `-o`, `--output_dir`  | `str`   | Derived from `input_dir` as `../outputs/`                            | Directory where the segmentations will be saved.                                            |
-| `--np`                | `int`   | `8`                                                                  | Number of parallel CPU processes to use during post-processing.                            |
+| `--np`                | `int`   | `4`                                                                  | Number of parallel CPU processes to use during post-processing.                            |
 | `--folds`             | `str`   | `"0 1 2 3 4"`                                                        | Space-separated string of folds to use for inference (we recommend to use all).            |
 | `--reorder_labels`    | `flag`  | `False`                                                              | If set, reorders label values from GOUHFI's LUT to FreeSurfer's LUT after post-processing. |
 | `--cpu`               | `flag`  | `False`                                                              | If set, the cpu will be used instead of the GPU for running the inference.                 |
@@ -146,8 +147,8 @@ run_gouhfi -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0 1 
     - Contrast: Any
     - Resolution: Any (resampling to isotropic resolution is processed internally. Not tested for highly anisotropic images, but always worth a try).
     - Field Strength: Any (extensively validated at 3T, 7T and 9.4T)
-    - Orientation: LIA (like FastSurfer [see [run_conforming](#run_conforming)])
-    - Brain-extracted/Skull-stripped [see [run_brain_extraction](#run_brain_extraction)]
+    - Preprocessed --> conformed + brain-extracted (see [this](#run_preprocessing) for both steps combined into one)
+        - Each preprocessing step can be run individually if desired with the following two scripts for [conforming](#run_conforming) and [brain extraction](#run_brain_extraction).
 
 
 #### Outputs
