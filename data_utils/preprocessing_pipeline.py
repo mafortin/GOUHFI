@@ -5,19 +5,30 @@
 #----------------------------------------------------------------------------------#
 
 import argparse
-import os
+from pathlib import Path
 from data_utils import conform_images
 from data_utils import brain_extraction_antspynet
 
-def run_preprocessing(args):
-    input_dir = args.input_dir
-    conform_output_dir = os.path.join(os.path.dirname(input_dir), os.path.basename(input_dir) + "_cfm")
-    brain_output_dir = args.output_dir or os.path.join(os.path.dirname(input_dir), os.path.basename(input_dir) + "_preproc")
+def get_output_dir(input_path: Path, suffix: str) -> Path:
+    """Return a robust output directory by appending a suffix to the last path component."""
+    input_path = input_path.resolve()
+    
+    # If input_path ends with a slash or is a directory, append suffix to the directory name
+    if input_path.is_dir() or str(input_path).endswith(('/', '\\')):
+        return input_path.parent / (input_path.name + suffix)
+    else:
+        # fallback for file paths (just in case)
+        return input_path.with_name(input_path.stem + suffix + input_path.suffix)
 
-    print("\n=== Step 1: Conforming images ===")
+def run_preprocessing(args):
+    input_dir = Path(args.input_dir).resolve()
+    conform_output_dir = get_output_dir(input_dir, "_cfm")
+    brain_output_dir = Path(args.output_dir).resolve() if args.output_dir else get_output_dir(input_dir, "_preproc")
+
+    print(f"\n=== Step 1: Conforming images ===\nSaving to: {conform_output_dir}")
     conform_args = argparse.Namespace(
-        input_dir=input_dir,
-        output_dir=conform_output_dir,
+        input_dir=str(input_dir),
+        output_dir=str(conform_output_dir),
         orientation=args.orientation,
         min=args.min,
         max=args.max,
