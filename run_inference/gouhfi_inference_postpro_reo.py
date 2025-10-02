@@ -61,7 +61,7 @@ def run_inference(dataset_id, input_dir, output_dir, config, trainer, plan, fold
         inference_command += ["-device", "cpu"]
 
     
-    print(f"Running inference with the following command: {' '.join(inference_command)}")
+    print(f"Running inference with the following command: {' '.join(map(str, inference_command))}")
     subprocess.run(inference_command)
     end_time = time.time()
     duration = end_time - start_time
@@ -80,7 +80,7 @@ def apply_post_processing(input_dir, output_dir, pp_pkl_file, np, plans_json):
         "-np", str(np),
         "-plans_json", plans_json
     ]
-    print(f"Applying post-processing with the following command: {' '.join(post_processing_command)}")
+    print(f"Applying post-processing with the following command: {' '.join(map(str, post_processing_command))}")
     subprocess.run(post_processing_command)
     end_time = time.time()
     duration = end_time - start_time
@@ -98,7 +98,7 @@ def apply_reordering(input_dir, output_dir, in_lut, out_lut):
         "--old_labels_file", in_lut,
         "--new_labels_file", out_lut
     ]
-    print(f"Reordering labels with the following command: {' '.join(reorder_command)}")
+    print(f"Reordering labels with the following command: {' '.join(map(str, reorder_command))}")
     subprocess.run(reorder_command)
     end_time = time.time()
     duration = end_time - start_time
