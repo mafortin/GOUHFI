@@ -6,7 +6,7 @@ Welcome to **GOUHFI**, a novel deep learning (DL) tool for segmentation of brain
 
 ## Updates
 
- - 29/09/25: 🎉 **GOUHFI's paper has been accepted for publication in the _Imaging Neuroscience_ journal!** 🎉 Until the final version is published online through the journal, the accepted version is for now available through [arXiv](https://arxiv.org/abs/2505.11445).
+ - 29/09/25: 🎉 **GOUHFI's paper has been accepted for publication in the _Imaging Neuroscience_ journal!** 🎉 The accepted version is available online [here](https://direct.mit.edu/imag/article/doi/10.1162/IMAG.a.960/133411/GOUHFI-a-novel-contrast-and-resolution-agnostic).
 
 ---
 
