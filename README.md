@@ -354,14 +354,20 @@ Generating synthetic images for training:
 
 If you use **GOUHFI** in your research, please cite the following:
 
-For the paper (accepted peer-reviewed version to the _Imaging Neuroscience_ journal):
+For the paper published in _Imaging Neuroscience_:
 ```
 @article{fortin2025gouhfi,
-  title={GOUHFI: a novel contrast- and resolution-agnostic segmentation tool for Ultra-High Field MRI},
-  author={Fortin, Marc-Antoine and Kristoffersen, Anne Louise and Larsen, Michael Staff and Lamalle, Laurent and Stirnberg, Ruediger and Goa, Paal Erik},
-  journal={arXiv preprint arXiv:2505.11445},
-  year={2025},
-  doi={10.48550/arXiv.2505.11445}
+    author = {Fortin, Marc-Antoine and Kristoffersen, Anne Louise and Larsen, Michael Staff and Lamalle, Laurent and Stirnberg, Rüdiger and Goa, Pål Erik},
+    title = {GOUHFI: A novel contrast- and resolution-agnostic segmentation tool for ultra-high-field MRI},
+    journal = {Imaging Neuroscience},
+    volume = {3},
+    pages = {IMAG.a.960},
+    year = {2025},
+    month = {10},
+    issn = {2837-6056},
+    doi = {10.1162/IMAG.a.960},
+    url = {https://doi.org/10.1162/IMAG.a.960},
+    eprint = {https://direct.mit.edu/imag/article-pdf/doi/10.1162/IMAG.a.960/2556634/imag.a.960.pdf},
 }
 
 ```
