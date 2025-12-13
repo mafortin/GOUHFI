@@ -131,7 +131,7 @@ run_gouhfi --help
 Example command line:
 
 ```bash
-run_gouhfi -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0 1 2 3 4"] [--v1] [--skip_parc] [--reorder_labels] [--cpu]
+run_gouhfi -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0 1 2 3 4"] [--v1] [--skip_parc] [--skip_seg] [--reorder_labels] [--cpu]
 ```
 
 ### Arguments
@@ -145,6 +145,7 @@ run_gouhfi -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0 1 
 | `--reorder_labels`    | `flag`  | `False`                                                              | If set, reorders label values from GOUHFI's LUT to FreeSurfer's LUT after post-processing. |
 | `--cpu`               | `flag`  | `False`                                                              | If set, the cpu will be used instead of the GPU for running the inference.                 |
 | `--skip_parc`               | `flag`  | `False`                                                              | If set, the cortical parcellation step will be skipped.                 |
+| `--skip_seg`               | `flag`  | `False`                                                              | If set, the subcortical segmentation step will be skipped. Note: The user is then responsible to provide cortex segmentation isolated (see command [`run_label_modif`](#run_label_modif) below).                 |
 | `--v1`               | `flag`  | `False`                                                              | If set, the original GOUHFI subcortical segmentation model will be used (doesn't apply to cortical parcellation).                 |
 
 #### Input Requirements
@@ -164,11 +165,11 @@ run_gouhfi -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0 1 
 
 #### Outputs
 
-File:
-- `{SUBJECT_ID}.nii.gz` —> Segmentation/Label map for the `{SUBJECT_ID}` subject.
+Files:
+- `$OUTPUT_DIR/outputs_seg[parc]/{SUBJECT_ID}.nii.gz` —> Not postprocessed subcortical segmentation/cortical parcellation for the `{SUBJECT_ID}` subject.
+- `$OUTPUT_DIR/outputs_seg[parc]_postpro/{SUBJECT_ID}.nii.gz` —> Postprocessed subcortical segmentation/cortical parcellation for the `{SUBJECT_ID}` subject.
+    - **Note**: The postprocessed segmentations/parcellations are the ones to use for analyses.
 
-Segmentation/Label map:
-- The labels are linearly ordered from 0 (background) to 35 by default if not reordered as described above. The complete list of labels is shown in file [misc/gouhfi-label-list-lut.txt](https://github.com/mafortin/GOUHFI/blob/main/misc/gouhfi-label-list-lut.txt).
 - As for **any** automatic segmentation tool, we recommend the user to visually inspect the quality of the segmetation outputs produced by GOUHFI.
    - While the technique has been extensively tested, it may still have unknown limitations. We kindly encourage users to report any issues or unexpected behavior to help guide future improvements and development.
    - Keep in mind that GOUHFI is a research tool, not a clinically-approved diagnostic tool for patients on an indiviudal basis.
@@ -299,9 +300,62 @@ run_renaming -i /path/to/input_dir -o /path/to/output_dir [--start_substring ./m
 
 - **Note**: A `subject_id_correspondence.json` file will be created and saved in `input_dir` to keep tract of the correspondence between the old and new filenames.
 
+---
+### `run_label_modif`:
+
+- Useful helper function to modify label maps in general. We are sharing it simply because it has been quite helpful for the development of GOUHFI, so we wanted to make it accessible to the coomunity! :) 
+- However, this command is **not required** at any stage of the pipeline and can be ignored if you are not interested in modifying label maps. 
+- Briefly, it can filter labels (keep only specific labels, or filter by keeping only the labels above/below a defined value), merge all individual cortex labels into one left- and right-hemisphere FreeSurfer-LUT cortex IDs (i.e., all 1000s -> 3 and all 2000s -> 42), set all labels to 1, reindex labels (from 1 -> N), and optionally rename outputs to nnUNet naming convention by appending `_0000`.
+
+```bash
+run_label_modif --input /path/to/input_dir --output /path/to/output_dir 
+  [--keep-labels 3 42] [--min-label N] [--max-label N] \
+  [--combine-ctx] [--set-to-one all|<label_ids...>] [--reindex] \
+  [--prep4ctx] [--num-workers N]
+```
+
+| Argument        | Default | Description                                                                                                                |
+| --------------- | ------: | -------------------------------------------------------------------------------------------------------------------------- |
+| `--input`       |       - | Path to directory containing input label maps (`.nii` / `.nii.gz`) (required).                                             |
+| `--output`      |       - | Directory to save processed label maps (required).                                                                         |
+| `--keep-labels` |       - | List of label IDs to keep (all others are set to 0).                                                                       |
+| `--min-label`   |       - | Minimum label value to keep (values below are set to 0).                                                                   |
+| `--max-label`   |       - | Maximum label value to keep (values above are set to 0).                                                                   |
+| `--combine-ctx` | `False` | Combine cortex labels: 1000–1999 → `3` (LH cortex) and 2000–2999 → `42` (RH cortex).                                       |
+| `--set-to-one`  |       - | Set labels to 1. Use `all` to set all non-zero labels to 1, or provide specific label IDs.                                 |
+| `--reindex`     | `False` | Reindex remaining non-zero labels to `1..N` (preserves background 0).                                                      |
+| `--prep4ctx`    | `False` | Ensure output filenames follow nnUNet single-channel convention by appending `_0000` before `.nii`/`.nii.gz` (if missing). |
+| `--num-workers` |     `4` | Number of parallel workers for processing files.                                                                           |
+
+---
+
+### `run_vol_extraction`:
+
+- The command `run_vol_extraction` computes volumetry from all `.nii`/`.nii.gz` label maps found inside a directory.
+- It outputs a CSV containing per-label absolute volumes (mm³) and normalized volumes:
+    - `brain`: normalized by TIV (total intracranial volume) and brain volume (BV) (brain volume = TIV − CSF)
+    - `cortex`: normalized by cortex volume (CV)
+- A label lookup table is used to map label IDs to names. If not provided, GOUHFI defaults are used.
+
+```bash
+run_vol_extraction -i /path/to/input_dir [-o /path/to/output_dir]
+  -t brain|cortex [-l /path/to/label_lut.txt] [-d DATASET_ID]
+```
+
+| Argument             |            Default | Description                                                                                                                                                                                  |
+| -------------------- | -----------------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `-i`, `--input_dir`  |                  - | Directory containing `.nii` / `.nii.gz` label maps (required).                                                                                                                               |
+| `-o`, `--output_dir` |        *input_dir* | Directory to save the output CSV. If not set, defaults to the input directory.                                                                                                               |
+| `-t`, `--task`       |                  - | Segmentation task: `brain` or `cortex` (required).                                                                                                                                           |
+| `-l`, `--label_file` | GOUHFI default LUT | Optional label mapping `.txt` file. If not provided: `brain` uses `$GOUHFI_HOME/misc/gouhfi_v2p0_brain_labels_lut.txt`, `cortex` uses `$GOUHFI_HOME/misc/gouhfi_v2p0_cortex_labels_lut.txt`. |
+| `-d`, `--dataset_id` |               `""` | Optional dataset ID appended to the output filename.                                                                                                                                         |
+
+
+---
 
 ### `run_add_label`:
 
+- **Note**: Since GOUHFI 2.0, this is less relevant since we moved away from the 'Extra-Cerebral' label approach. For legacy reasons, we will keep it here if someone would stil like to use it.
 - If you want to reproduce what we did for creating the synthetic images for training from label maps with the additional 'Extra-Cerebral' label, use the following shown below.
     - As mentioned in [Third-Party softwares related to GOUHFI](#third-party-softwares-related-to-gouhfi), this repository does **not** include the necessary scripts to create synthetic images from SynthSeg. Please refer to [SynthSeg's repository](https://github.com/BBillot/SynthSeg) for this.
 
