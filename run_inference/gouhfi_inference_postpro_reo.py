@@ -183,11 +183,13 @@ def apply_reordering(input_dir: Path, output_dir: Path, in_lut: str, out_lut: st
         "--old_labels_file", str(in_lut),
         "--new_labels_file", str(out_lut),
     ]
+    print("--------------------------------------------------------------------------------")
     print(f"Reordering labels ({tag}) with the following command: {' '.join(map(str, reorder_command))}")
     subprocess.run(reorder_command, check=True)
 
     duration = time.time() - start_time
     print(f"Label reordering ({tag}) completed in {duration:.2f} seconds.")
+    print("--------------------------------------------------------------------------------")
     return duration
 
 
@@ -213,11 +215,14 @@ def prepare_parcellation_inputs(seg_output_pp_dir: Path, parc_input_dir: Path, n
         "--num-workers", str(num_workers),
     ]
 
+    print("--------------------------------------------------------------------------------")   
     print(f"Preparing parcellation inputs with: {' '.join(map(str, prepare_command))}")
     subprocess.run(prepare_command, check=True)
 
     duration = time.time() - start_time
+    
     print(f"Parcellation input preparation completed in {duration:.2f} seconds.")
+    print("--------------------------------------------------------------------------------")
     return duration
 #---------------------------------------------------------------------------------#
 
@@ -247,16 +252,19 @@ def run_pipeline_v1(input_dir: str, output_root: Path | None, np: int, folds: st
     _ensure_exists(pp_pkl, "postprocessing.pkl")
     _ensure_exists(plans_json, "plans.json")
 
+    print("--------------------------------------------------------------------------------")
     _announce_inputs("GOUHFI 1.0 subcortical segmentation: ", input_path)
-
+    print("--------------------------------------------------------------------------------")
     run_inference(MODEL_V1, input_dir=input_dir, output_dir=out_inf, folds=folds_list, num_pr=np, cpu=cpu)
     apply_post_processing(out_inf, out_pp, pp_pkl, np, plans_json, tag="v1")
 
     if reorder_labels:
+        print("--------------------------------------------------------------------------------")
         print("Reordering label maps to FreeSurfer's lookup table (v1)...")
         in_lut = os.path.join(gouhfi_home, "misc/gouhfi_v2p0_brain_labels_lut.txt")
         out_lut = os.path.join(gouhfi_home, "misc/freesurfer_brain_labels_lut.txt")
         apply_reordering(out_pp, out_reo, in_lut=in_lut, out_lut=out_lut, tag="v1")
+        print("--------------------------------------------------------------------------------")
 
 
 def run_pipeline_v2(input_dir: str,
@@ -307,17 +315,21 @@ def run_pipeline_v2(input_dir: str,
         seg_pp_pkl, seg_plans_json = _postproc_paths(MODEL_SEG)
         _ensure_exists(seg_pp_pkl, "postprocessing.pkl")
         _ensure_exists(seg_plans_json, "plans.json")
-
+        
+        print("--------------------------------------------------------------------------------")
         _announce_inputs("GOUHFI 2.0 Subcortical segmentation: ", input_path)
-
+        print("--------------------------------------------------------------------------------")
         run_inference(MODEL_SEG, input_dir=input_dir, output_dir=seg_out_inf, folds=folds_list, num_pr=np, cpu=cpu)
+        print("--------------------------------------------------------------------------------")
         apply_post_processing(seg_out_inf, seg_out_pp, seg_pp_pkl, np, seg_plans_json, tag="seg")
 
         if reorder_labels:
+            print("--------------------------------------------------------------------------------")
             print("Reordering label maps to FreeSurfer's lookup table (subcortical segmentation)...")
             in_lut = os.path.join(gouhfi_home, "misc/gouhfi_v2p0_brain_labels_lut.txt")
             out_lut = os.path.join(gouhfi_home, "misc/freesurfer_brain_labels_lut.txt")
             apply_reordering(seg_out_pp, seg_out_reo, in_lut=in_lut, out_lut=out_lut, tag="seg")
+            print("--------------------------------------------------------------------------------")
 
     # --- Prepare inputs for PARC stage + PARC inference ---
     if not skip_parc:
@@ -352,7 +364,7 @@ def run_pipeline_v2(input_dir: str,
         parc_pp_pkl, parc_plans_json = _postproc_paths(MODEL_PARC)
         _ensure_exists(parc_pp_pkl, "postprocessing.pkl")
         _ensure_exists(parc_plans_json, "plans.json")
-
+        print("--------------------------------------------------------------------------------")
         _announce_inputs("GOUHFI 2.0 Cortical parcellation: ", parc_in_dir)
 
         run_inference(
@@ -363,13 +375,16 @@ def run_pipeline_v2(input_dir: str,
             num_pr=np,
             cpu=cpu
         )
+        print("--------------------------------------------------------------------------------")
         apply_post_processing(parc_out_inf, parc_out_pp, parc_pp_pkl, np, parc_plans_json, tag="parc")
 
         if reorder_labels:
+            print("--------------------------------------------------------------------------------")
             print("Reordering label maps to FreeSurfer's lookup table (cortex parcellation)...")
             in_lut = os.path.join(gouhfi_home, "misc/gouhfi_v2p0_cortex_labels_lut.txt")
             out_lut = os.path.join(gouhfi_home, "misc/freesurfer_cortex_labels_lut.txt")
             apply_reordering(parc_out_pp, parc_out_reo, in_lut=in_lut, out_lut=out_lut, tag="parc")
+            print("--------------------------------------------------------------------------------")
 
 #---------------------------------------------------------------------------------#
 
