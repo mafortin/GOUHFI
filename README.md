@@ -2,7 +2,7 @@
  
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17920473.svg)](https://doi.org/10.5281/zenodo.17920473)
 
-Welcome to **GOUHFI**, a novel deep learning (DL) toolbox for subcortical segmentation and cortical parcellation of brain MR images of **any** contrast, resolution or even field strength. 
+Welcome to **GOUHFI 2.0**, a novel deep learning (DL) toolbox for subcortical segmentation and cortical parcellation of brain MR images of **any** contrast, resolution or even field strength. 
 
 This README provides instructions for [Installation](#installation), an overview of the main commands ([Usage](#usage)), [Related work](#third-party-softwares-related-to-gouhfi), [Citation](#citation), and [Licensing](#license). For the full command reference and detailed examples, please see **[`docs/usage.md`](docs/usage.md)**.
 
@@ -20,7 +20,13 @@ While the main goal of this repository is to share GOUHFI with the community, it
 
 ## How was GOUHFI developed?
 
-GOUHFI is a fully automatic, contrast- and resolution-agnostic, DL-based brain segmentation tool optimized for Ultra-High Field MRI (UHF-MRI), while also demonstrating strong performance at 3T compared to other well-established techniques. Using the domain randomization approach proposed in [SynthSeg](https://github.com/BBillot/SynthSeg) and a state-of-the-art 3D U-Net with Residual Encoders from the [nnUNetv2](https://github.com/MIC-DKFZ/nnUNet) framework, GOUHFI is able to handle various contrasts, resolutions and even field strengths without requiring fine-tuning or retraining. Tested on multiple datasets, it showed high accuracy and impressive robustness to noise and inhomogeneities, making it a valuable tool for neuroscientists working at both 3T and UHF-MRI. For more details on how GOUHFI was developed, please refer to the corresponding [paper](https://direct.mit.edu/imag/article/doi/10.1162/IMAG.a.960/133411/GOUHFI-a-novel-contrast-and-resolution-agnostic) published in Imaging Neuroscience.
+GOUHFI is a fully automatic, contrast- and resolution-agnostic, DL-based brain segmentation tool optimized for Ultra-High Field MRI (UHF-MRI), while also demonstrating strong performance at 1.5T/3T compared to other well-established techniques. 
+
+Using the domain randomization approach proposed in [SynthSeg](https://github.com/BBillot/SynthSeg) and a state-of-the-art 3D U-Net with Residual Encoders from the [nnUNetv2](https://github.com/MIC-DKFZ/nnUNet) framework, GOUHFI is able to handle various contrasts, resolutions and even field strengths without requiring fine-tuning or retraining. Tested on multiple datasets, it showed high accuracy and impressive robustness to noise and inhomogeneities, making it a valuable tool for neuroscientists working at both 3T and UHF-MRI. 
+
+For more details on how GOUHFI was developed, please refer to the corresponding [paper](https://direct.mit.edu/imag/article/doi/10.1162/IMAG.a.960/133411/GOUHFI-a-novel-contrast-and-resolution-agnostic) published in Imaging Neuroscience.
+
+More recently, we released a major update under the name **GOUHFI 2.0**. This new version retains the original subcortical segmentation approach, based on the same domain randomization principles, but benefits from an improved and expanded training dataset. In addition, **GOUHFI 2.0** introduces cortical parcellation and Total Intracranial Volume (TIV) estimation, enabling independent normalized volumetric analyses. Further details about the developement of GOUHFI 2.0 will be provided in an accompanying [ArXiv publication]() [**to be released shortly**].
 
 ![GOUHFI](figs/fig-readme.png)
 
@@ -179,7 +185,13 @@ Generating synthetic images for training:
 
 If you use **GOUHFI** in your research, please cite the following:
 
-For the paper published in _Imaging Neuroscience_:
+### Papers:
+
+- For the original GOUHFI paper published in _Imaging Neuroscience_:
+```
+Marc-Antoine Fortin, Anne Louise Kristoffersen, Michael Staff Larsen, Laurent Lamalle, Rüdiger Stirnberg, Pål Erik Goa; GOUHFI: A novel contrast- and resolution-agnostic segmentation tool for ultra-high-field MRI. Imaging Neuroscience 2025; 3 IMAG.a.960. doi: https://doi.org/10.1162/IMAG.a.960
+```
+- Bibtex entry:
 ```
 @article{fortin2025gouhfi,
     author = {Fortin, Marc-Antoine and Kristoffersen, Anne Louise and Larsen, Michael Staff and Lamalle, Laurent and Stirnberg, Rüdiger and Goa, Pål Erik},
@@ -197,18 +209,44 @@ For the paper published in _Imaging Neuroscience_:
 
 ```
 
-For the trained model:
+- For GOUHFI 2.0, currently on ArXiV [will be added shortly]:
+```
+
+```
+- Bibtex entry:
+```
+
+```
+
+### Models:
+
+- For the original GOUHFI subcortical segmentation model:
 ```
 @misc{fortin2025gouhfi,
   author       = {Fortin, M.-A. and Larsen, M. and Kristoffersen, A. L. and Goa, P. E.},
   title        = {GOUHFI: Generalized and Optimized segmentation tool for Ultra-High Field Images},
   year         = {2025},
   publisher    = {Zenodo},
+  version      = {1.0.0},
   doi          = {10.5281/zenodo.15255556},
   url          = {https://doi.org/10.5281/zenodo.15255556}
 }
 ```
 
+- For GOUHFI 2.0 subcortical segmentation and/or cortical parcellation models:
+```
+@misc{fortin2025gouhfi_2p0,
+  author       = {Fortin, M.-A. and Larsen, M. and Kristoffersen, A. L. and Goa, P. E.},
+  title        = {GOUHFI 2.0: Generalized and Optimized segmentation tool for Ultra-High Field Images},
+  year         = {2025},
+  publisher    = {Zenodo},
+  version      = {2.0.0},
+  number       = {3},
+  doi          = {10.5281/zenodo.17920473},
+  url          = {https://doi.org/10.5281/zenodo.17920473}
+}
+
+```
 ---
 
 ## Contributing
