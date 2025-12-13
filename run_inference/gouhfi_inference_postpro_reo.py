@@ -208,11 +208,12 @@ def prepare_parcellation_inputs(seg_output_pp_dir: Path, parc_input_dir: Path, n
     _ensure_exists(script_path, "remove_keep_reindex_labels.py")
 
     prepare_command = [
-        "python3", str(script_path),
-        "--input", str(seg_output_pp_dir),
-        "--output", str(parc_input_dir),
-        "--combine-ctx",
-        "--num-workers", str(num_workers),
+    "python3", str(script_path),
+    "--input", str(seg_output_pp_dir),
+    "--output", str(parc_input_dir),
+    "--keep-labels", "3", "42",
+    "--prep4ctx",
+    "--num-workers", str(num_workers),
     ]
 
     print("--------------------------------------------------------------------------------")   
