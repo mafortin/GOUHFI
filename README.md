@@ -73,7 +73,7 @@ pip install -e .
 
 ### Step 4: Download the trained model weights
 
-1) A Zenodo link to the trained model weights is included in the repository in the `trained_model/gouhfi-trained-model-weights.md` file or simply with this [link](https://zenodo.org/records/15255556).
+1) A Zenodo link to the trained model weights is included in the repository in the `trained_model/gouhfi-trained-model-weights.md` file or simply with this [link](https://zenodo.org/records/17920473).
 2) Move the three .zip files (`gouhfi_2p0_brain_seg.zip` [GOUHFI 2.0 subcortical segmentation], `gouhfi_2p0_parc.zip` [GOUHFI 2.0 cortical parcellation], and `GOUHFI.zip` [old GOUHFI 1.0 subcortical segmentation]) in the `trained-model` folder before unzipping it.
 
 ### Step 5: Unzip the `GOUHFI.zip`
