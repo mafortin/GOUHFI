@@ -6,6 +6,9 @@ Welcome to **GOUHFI**, a novel deep learning (DL) tool for segmentation of brain
 
 ## Updates
 
+- 13/12/25: **GOUHFI 2.0** is finally available! 
+    - In addition of an improved subcortical segmentation tool on clinical cohorts, GOUHFI 2.0 now also offers (a) contrast-, resolution- and field-agnostic cortex parcellation following the Desikan-Killiany-Tourville (DKT) atlas and (b) Total Intracranial Volume (TIV) estimations for normalized volumetry analyses. 
+    - The related publication will be released shortly.
  - 29/09/25: 🎉 **GOUHFI's paper has been accepted for publication in the _Imaging Neuroscience_ journal!** 🎉 The accepted version is available online [here](https://direct.mit.edu/imag/article/doi/10.1162/IMAG.a.960/133411/GOUHFI-a-novel-contrast-and-resolution-agnostic).
 
 ---
@@ -60,18 +63,20 @@ pip install -e .
 ### Step 4: Download the trained model weights
 
 1) A Zenodo link to the trained model weights is included in the repository in the `trained_model/gouhfi-trained-model-weights.md` file or simply with this [link](https://zenodo.org/records/15255556).
-2) Move this `GOUHFI.zip` in the `trained-model` folder before unzipping it.
+2) Move the three .zip files (`gouhfi_2p0_brain_seg.zip` [GOUHFI 2.0 subcortical segmentation], `gouhfi_2p0_parc.zip` [GOUHFI 2.0 cortical parcellation], and `GOUHFI.zip` [old GOUHFI 1.0 subcortical segmentation]) in the `trained-model` folder before unzipping it.
 
 ### Step 5: Unzip the `GOUHFI.zip`
 
-- To unzip `GOUHFI.zip`, use the following command:
+- To unzip all three .zip files, use the following command:
 ```bash
 cd trained_model/
-unzip GOUHFI.zip
+unzip '*.zip'
 ```
 
-- Once unzipped, you should have a folder called `Dataset014_gouhfi` with all five trained folds and related files in the `trained_model` folder. This is the trained GOUHFI model.
-- **Note**: If you manually extracted GOUHFI with your OS GUI (i.e., not using the unzip function shown above), be careful. It might have created an additional and unwanted directory called `GOUHFI` where the `Dataset014_gouhfi` is hidden inside. Manually move `Dataset014_gouhfi` back into `trained_model` if that's the case. 
+- Once unzipped, you should have three folders named `Dataset014_gouhfi` [GOUHFI 1.0 subcort. seg.],  with all five trained folds and related files in the `trained_model` folder. This is the trained GOUHFI model.
+- **Notes**: 
+    - Since the three models are quite beefy (~7 Gb each), this step might last several minutes.
+    - If you manually extracted GOUHFI with your OS GUI (i.e., not using the unzip function shown above), be careful. It might have created an additional and unwanted directory called `GOUHFI` where the `Dataset014_gouhfi` is hidden inside. Manually move `Dataset014_gouhfi` back into `trained_model` if that's the case. 
 
 ### Step 6: Set GOUHFI's directory as an environment variable
 
