@@ -2,7 +2,7 @@
  
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17920473.svg)](https://doi.org/10.5281/zenodo.17920473)
 
-Welcome to **GOUHFI 2.0**, a novel deep learning (DL) toolbox for subcortical segmentation and cortical parcellation of brain MR images of **any** contrast, resolution or even field strength. 
+Welcome to **GOUHFI 2.0**, a novel deep learning (DL) toolbox for subcortical segmentation, cortical parcellation and volumetry of brain MR images of **any contrast, resolution and field strength**. 
 
 This README provides instructions for [Installation](#installation), an overview of the main commands ([Usage](#usage)), [Related work](#third-party-softwares-related-to-gouhfi), [Citation](#citation), and [Licensing](#license). For the full command reference and detailed examples, please see **[`docs/usage.md`](docs/usage.md)**.
 
