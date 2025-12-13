@@ -334,39 +334,32 @@ def run_pipeline_v2(input_dir: str,
 
     # --- Prepare inputs for PARC stage + PARC inference ---
     if not skip_parc:
-        # Determine parcellation input directory:
-        # - default: created from seg_out_pp using remove_keep_reindex_labels.py --combine-ctx
-        # - if --skip_seg: user must provide a directory that already contains the isolated cortex seg inputs
         if skip_seg:
-            parc_model_input_dir = input_path  # use the -i/--input_dir provided by user
-
-            if not parc_model_input_dir.exists():
-                raise FileNotFoundError(f"Input directory not found: {parc_model_input_dir}")
-
-            # Provide a helpful note if they forgot to give cortex-only inputs
+            parc_model_input_dir = input_path  # <- user's -i/--input_dir
             print(
                 "NOTE: --skip_seg was set. The parcellation model will use the provided --input_dir directly.\n"
-                "      Make sure --input_dir contains the isolated cortex segmentation inputs expected by the parc model,\n"
-                "      i.e., outputs previously produced by the segmentation stage or by running\n"
-                "      $GOUHFI_HOME/data_utils/remove_keep_reindex_labels.py with the --combine-ctx flag."
+                "      Make sure --input_dir contains isolated cortex segmentation inputs for the parc model\n"
+                "      (e.g., produced previously by the seg stage or by running\n"
+                "      $GOUHFI_HOME/data_utils/remove_keep_reindex_labels.py --keep-labels 3 42 --prep4ctx).\n"
             )
         else:
-            # We ran seg (or will have seg outputs), so prepare cortex-only inputs for parc
             if not seg_out_pp.exists():
                 raise FileNotFoundError(
                     f"Expected segmentation post-processed outputs at: {seg_out_pp}\n"
                     f"Run without --skip_seg, or provide cortex-only inputs and use --skip_seg."
                 )
 
-            _announce_inputs("Cortical parcellation input preparation: ", seg_out_pp)
+            _announce_inputs("Cortical parcellation input preparation", seg_out_pp)
             prepare_parcellation_inputs(seg_output_pp_dir=seg_out_pp, parc_input_dir=parc_in_dir, num_workers=np)
-            parc_model_input_dir = parc_in_dir
+
+            parc_model_input_dir = parc_in_dir  # <- generated cortex-only folder
+
+        # announce the actual directory that will be used for parcellation
+        _announce_inputs("GOUHFI 2.0 Cortical parcellation", Path(parc_model_input_dir))
 
         parc_pp_pkl, parc_plans_json = _postproc_paths(MODEL_PARC)
         _ensure_exists(parc_pp_pkl, "postprocessing.pkl")
         _ensure_exists(parc_plans_json, "plans.json")
-        print("--------------------------------------------------------------------------------")
-        _announce_inputs("GOUHFI 2.0 Cortical parcellation", parc_in_dir)
 
         run_inference(
             MODEL_PARC,
@@ -376,6 +369,7 @@ def run_pipeline_v2(input_dir: str,
             num_pr=np,
             cpu=cpu
         )
+
         print("--------------------------------------------------------------------------------")
         apply_post_processing(parc_out_inf, parc_out_pp, parc_pp_pkl, np, parc_plans_json, tag="parc")
 
