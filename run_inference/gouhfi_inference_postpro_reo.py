@@ -254,7 +254,7 @@ def run_pipeline_v1(input_dir: str, output_root: Path | None, np: int, folds: st
     _ensure_exists(plans_json, "plans.json")
 
     print("--------------------------------------------------------------------------------")
-    _announce_inputs("GOUHFI 1.0 subcortical segmentation: ", input_path)
+    _announce_inputs("GOUHFI 1.0 subcortical segmentation", input_path)
     print("--------------------------------------------------------------------------------")
     run_inference(MODEL_V1, input_dir=input_dir, output_dir=out_inf, folds=folds_list, num_pr=np, cpu=cpu)
     apply_post_processing(out_inf, out_pp, pp_pkl, np, plans_json, tag="v1")
@@ -318,7 +318,7 @@ def run_pipeline_v2(input_dir: str,
         _ensure_exists(seg_plans_json, "plans.json")
         
         print("--------------------------------------------------------------------------------")
-        _announce_inputs("GOUHFI 2.0 Subcortical segmentation: ", input_path)
+        _announce_inputs("GOUHFI 2.0 Subcortical segmentation", input_path)
         print("--------------------------------------------------------------------------------")
         run_inference(MODEL_SEG, input_dir=input_dir, output_dir=seg_out_inf, folds=folds_list, num_pr=np, cpu=cpu)
         print("--------------------------------------------------------------------------------")
@@ -366,7 +366,7 @@ def run_pipeline_v2(input_dir: str,
         _ensure_exists(parc_pp_pkl, "postprocessing.pkl")
         _ensure_exists(parc_plans_json, "plans.json")
         print("--------------------------------------------------------------------------------")
-        _announce_inputs("GOUHFI 2.0 Cortical parcellation: ", parc_in_dir)
+        _announce_inputs("GOUHFI 2.0 Cortical parcellation", parc_in_dir)
 
         run_inference(
             MODEL_PARC,
