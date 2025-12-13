@@ -73,10 +73,10 @@ cd trained_model/
 unzip '*.zip'
 ```
 
-- Once unzipped, you should have three folders named `Dataset014_gouhfi` [GOUHFI 1.0 subcort. seg.],  with all five trained folds and related files in the `trained_model` folder. This is the trained GOUHFI model.
+- Once unzipped, you should have three folders: `Dataset014_gouhfi` [GOUHFI 1.0 subcort. seg.], `Dataset020_gouhfi_2p0n2` [GOUHFI 2.0 subcort. seg.] and `Dataset024_gouhfi_parc` [GOUHFI 2.0 cort. parc.]  with all of their five trained folds and related files for each inside the `trained_model` folder. This is the trained GOUHFI model.
 - **Notes**: 
-    - Since the three models are quite beefy (~7 Gb each), this step might last several minutes.
-    - If you manually extracted GOUHFI with your OS GUI (i.e., not using the unzip function shown above), be careful. It might have created an additional and unwanted directory called `GOUHFI` where the `Dataset014_gouhfi` is hidden inside. Manually move `Dataset014_gouhfi` back into `trained_model` if that's the case. 
+    - Since the three models are quite beefy (~7 Gb each), this step might last 6-7 minutes in total.
+    - If you have manually extracted the ZIP files with your OS GUI (i.e., not using the unzip function shown above), be careful. It might have created an additional and unwanted directory called `GOUHFI` where the above-mentioned trained models are hidden inside. Manually move them back into `trained_model` if that's the case. 
 
 ### Step 6: Set GOUHFI's directory as an environment variable
 
@@ -121,17 +121,17 @@ run_gouhfi --help
 
 ### `run_gouhfi`: 
 
-- This is the command to obtain the whole brain segmentation into 35 labels from GOUHFI.
-    - The command `run_gouhfi` is used to (1) run the inference (i.e., segment your images using the trained model), (2) apply the post-processing step and (3), if desired, reorder the label values in the segmentations produced from GOUHFI (optional). 
-        - More precisely, the third step changes GOUHFI's lookuptable (LUT) (i.e., label values from 0 to 35) to the FreeSurfer LUT which is commonly used by the neuroimaging community. 
-- We strongly recommend to use a GPU to run the inference (anything with >8 Gb of VRAM should be strong enough, but not officially tested). CPU can be used but expect a considerable increased in computation time (e.g., ca. ~10 sec/subject on GPU and can be roughly ~75 times longer or even more on the CPU depending on the setup).
+- This is the core command of this repository to obtain (a) the whole brain subcortical segmentation into 35 labels and (b) cortical parcellation from GOUHFI 2.0.
+    - The command `run_gouhfi` is used to (1) run the inference (i.e., segment your images using the trained models), (2) apply the post-processing step and (3), if desired, reorder the label values in the segmentations produced from GOUHFI (optional). 
+        - More precisely, the third step changes GOUHFI's lookuptable (LUT) to the more frequentely used FreeSurfer LUT in the neuroimaging community. 
+- We strongly recommend to use a GPU to run the inference (anything with >8 Gb of VRAM should be strong enough, but not officially tested). CPU can be used but expect a considerable increased in computation time (e.g., ca. ~10 sec/subject on GPU and can be roughly ~100 times longer or even more on the CPU depending on the setup).
 
 - **Note**: **Before** running the example command line below, remember that the images to be segmented need to (1) be preprocessed (i.e., conformed + brain extraction, see [this](#run_preprocessing)) and (2) renamed to the nnUNet naming convention (see [that](#run_renaming)).
 
 Example command line:
 
 ```bash
-run_gouhfi -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0 1 2 3 4"] [--reorder_labels] [--cpu]
+run_gouhfi -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0 1 2 3 4"] [--v1] [--skip_parc] [--reorder_labels] [--cpu]
 ```
 
 ### Arguments
@@ -144,6 +144,8 @@ run_gouhfi -i /path/to/input_data -o /path/to/output_dir [--np N] [--folds "0 1 
 | `--folds`             | `str`   | `"0 1 2 3 4"`                                                        | Space-separated string of folds to use for inference (we recommend to use all).            |
 | `--reorder_labels`    | `flag`  | `False`                                                              | If set, reorders label values from GOUHFI's LUT to FreeSurfer's LUT after post-processing. |
 | `--cpu`               | `flag`  | `False`                                                              | If set, the cpu will be used instead of the GPU for running the inference.                 |
+| `--skip_parc`               | `flag`  | `False`                                                              | If set, the cortical parcellation step will be skipped.                 |
+| `--v1`               | `flag`  | `False`                                                              | If set, the original GOUHFI subcortical segmentation model will be used (doesn't apply to cortical parcellation).                 |
 
 #### Input Requirements
 
