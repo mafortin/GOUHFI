@@ -327,6 +327,9 @@ run_label_modif --input /path/to/input_dir --output /path/to/output_dir
 | `--prep4ctx`    | `False` | Ensure output filenames follow nnUNet single-channel convention by appending `_0000` before `.nii`/`.nii.gz` (if missing). |
 | `--num-workers` |     `4` | Number of parallel workers for processing files.                                                                           |
 
+- Output:
+    - Modified label maps in `--output`.
+
 ---
 
 ### `run_vol_extraction`:
@@ -350,6 +353,11 @@ run_vol_extraction -i /path/to/input_dir [-o /path/to/output_dir]
 | `-l`, `--label_file` | GOUHFI default LUT | Optional label mapping `.txt` file. If not provided: `brain` uses `$GOUHFI_HOME/misc/gouhfi_v2p0_brain_labels_lut.txt`, `cortex` uses `$GOUHFI_HOME/misc/gouhfi_v2p0_cortex_labels_lut.txt`. |
 | `-d`, `--dataset_id` |               `""` | Optional dataset ID appended to the output filename.                                                                                                                                         |
 
+- Output:
+    - Produces a CSV named:
+        - `volumetry_brain[_DATASET_ID].csv` or;
+        - `volumetry_cortex[_DATASET_ID].csv`
+    - Saved in `--output_dir` (or `input_dir` if `--output_dir` is not set).
 
 ---
 
