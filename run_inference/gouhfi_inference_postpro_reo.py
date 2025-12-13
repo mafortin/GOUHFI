@@ -211,7 +211,7 @@ def prepare_parcellation_inputs(seg_output_pp_dir: Path, parc_input_dir: Path, n
     "python3", str(script_path),
     "--input", str(seg_output_pp_dir),
     "--output", str(parc_input_dir),
-    "--keep-labels", "3", "42",
+    "--keep-labels", "2", "21",
     "--prep4ctx",
     "--num-workers", str(num_workers),
     ]
