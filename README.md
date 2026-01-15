@@ -13,7 +13,7 @@ While the main goal of this repository is to share GOUHFI with the community, it
 
 - 13/12/25: **GOUHFI 2.0** is finally available! 
     - In addition of an improved subcortical segmentation tool on clinical cohorts, GOUHFI 2.0 now also offers (a) contrast-, resolution- and field-agnostic cortex parcellation following the Desikan-Killiany-Tourville (DKT) atlas and (b) Total Intracranial Volume (TIV) estimations for normalized volumetry analyses. 
-    - The related publication will be released shortly.
+    - The related arXiv publication for GOUHFI 2.0 is available [here](https://doi.org/10.48550/arXiv.2601.09006).
  - 29/09/25: 🎉 **GOUHFI's paper has been accepted for publication in the _Imaging Neuroscience_ journal!** 🎉 The accepted version is available online [here](https://direct.mit.edu/imag/article/doi/10.1162/IMAG.a.960/133411/GOUHFI-a-novel-contrast-and-resolution-agnostic).
 
 ---
@@ -26,7 +26,7 @@ Using the domain randomization approach proposed in [SynthSeg](https://github.co
 
 For more details on how GOUHFI was developed, please refer to the corresponding [paper](https://direct.mit.edu/imag/article/doi/10.1162/IMAG.a.960/133411/GOUHFI-a-novel-contrast-and-resolution-agnostic) published in Imaging Neuroscience.
 
-More recently, we released a major update under the name **GOUHFI 2.0**. This new version retains the original subcortical segmentation approach, based on the same domain randomization principles, but benefits from an improved and expanded training dataset. In addition, **GOUHFI 2.0** introduces cortical parcellation and Total Intracranial Volume (TIV) estimation, enabling independent normalized volumetric analyses. Further details about the developement of GOUHFI 2.0 will be provided in an accompanying [ArXiv publication]() [**to be released shortly**].
+More recently, we released a major update under the name **GOUHFI 2.0**. This new version retains the original subcortical segmentation approach, based on the same domain randomization principles, but benefits from an improved and expanded training dataset. In addition, **GOUHFI 2.0** introduces cortical parcellation and Total Intracranial Volume (TIV) estimation, enabling independent normalized volumetric analyses. Further details about the developement of GOUHFI 2.0 will be provided in the corresponding [ArXiv publication](https://arxiv.org/abs/2601.09006).
 
 ![GOUHFI](figs/fig-readme.png)
 
@@ -209,13 +209,22 @@ Marc-Antoine Fortin, Anne Louise Kristoffersen, Michael Staff Larsen, Laurent La
 
 ```
 
-- For GOUHFI 2.0, currently on ArXiV [will be added shortly]:
+- For GOUHFI 2.0, currently on ArXiV:
 ```
-
+Marc-Antoine Fortin, Anne Louise Kristoffersen, Pål Erik Goa; GOUHFI 2.0: A Next-Generation Toolbox for Brain Segmentation and Cortex Parcellation at Ultra-High Field MRI. ArXiv. doi: https://doi.org/10.48550/arXiv.2601.09006
 ```
 - Bibtex entry:
 ```
-
+@misc{fortin2026gouhfi,
+  title         = {GOUHFI 2.0: A Next-Generation Toolbox for Brain Segmentation and Cortex Parcellation at Ultra-High Field MRI},
+  author        = {Fortin, Marc-Antoine and Kristoffersen, Anne Louise and Goa, Paal Erik},
+  year          = {2026},
+  eprint        = {2601.09006},
+  archivePrefix = {arXiv},
+  primaryClass  = {eess.IV},
+  doi           = {10.48550/arXiv.2601.09006},
+  url           = {https://arxiv.org/abs/2601.09006}
+}
 ```
 
 ### Models:
