@@ -1,6 +1,10 @@
 # GOUHFI: novel contrast- and resolution-agnostic segmentation tool for Ultra-High Field MRI
- 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17920473.svg)](https://doi.org/10.5281/zenodo.17920473)
+
+[![Paper](https://img.shields.io/badge/Paper-Imaging%20Neuroscience-green)](https://doi.org/10.1162/IMAG.a.960)
+[![arXiv](https://img.shields.io/badge/arXiv-2601.09006-b31b1b)](https://arxiv.org/abs/2601.09006)
+[![Zenodo](https://img.shields.io/badge/Model-Zenodo-blue)](https://doi.org/10.5281/zenodo.17920473)
+[![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97-HuggingFace-yellow)](https://huggingface.co/mafortin/GOUHFI2p0)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue)](LICENSE)
 
 Welcome to **GOUHFI 2.0**, a novel deep learning (DL) toolbox for subcortical segmentation, cortical parcellation and volumetry of brain MR images of **any contrast, resolution and field strength**. 
 
@@ -73,8 +77,23 @@ pip install -e .
 
 ### Step 4: Download the trained model weights
 
-1) A Zenodo link to the trained model weights is included in the repository in the `trained_model/gouhfi-trained-model-weights.md` file or simply with this [link](https://zenodo.org/records/17920473).
-2) Move the three .zip files (`gouhfi_2p0_brain_seg.zip` [GOUHFI 2.0 subcortical segmentation], `gouhfi_2p0_parc.zip` [GOUHFI 2.0 cortical parcellation], and `GOUHFI.zip` [old GOUHFI 1.0 subcortical segmentation]) in the `trained-model` folder before unzipping it.
+The trained GOUHFI model weights are publicly available from both Zenodo and Hugging Face (same models, simply two repositories for visibility):
+
+- **Zenodo (official archival release / DOI)**:  
+  https://zenodo.org/records/17920473
+
+- **Hugging Face**:  
+  https://huggingface.co/mafortin/GOUHFI2p0
+
+The repository includes three model archives:
+
+| File | Description |
+|---|---|
+| `gouhfi_2p0_brain_seg.zip` | GOUHFI 2.0 subcortical segmentation |
+| `gouhfi_2p0_parc.zip` | GOUHFI 2.0 cortical parcellation |
+| `GOUHFI.zip` | Original GOUHFI 1.0 subcortical segmentation |
+
+Download the three `.zip` files and move them into the `trained_model/` folder before unzipping them.
 
 ### Step 5: Unzip the `GOUHFI.zip`
 
