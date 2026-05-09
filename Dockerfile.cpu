@@ -1,0 +1,56 @@
+# ============================================================
+# GOUHFI 2.0 — CPU-only Image (no CUDA, ~4.5 GB smaller)
+# Use this if you have no NVIDIA GPU available.
+# Pass --cpu to run_gouhfi at runtime (expect ~100x slower inference).
+# ============================================================
+FROM python:3.10-slim
+
+LABEL maintainer="Marc-Antoine Fortin <marc.a.fortin@ntnu.no>"
+LABEL description="GOUHFI 2.0 — CPU-only variant (no CUDA)"
+LABEL version="2.0.0"
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libglib2.0-0 \
+        libsm6 \
+        libxext6 \
+        libxrender1 \
+        graphviz \
+        unzip \
+        wget \
+        curl \
+        gosu \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /opt/gouhfi
+COPY . /opt/gouhfi/
+
+ENV GOUHFI_HOME=/opt/gouhfi
+ENV PYTHONUNBUFFERED=1
+ENV TF_CPP_MIN_LOG_LEVEL=3
+ENV MPLCONFIGDIR=/tmp
+
+RUN mkdir -p /opt/gouhfi/nnUNet_raw \
+             /opt/gouhfi/nnUNet_preprocessed \
+             /opt/gouhfi/trained_model
+
+# Install CPU-only PyTorch. The --extra-index-url is passed to the second step too
+# so that if pip re-resolves torch during dependency installation it stays on the
+# CPU wheel index instead of pulling the default CUDA wheels from PyPI.
+RUN pip install --no-cache-dir "numpy<2"
+
+RUN pip install --no-cache-dir \
+        torch==2.1.2+cpu \
+        torchvision==0.16.2+cpu \
+        --index-url https://download.pytorch.org/whl/cpu
+
+RUN pip install --no-cache-dir -e /opt/gouhfi \
+        --extra-index-url https://download.pytorch.org/whl/cpu
+
+ENV KERAS_HOME=/opt/keras-cache
+
+VOLUME ["/opt/gouhfi/trained_model", "/opt/keras-cache", "/input", "/output"]
+
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["run_gouhfi", "--help"]
