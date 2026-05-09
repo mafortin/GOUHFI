@@ -27,6 +27,10 @@
 version: "3.8"
 
 x-gouhfi-common: &gouhfi-common
+  # Shared memory for nnUNet multiprocessing workers. This is a maximum cap, not
+  # pre-allocated — the container starts fine even with less RAM available.
+  # Increase if processing many subjects in parallel or very large volumes.
+  shm_size: "16gb"
   volumes:
     # GOUHFI model weights — read-only; set GOUHFI_WEIGHTS_DIR in your .env file
     - ${GOUHFI_WEIGHTS_DIR:-./trained_model}:/opt/gouhfi/trained_model:ro
