@@ -1,0 +1,46 @@
+# ============================================================
+# GOUHFI 2.0 — CPU-only Image (no CUDA, ~4.5 GB smaller)
+# Use this if you have no NVIDIA GPU available.
+# Pass --cpu to run_gouhfi at runtime (expect ~100x slower inference).
+# ============================================================
+FROM python:3.10-slim
+
+LABEL maintainer="Marc-Antoine Fortin <marc.a.fortin@ntnu.no>"
+LABEL description="GOUHFI 2.0 — CPU-only variant (no CUDA)"
+LABEL version="2.0.0"
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libglib2.0-0 \
+        libsm6 \
+        libxext6 \
+        libxrender1 \
+        graphviz \
+        unzip \
+        wget \
+        curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /opt/gouhfi
+COPY . /opt/gouhfi/
+
+ENV GOUHFI_HOME=/opt/gouhfi
+ENV PYTHONUNBUFFERED=1
+ENV TF_CPP_MIN_LOG_LEVEL=3
+
+RUN mkdir -p /opt/gouhfi/nnUNet_raw \
+             /opt/gouhfi/nnUNet_preprocessed \
+             /opt/gouhfi/trained_model
+
+# Install CPU-only PyTorch before the rest of the deps to avoid pulling in the CUDA wheels
+RUN pip install --no-cache-dir \
+        torch==2.1.2+cpu \
+        torchvision==0.16.2+cpu \
+        --index-url https://download.pytorch.org/whl/cpu
+
+RUN pip install --no-cache-dir -e /opt/gouhfi
+
+ENV KERAS_HOME=/opt/keras-cache
+
+VOLUME ["/opt/gouhfi/trained_model", "/opt/keras-cache", "/input", "/output"]
+
+CMD ["run_gouhfi", "--help"]
