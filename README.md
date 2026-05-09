@@ -4,6 +4,7 @@
 [![arXiv](https://img.shields.io/badge/arXiv-2601.09006-b31b1b)](https://arxiv.org/abs/2601.09006)
 [![Zenodo](https://img.shields.io/badge/Model-Zenodo-blue)](https://doi.org/10.5281/zenodo.17920473)
 [![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97-HuggingFace-yellow)](https://huggingface.co/mafortin/GOUHFI2p0)
+[![Docker](https://img.shields.io/badge/Docker-mafortin30%2Fgouhfi-blue?logo=docker)](https://hub.docker.com/r/mafortin30/gouhfi)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue)](LICENSE)
 
 Welcome to **GOUHFI 2.0**, a novel deep learning (DL) toolbox for subcortical segmentation, cortical parcellation and volumetry of brain MR images of **any contrast, resolution and field strength**.
