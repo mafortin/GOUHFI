@@ -2,10 +2,9 @@
 .git
 .gitignore
 
-# Model weight directories — never bake into image; mount at runtime
-trained_model/Dataset014_gouhfi/
-trained_model/Dataset020_gouhfi_2p0n2/
-trained_model/Dataset024_gouhfi_parc/
+# Model weights — exclude everything in trained_model/ except the .md readme
+trained_model/*
+!trained_model/*.md
 
 # Python build artifacts
 **/__pycache__/
