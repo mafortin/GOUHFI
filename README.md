@@ -46,8 +46,8 @@ Two installation methods are available:
 
 | Method | Best for | Guide |
 |---|---|---|
-| **Docker** | Most users who just want to segment their images. Easiest, no Python knowledge  required | [`docs/installation_docker.md`](docs/installation_docker.md) |
-| **Native (conda + pip)** | Developers or users who want to modify the code | [`docs/installation_native.md`](docs/installation_native.md) |
+| **Docker** | Most users who just want to segment their images. Easiest, no Python knowledge  required. | [`docs/installation_docker.md`](docs/installation_docker.md) |
+| **Native (conda + pip)** | Developers or users who want to modify the code. | [`docs/installation_native.md`](docs/installation_native.md) |
 
 Both methods require the user to download the trained model weights from [Zenodo](https://zenodo.org/records/17920473) or [Hugging Face](https://huggingface.co/mafortin/GOUHFI2p0) (~7 GB each, 3 models in total).
 
@@ -71,12 +71,20 @@ run_gouhfi -i /path/to/renamed
 
 **Docker (GPU):**
 ```bash
-docker run --gpus all --rm --shm-size=16g \
-  -e HOST_UID=$(id -u) -e HOST_GID=$(id -g) \
-  -v /path/to/weights:/opt/gouhfi/trained_model:ro \
-  -v antspynet-cache:/opt/keras-cache \
-  -v /path/to/input:/input -v /path/to/output:/output \
-  mafortin30/gouhfi:2.0.1 run_gouhfi -i /input -o /output
+docker run \
+  # ── Docker configuration ──────────────────────────────────────────
+  --gpus all \                              # pass NVIDIA GPU into container
+  --rm \                                    # delete container when done
+  --shm-size=16g \                          # shared memory for nnUNet workers
+  -e HOST_UID=$(id -u) \                   # output files will be owned by you
+  -e HOST_GID=$(id -g) \                   # output files will be owned by you
+  -v /path/to/weights:/opt/gouhfi/trained_model:ro \  # model weights (read-only)
+  -v antspynet-cache:/opt/keras-cache \    # ANTsPyNet weight cache (persistent)
+  -v /path/to/input:/input \               # your input NIfTI files
+  -v /path/to/output:/output \             # where segmentations will be saved
+  # ── Image and command ─────────────────────────────────────────────
+  mafortin30/gouhfi:2.0.1 \
+  run_gouhfi -i /input -o /output
 ```
 
 ---
