@@ -1,0 +1,36 @@
+# Version control
+.git
+.gitignore
+
+# Model weights — exclude everything in trained_model/ except the .md readme
+trained_model/*
+!trained_model/*.md
+
+# Python build artifacts
+**/__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+gouhfi.egg-info/
+dist/
+build/
+.eggs/
+
+# Test data and figures (not needed at runtime)
+test_data/
+figs/
+
+# IDE configs
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Environment files
+.env
+*.env
+
+# Jupyter
+*.ipynb
+.ipynb_checkpoints/

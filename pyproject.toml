@@ -1,6 +1,6 @@
 [project]
 name = "gouhfi"
-version = "2.0.0"
+version = "2.0.1"
 readme = "README.md"
 requires-python = ">=3.10"
 
@@ -24,7 +24,7 @@ keywords = [
 ]
 
 dependencies = [
-    "ants",
+    "antspyx>=0.6.1",
     "antspynet",
     "scikit-image>=0.19.3",
     "acvl-utils>=0.2.3,<0.3",
