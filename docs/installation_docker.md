@@ -130,13 +130,17 @@ Replace `/data/gouhfi_weights`, `/data/input`, and `/data/output` with your actu
 **GPU (recommended):**
 
 ```bash
-docker run --gpus all --rm \
-  --shm-size=16g \
-  --user "$(id -u):$(id -g)" \
-  -v /data/gouhfi_weights:/opt/gouhfi/trained_model:ro \
-  -v antspynet-cache:/opt/keras-cache \
-  -v /data/input:/input \
-  -v /data/output:/output \
+docker run \
+  # ── Docker configuration ──────────────────────────────────────────
+  --gpus all \                              # pass NVIDIA GPU into container
+  --rm \                                    # delete container when done
+  --shm-size=16g \                          # shared memory for nnUNet workers
+  --user "$(id -u):$(id -g)" \             # write output files as you, not root
+  -v /data/gouhfi_weights:/opt/gouhfi/trained_model:ro \  # model weights (read-only)
+  -v antspynet-cache:/opt/keras-cache \    # ANTsPyNet weight cache (persistent)
+  -v /data/input:/input \                  # your input NIfTI files
+  -v /data/output:/output \               # where segmentations will be saved
+  # ── Image and command ─────────────────────────────────────────────
   gouhfi:2.0.1 \
   run_gouhfi -i /input -o /output
 ```
@@ -144,73 +148,71 @@ docker run --gpus all --rm \
 **CPU only:**
 
 ```bash
-docker run --rm \
-  --shm-size=16g \
-  --user "$(id -u):$(id -g)" \
-  -v /data/gouhfi_weights:/opt/gouhfi/trained_model:ro \
-  -v antspynet-cache:/opt/keras-cache \
-  -v /data/input:/input \
-  -v /data/output:/output \
+docker run \
+  # ── Docker configuration ──────────────────────────────────────────
+  --rm \                                    # delete container when done
+  --shm-size=16g \                          # shared memory for nnUNet workers
+  --user "$(id -u):$(id -g)" \             # write output files as you, not root
+  -v /data/gouhfi_weights:/opt/gouhfi/trained_model:ro \  # model weights (read-only)
+  -v antspynet-cache:/opt/keras-cache \    # ANTsPyNet weight cache (persistent)
+  -v /data/input:/input \                  # your input NIfTI files
+  -v /data/output:/output \               # where segmentations will be saved
+  # ── Image and command ─────────────────────────────────────────────
   gouhfi:2.0.1-cpu \
   run_gouhfi -i /input -o /output --cpu
 ```
 
-> **Note**: `--user "$(id -u):$(id -g)"` makes Docker write output files as your host user instead of root, so you can delete or move them without `sudo`.
-
-All flags available in the native installation (`--skip_parc`, `--reorder_labels`, `--v1`, etc.) work identically inside Docker. See [`usage.md`](usage.md) for the full command reference.
-
-### Using Docker Compose
-
-A `docker-compose.yml` is provided for convenience. Create a `.env` file next to it:
-
-```bash
-GOUHFI_WEIGHTS_DIR=/data/gouhfi_weights
-GOUHFI_INPUT_DIR=/data/input
-GOUHFI_OUTPUT_DIR=/data/output
-```
-
-Then run:
-
-```bash
-docker compose run --rm gouhfi run_gouhfi -i /input -o /output --reorder_labels
-```
+All flags available in the native installation (`--skip_parc`, `--reorder_labels`, `--v1`, `--folds`, etc.) are appended at the end of the command, after `run_gouhfi`. See [`usage.md`](usage.md) for the full list.
 
 ---
 
 ## ANTsPyNet brain extraction (preprocessing)
 
-The `run_preprocessing` and `run_brain_extraction` commands use ANTsPyNet, which downloads its own brain extraction weights on **first use** (requires internet). After that first run the weights are cached in the `antspynet-cache` Docker volume and no internet access is needed.
+The `run_preprocessing` and `run_brain_extraction` commands use ANTsPyNet, which downloads its own brain extraction weights on **first use** (requires internet, ~300 MB). After that first run the weights are cached in the `antspynet-cache` Docker volume and no internet access is needed.
 
 ```bash
-# First run: internet required (downloads ANTsPyNet weights ~300 MB)
-docker run --rm \
+docker run \
+  # ── Docker configuration ──────────────────────────────────────────
+  --rm \
   --shm-size=16g \
   --user "$(id -u):$(id -g)" \
-  -v antspynet-cache:/opt/keras-cache \
+  -v antspynet-cache:/opt/keras-cache \    # cache persists between runs
   -v /data/raw_images:/input \
   -v /data/preprocessed:/output \
+  # ── Image and command ─────────────────────────────────────────────
   gouhfi:2.0.1 \
-  run_preprocessing -i /input -o /output
-
-# All subsequent runs: fully offline
+  run_preprocessing -i /input -o /output   # internet required on first run only
 ```
 
 ---
 
 ## Troubleshooting
 
-**`Background workers died` / `RuntimeError`**  
-nnUNet's multiprocessing workers need more shared memory than Docker's 64 MB default. Always pass `--shm-size=16g` (or higher for very large datasets). This is already set in `docker-compose.yml`.
+- **`Background workers died` / `RuntimeError`**
+  - nnUNet's multiprocessing workers need more shared memory than Docker's 64 MB default.
+  - Fix: always pass `--shm-size=16g` to `docker run` (already set in `docker-compose.yml`).
+  - If it still fails with very large datasets, try increasing to `--shm-size=32g`.
 
-**`permission denied while trying to connect to the Docker API`**  
-Your shell session does not have the `docker` group yet. Run `newgrp docker` or log out and back in.
+- **`permission denied while trying to connect to the Docker API`**
+  - Your current shell session does not have the `docker` group active yet.
+  - Fix: run `newgrp docker` to apply it in the current shell, or log out and back in to make it permanent.
 
-**TensorFlow warnings about CUDA (`Could not find cuda drivers`)**  
-These appear when running without `--gpus all` (e.g. smoke tests). They are harmless — TensorFlow is used only for ANTsPyNet brain extraction, and PyTorch (used for the main GOUHFI inference) handles GPU access independently via `--gpus all`.
+- **TensorFlow warnings about CUDA (`Could not find cuda drivers`)**
+  - These appear when running without `--gpus all` (e.g. during smoke tests or CPU runs).
+  - This is harmless — TensorFlow is only used by ANTsPyNet for brain extraction. The main GOUHFI inference uses PyTorch, which accesses the GPU separately via `--gpus all`.
 
-**`lstat ./.gvfs: permission denied` during build**  
-You ran `docker build` from your home directory instead of from inside the GOUHFI repository. Always `cd` into the repository first:
-```bash
-cd /path/to/GOUHFI
-docker build -t gouhfi:2.0.1 .
-```
+- **`lstat ./.gvfs: permission denied` during `docker build`**
+  - You ran `docker build` from your home directory. Docker tried to scan the whole home folder and hit a system virtual filesystem it cannot access.
+  - Fix: always `cd` into the GOUHFI repository first, then build with `.` as the context:
+    ```bash
+    cd /path/to/GOUHFI
+    docker build -t gouhfi:2.0.1 .
+    ```
+
+- **Output files owned by root (can't delete without `sudo`)**
+  - The container ran as root instead of your user.
+  - Fix: always include `--user "$(id -u):$(id -g)"` in your `docker run` command, or set `UID`/`GID` in your `.env` file when using Docker Compose.
+
+- **CPU image is unexpectedly large**
+  - pip may have pulled in CUDA PyTorch wheels on top of the CPU ones when resolving dependencies.
+  - Fix: rebuild using the updated `Dockerfile.cpu`, which passes `--extra-index-url https://download.pytorch.org/whl/cpu` to keep pip on the CPU wheel index throughout installation.
