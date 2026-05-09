@@ -31,13 +31,16 @@ RUN mkdir -p /opt/gouhfi/nnUNet_raw \
              /opt/gouhfi/nnUNet_preprocessed \
              /opt/gouhfi/trained_model
 
-# Install CPU-only PyTorch before the rest of the deps to avoid pulling in the CUDA wheels
+# Install CPU-only PyTorch. The --extra-index-url is passed to the second step too
+# so that if pip re-resolves torch during dependency installation it stays on the
+# CPU wheel index instead of pulling the default CUDA wheels from PyPI.
 RUN pip install --no-cache-dir \
         torch==2.1.2+cpu \
         torchvision==0.16.2+cpu \
         --index-url https://download.pytorch.org/whl/cpu
 
-RUN pip install --no-cache-dir -e /opt/gouhfi
+RUN pip install --no-cache-dir -e /opt/gouhfi \
+        --extra-index-url https://download.pytorch.org/whl/cpu
 
 ENV KERAS_HOME=/opt/keras-cache
 
