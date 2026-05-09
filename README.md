@@ -16,7 +16,8 @@ Helper commands for neuroscientists/neuroimagers working with label maps are als
 
 ## Updates
 
-- 09/05/26: **GOUHFI 2.0.1** — Docker support added. GOUHFI can now be run without any Python setup via Docker. See **[`docs/installation_docker.md`](docs/installation_docker.md)** for the full guide.
+- 09/05/26: **GOUHFI 2.0.1: Docker support added!**
+  - In order to make GOUHFI more accessible to the community, we made a Docker implementation for GOUHFI. That way, GOUHFI can now be run without any Python setup using only a few installation steps. See **[`docs/installation_docker.md`](docs/installation_docker.md)** for the full guide.
 - 13/12/25: **GOUHFI 2.0** is finally available!
     - In addition of an improved subcortical segmentation tool on clinical cohorts, GOUHFI 2.0 now also offers (a) contrast-, resolution- and field-agnostic cortex parcellation following the Desikan-Killiany-Tourville (DKT) atlas and (b) Total Intracranial Volume (TIV) estimations for normalized volumetry analyses.
     - The related arXiv publication for GOUHFI 2.0 is available [here](https://doi.org/10.48550/arXiv.2601.09006).
