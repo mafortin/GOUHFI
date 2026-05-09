@@ -76,7 +76,7 @@ docker run --gpus all --rm --shm-size=16g \
   -v /path/to/weights:/opt/gouhfi/trained_model:ro \
   -v antspynet-cache:/opt/keras-cache \
   -v /path/to/input:/input -v /path/to/output:/output \
-  gouhfi:2.0.1 run_gouhfi -i /input -o /output
+  mafortin30/gouhfi:2.0.1 run_gouhfi -i /input -o /output
 ```
 
 ---

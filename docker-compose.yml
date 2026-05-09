@@ -56,10 +56,7 @@ services:
   # GPU-accelerated service (requires NVIDIA Container Toolkit)
   gouhfi:
     <<: *gouhfi-common
-    image: gouhfi:2.0.0
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: mafortin30/gouhfi:2.0.1
     deploy:
       resources:
         reservations:
@@ -71,10 +68,7 @@ services:
   # CPU-only service (no GPU required; expect ~100x slower inference)
   gouhfi-cpu:
     <<: *gouhfi-common
-    image: gouhfi:2.0.0-cpu
-    build:
-      context: .
-      dockerfile: Dockerfile.cpu
+    image: mafortin30/gouhfi:2.0.1-cpu
 
 volumes:
   # Persistent cache for ANTsPyNet brain extraction weights.

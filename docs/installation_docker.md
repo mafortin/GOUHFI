@@ -94,29 +94,27 @@ After unzipping you should have three folders inside that directory:
 
 ---
 
-## Step 4: Build the Docker image
+## Step 4: Pull the Docker image
 
-Clone the GOUHFI repository and build the image from inside it:
+Pull the pre-built image directly from Docker Hub — no cloning or building required:
 
 ```bash
-git clone https://github.com/mafortin/GOUHFI.git
-cd GOUHFI
-docker build -t gouhfi:2.0.1 .
+docker pull mafortin30/gouhfi:2.0.1
 ```
 
-This step downloads and installs all Python dependencies inside the image. It typically takes **15–30 minutes** depending on your internet speed. You only need to do it once.
-
-> **CPU-only users**: build the CPU image instead:
+> **CPU-only users**: pull the CPU image instead:
 > ```bash
-> docker build -t gouhfi:2.0.1-cpu -f Dockerfile.cpu .
+> docker pull mafortin30/gouhfi:2.0.1-cpu
 > ```
+
+This downloads all Python dependencies pre-installed inside the image (~9 GB for GPU, ~1.2 GB for CPU). You only need to do it once.
 
 ---
 
 ## Step 5: Test the installation
 
 ```bash
-docker run --rm gouhfi:2.0.1 run_gouhfi --help
+docker run --rm mafortin30/gouhfi:2.0.1 run_gouhfi --help
 ```
 
 If the help text appears, the image is working correctly.
@@ -124,8 +122,6 @@ If the help text appears, the image is working correctly.
 ---
 
 ## Quick start
-
-> **Note**: All `docker` commands must be run from inside the GOUHFI repository directory (i.e. where the `Dockerfile` lives). If you are not sure, run `cd /path/to/GOUHFI` first.
 
 Replace `/data/gouhfi_weights`, `/data/input`, and `/data/output` with your actual paths.
 
@@ -144,7 +140,7 @@ docker run \
   -v /data/input:/input \                  # your input NIfTI files
   -v /data/output:/output \               # where segmentations will be saved
   # ── Image and command ─────────────────────────────────────────────
-  gouhfi:2.0.1 \
+  mafortin30/gouhfi:2.0.1 \
   run_gouhfi -i /input -o /output
 ```
 
@@ -162,7 +158,7 @@ docker run \
   -v /data/input:/input \                  # your input NIfTI files
   -v /data/output:/output \               # where segmentations will be saved
   # ── Image and command ─────────────────────────────────────────────
-  gouhfi:2.0.1-cpu \
+  mafortin30/gouhfi:2.0.1-cpu \
   run_gouhfi -i /input -o /output --cpu
 ```
 
@@ -185,7 +181,7 @@ docker run \
   -v /data/raw_images:/input \
   -v /data/preprocessed:/output \
   # ── Image and command ─────────────────────────────────────────────
-  gouhfi:2.0.1 \
+  mafortin30/gouhfi:2.0.1 \
   run_preprocessing -i /input -o /output   # internet required on first run only
 ```
 
