@@ -1,0 +1,37 @@
+# Version control
+.git
+.gitignore
+
+# Model weight directories — never bake into image; mount at runtime
+trained_model/Dataset014_gouhfi/
+trained_model/Dataset020_gouhfi_2p0n2/
+trained_model/Dataset024_gouhfi_parc/
+
+# Python build artifacts
+**/__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+gouhfi.egg-info/
+dist/
+build/
+.eggs/
+
+# Test data and figures (not needed at runtime)
+test_data/
+figs/
+
+# IDE configs
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Environment files
+.env
+*.env
+
+# Jupyter
+*.ipynb
+.ipynb_checkpoints/
