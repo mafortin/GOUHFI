@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         unzip \
         wget \
         curl \
+        gosu \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/gouhfi
@@ -52,4 +53,7 @@ ENV KERAS_HOME=/opt/keras-cache
 #   /output                    — segmentation output
 VOLUME ["/opt/gouhfi/trained_model", "/opt/keras-cache", "/input", "/output"]
 
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["run_gouhfi", "--help"]
