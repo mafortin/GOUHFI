@@ -9,6 +9,8 @@
 #   GOUHFI_WEIGHTS_DIR=/absolute/path/to/trained_model
 #   GOUHFI_INPUT_DIR=/absolute/path/to/your/input
 #   GOUHFI_OUTPUT_DIR=/absolute/path/to/your/output
+#   UID=1000   # replace with: id -u
+#   GID=1000   # replace with: id -g
 #
 # ANTsPyNet brain extraction weights are downloaded on first use of run_preprocessing
 # and cached in the named Docker volume 'antspynet-cache' so they persist between runs.
@@ -27,6 +29,9 @@
 version: "3.8"
 
 x-gouhfi-common: &gouhfi-common
+  # Run as your host user so output files are owned by you (not root).
+  # Set UID and GID in your .env file (see header comments above).
+  user: "${UID:-1000}:${GID:-1000}"
   # Shared memory for nnUNet multiprocessing workers. This is a maximum cap, not
   # pre-allocated — the container starts fine even with less RAM available.
   # Increase if processing many subjects in parallel or very large volumes.
