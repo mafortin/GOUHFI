@@ -162,7 +162,7 @@ docker run \
   run_gouhfi -i /input -o /output --cpu
 ```
 
-All flags available in the native installation (`--skip_parc`, `--reorder_labels`, `--v1`, `--folds`, etc.) are appended at the end of the command, after `run_gouhfi`. See [`usage.md`](usage.md) for the full list.
+Every command available in the native installation like `run_gouhfi`, `run_preprocessing`, `run_renaming`, `run_brain_extraction`, `run_volumetry`, with all their flags, works identically inside Docker. Simply replace the native command with the equivalent `docker run ... mafortin30/gouhfi:2.0.1 <command>` call. See [`usage.md`](usage.md) for the full command reference.
 
 ---
 
