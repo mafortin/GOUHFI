@@ -1,6 +1,6 @@
 [project]
 name = "gouhfi"
-version = "2.0.0"
+version = "2.0.1"
 readme = "README.md"
 requires-python = ">=3.10"
 
