@@ -201,18 +201,3 @@ docker run \
   - These appear when running without `--gpus all` (e.g. during smoke tests or CPU runs).
   - This is harmless — TensorFlow is only used by ANTsPyNet for brain extraction. The main GOUHFI inference uses PyTorch, which accesses the GPU separately via `--gpus all`.
 
-- **`lstat ./.gvfs: permission denied` during `docker build`**
-  - You ran `docker build` from your home directory. Docker tried to scan the whole home folder and hit a system virtual filesystem it cannot access.
-  - Fix: always `cd` into the GOUHFI repository first, then build with `.` as the context:
-    ```bash
-    cd /path/to/GOUHFI
-    docker build -t gouhfi:2.0.1 .
-    ```
-
-- **Output files owned by root (can't delete without `sudo`)**
-  - The container ran as root instead of your user.
-  - Fix: always include `--user "$(id -u):$(id -g)"` in your `docker run` command, or set `UID`/`GID` in your `.env` file when using Docker Compose.
-
-- **CPU image is unexpectedly large**
-  - pip may have pulled in CUDA PyTorch wheels on top of the CPU ones when resolving dependencies.
-  - Fix: rebuild using the updated `Dockerfile.cpu`, which passes `--extra-index-url https://download.pytorch.org/whl/cpu` to keep pip on the CPU wheel index throughout installation.
