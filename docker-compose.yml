@@ -1,0 +1,70 @@
+# GOUHFI Docker Compose — convenience launcher
+#
+# Prerequisites:
+#   - NVIDIA Container Toolkit installed (for GPU service)
+#   - GOUHFI model weights downloaded and unzipped into a local directory
+#     (see trained_model/gouhfi-trained-model-weights.md for download links)
+#
+# Create a .env file in this directory with:
+#   GOUHFI_WEIGHTS_DIR=/absolute/path/to/trained_model
+#   GOUHFI_INPUT_DIR=/absolute/path/to/your/input
+#   GOUHFI_OUTPUT_DIR=/absolute/path/to/your/output
+#
+# ANTsPyNet brain extraction weights are downloaded on first use of run_preprocessing
+# and cached in the named Docker volume 'antspynet-cache' so they persist between runs.
+# The first run of run_preprocessing requires internet access; all subsequent runs do not.
+#
+# Example commands:
+#   GPU inference (on already-preprocessed data):
+#     docker compose run --rm gouhfi run_gouhfi -i /input -o /output --reorder_labels
+#   CPU inference:
+#     docker compose run --rm gouhfi-cpu run_gouhfi -i /input -o /output --cpu
+#   Preprocessing — requires internet on first run to fetch ANTsPyNet weights:
+#     docker compose run --rm gouhfi run_preprocessing -i /input -o /input_preprocessed
+#   Renaming to nnUNet convention:
+#     docker compose run --rm gouhfi run_renaming -i /input_preprocessed -o /input_renamed
+
+version: "3.8"
+
+x-gouhfi-common: &gouhfi-common
+  volumes:
+    # GOUHFI model weights — read-only; set GOUHFI_WEIGHTS_DIR in your .env file
+    - ${GOUHFI_WEIGHTS_DIR:-./trained_model}:/opt/gouhfi/trained_model:ro
+    # ANTsPyNet weight cache — downloaded on first use, persisted in a named volume
+    - antspynet-cache:/opt/keras-cache
+    # Input and output directories
+    - ${GOUHFI_INPUT_DIR:-./data/input}:/input
+    - ${GOUHFI_OUTPUT_DIR:-./data/output}:/output
+  environment:
+    - GOUHFI_HOME=/opt/gouhfi
+    - TF_CPP_MIN_LOG_LEVEL=3
+  working_dir: /opt/gouhfi
+
+services:
+  # GPU-accelerated service (requires NVIDIA Container Toolkit)
+  gouhfi:
+    <<: *gouhfi-common
+    image: gouhfi:2.0.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  # CPU-only service (no GPU required; expect ~100x slower inference)
+  gouhfi-cpu:
+    <<: *gouhfi-common
+    image: gouhfi:2.0.0-cpu
+    build:
+      context: .
+      dockerfile: Dockerfile.cpu
+
+volumes:
+  # Persistent cache for ANTsPyNet brain extraction weights.
+  # Each user fetches directly from figshare on first use — no redistribution.
+  antspynet-cache:
