@@ -70,7 +70,7 @@ run_gouhfi -i /path/to/renamed
 **Docker (GPU):**
 ```bash
 docker run --gpus all --rm --shm-size=16g \
-  --user "$(id -u):$(id -g)" \
+  -e HOST_UID=$(id -u) -e HOST_GID=$(id -g) \
   -v /path/to/weights:/opt/gouhfi/trained_model:ro \
   -v antspynet-cache:/opt/keras-cache \
   -v /path/to/input:/input -v /path/to/output:/output \
