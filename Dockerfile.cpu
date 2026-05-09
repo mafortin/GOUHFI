@@ -27,6 +27,7 @@ COPY . /opt/gouhfi/
 ENV GOUHFI_HOME=/opt/gouhfi
 ENV PYTHONUNBUFFERED=1
 ENV TF_CPP_MIN_LOG_LEVEL=3
+ENV MPLCONFIGDIR=/tmp
 
 RUN mkdir -p /opt/gouhfi/nnUNet_raw \
              /opt/gouhfi/nnUNet_preprocessed \

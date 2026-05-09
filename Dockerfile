@@ -28,6 +28,7 @@ COPY . /opt/gouhfi/
 ENV GOUHFI_HOME=/opt/gouhfi
 ENV PYTHONUNBUFFERED=1
 ENV TF_CPP_MIN_LOG_LEVEL=3
+ENV MPLCONFIGDIR=/tmp
 
 # nnUNetv2 expects these directories to exist (set from GOUHFI_HOME at runtime)
 RUN mkdir -p /opt/gouhfi/nnUNet_raw \
